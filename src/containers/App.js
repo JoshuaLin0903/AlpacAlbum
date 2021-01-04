@@ -3,7 +3,7 @@ import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER} from '../components'
 import React, { useEffect, useState } from 'react'
 import 'antd/dist/antd.css';
 import alpaca from '../images/alpaca.png';
-import { Layout, Menu, message, Input, Button, Divider} from 'antd';
+import { Layout, Menu, message, Input, Button, Popconfirm, Avatar} from 'antd';
 import {
   SearchOutlined,
   PictureOutlined,
@@ -34,15 +34,13 @@ function App() {
       message.error('Wrong password!')
     }
     else{
-      message.success('Successfully log in!')
+      message.success('Successfully login!')
       setLogIN(true)
     }
   }
 
   const handleLogOut = () =>{
-    setLogIN(false)
-    setUserName('')
-    setPassword('')
+    window.location.reload()
   }
 
   const handleMenuCollapse =() =>{
@@ -110,18 +108,22 @@ function App() {
           {logIN?
           <>
             <div className="user">
-              <Divider type="vertical"/>
               <div>
-                <UserOutlined style={{color:"white", fontSize: 18, margin:5}}/>
+                <Avatar icon={<UserOutlined/>} style={{marginRight: 8}}/>
                 {username}
               </div>
-              <Divider type="vertical"/>
               <div>
-                <Button ghost="true" size="small" 
-                style={{color:"white", borderColor: "gray"}}
-                onClick={handleLogOut}> 
-                  Logout 
-                </Button>
+                <Popconfirm placement="bottom" 
+                  onConfirm={handleLogOut} 
+                  title="Are you sure you want to log out?"
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button ghost="true" size="small" 
+                  style={{color:"white", borderColor: "gray", marginLeft: 10}}> 
+                    Logout 
+                  </Button>
+                </Popconfirm>
               </div>
             </div>
           </>
@@ -151,7 +153,7 @@ function App() {
             </div>
           )}
         </Content>
-        <Footer style={{ textAlign: 'center' }}></Footer>
+        <Footer style={{ textAlign: 'center' }}> Footer</Footer>
       </Layout>
     </Layout>
   );
