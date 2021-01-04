@@ -3,6 +3,10 @@ import '../style.css'
 
 export const ALL= () =>{
 	return(
-		<div>View all photos</div>
+		<>
+			<div className="main-display">
+				View all photos
+			</div>
+		</>
 	)
 }

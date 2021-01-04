@@ -1,23 +1,49 @@
 import '../style.css';
-import {HOMEPAGE, SEARCH, UPLOAD, ALL, SEARCH_SIDER} from '../components'
+import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER} from '../components'
 import React, { useEffect, useState } from 'react'
 import 'antd/dist/antd.css';
-import { Layout, Menu} from 'antd';
+import alpaca from '../images/alpaca.png';
+import { Layout, Menu, message, Input, Button, Divider} from 'antd';
 import {
-  UploadOutlined,
   SearchOutlined,
   PictureOutlined,
   HeartTwoTone,
-  HomeOutlined
+  HomeOutlined,
+  UserOutlined,
+  KeyOutlined
 } from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider} = Layout;
+const PASSWORD = '123456789'
 
 function App() {
 	const [menuCollapsed, setMenuCollapsed] = useState(true);
 	const [searchCollapsed, setSearchCollapsed] = useState(true);
 	const [currentEvent, setCurrentEvent] = useState('home')
   const [mainDisplay, setMainDisplay] = useState(<HOMEPAGE/>)
+  const [logIN, setLogIN] = useState(false)
+  const [username, setUserName] = useState('')
+  const [password, setPassword]= useState('')
+
+  const handleLogIn = () => {
+    if (username === '' || password === ''){
+      message.error('Both username and password must be entered!')
+    }
+    else if(password !== PASSWORD)
+    {
+      message.error('Wrong password!')
+    }
+    else{
+      message.success('Successfully log in!')
+      setLogIN(true)
+    }
+  }
+
+  const handleLogOut = () =>{
+    setLogIN(false)
+    setUserName('')
+    setPassword('')
+  }
 
   const handleMenuCollapse =() =>{
   	if (menuCollapsed === false && searchCollapsed === false){
@@ -34,9 +60,6 @@ function App() {
       case 'search':
         setMainDisplay(<SEARCH/>)
         break
-      case 'upload':
-        setMainDisplay(<UPLOAD/>)
-        break
       case 'all':
         setMainDisplay(<ALL/>)
         break
@@ -48,7 +71,8 @@ function App() {
 
   return (
    	<Layout style={{ minHeight: '100vh'}}>
-     	<Sider  
+      {logIN?
+     	(<Sider 
        	collapsible 
        	collapsed={menuCollapsed} 
        	width={500} 
@@ -73,23 +97,59 @@ function App() {
               :
              	<SEARCH_SIDER/>
             }
-          <Menu.Item key="3" icon={<UploadOutlined />} 
-          	onClick={()=>{setCurrentEvent("upload");setSearchCollapsed(true);}}>
-          	Add New Photos
-          </Menu.Item>
-          <Menu.Item key="4" icon={<PictureOutlined />}
+          <Menu.Item key="3" icon={<PictureOutlined />}
           	onClick={()=>{setCurrentEvent("all");setSearchCollapsed(true);}}>
           	View All Albums
           </Menu.Item>
         </Menu>
-      </Sider>
+      </Sider>)
+      :
+      (<></>)}
       <Layout className="site-layout">
-      	<Header className="header" style={{ padding: 0, textAlign: 'center' }}>
+      	<Header className="header">
+          {logIN?
+          <>
+            <div className="user">
+              <Divider type="vertical"/>
+              <div>
+                <UserOutlined style={{color:"white", fontSize: 18, margin:5}}/>
+                {username}
+              </div>
+              <Divider type="vertical"/>
+              <div>
+                <Button ghost="true" size="small" 
+                style={{color:"white", borderColor: "gray"}}
+                onClick={handleLogOut}> 
+                  Logout 
+                </Button>
+              </div>
+            </div>
+          </>
+          :
+          <></>}
       	</Header>
         <Content style={{ margin: '0 16px' }}>
-       		<div className="main-display">
-       	    {mainDisplay}
-        	</div>
+       	  {logIN ? 
+            mainDisplay
+            :(
+            <div className="main-display">
+              <div className="image-display">
+                <img src={alpaca}/>
+              </div>
+              <Input 
+                placeholder="Enter your username" 
+                prefix={<UserOutlined/>} 
+                style={{width: 250, margin:5}}
+                onChange={(e) => setUserName(e.target.value)}/>
+              <Input.Password placeholder="Enter your password"
+                prefix={<KeyOutlined />}
+                style={{width:250, margin:5}}
+                onChange={(e) => setPassword(e.target.value)}/>
+              <Button type="primary" style={{margin:5}} onClick={handleLogIn}> 
+                Login
+            </Button>
+            </div>
+          )}
         </Content>
         <Footer style={{ textAlign: 'center' }}></Footer>
       </Layout>

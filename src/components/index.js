@@ -1,5 +1,4 @@
 export {HOMEPAGE} from './HomePage'
 export {SEARCH} from './Search'
-export {UPLOAD} from './Upload'
 export {ALL} from './All'
 export {SEARCH_SIDER} from './SearchSider'

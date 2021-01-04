@@ -4,6 +4,8 @@ import {LoadingOutlined} from '@ant-design/icons';
 
 export const SEARCH= () =>{
 	return(
-		<LoadingOutlined style={{fontSize: "300%", color: "blue"}}/>
+		<div className="main-display">
+			<LoadingOutlined style={{fontSize: "300%", color: "blue"}}/>
+		</div>
 	)
 }

@@ -13,6 +13,7 @@
 
 .main-display{
   display: flex;
+  flex-direction: column;
   background: #fff;
   padding: 24px; 
   min-height: 540px;
@@ -39,6 +40,14 @@
 
 .tags{
   margin: 2.5px;
+}
+
+.user{
+  text-align: right;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  float: right;
 }
 
   [data-theme="dark"] .site-layout .site-layout-background {
