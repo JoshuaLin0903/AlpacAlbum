@@ -142,12 +142,20 @@ function App() {
                 placeholder="Enter your username" 
                 prefix={<UserOutlined/>} 
                 style={{width: 250, margin:5}}
-                onChange={(e) => setUserName(e.target.value)}/>
+                onChange={(e) => setUserName(e.target.value)}
+                onKeyDown={(e) => {
+                  if(e.key === 'Enter') {handleLogIn()}
+                }}/>
               <Input.Password placeholder="Enter your password"
                 prefix={<KeyOutlined />}
                 style={{width:250, margin:5}}
-                onChange={(e) => setPassword(e.target.value)}/>
-              <Button type="primary" style={{margin:5}} onClick={handleLogIn}> 
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => {
+                  if(e.key === 'Enter') {handleLogIn()}
+                }}/>
+              <Button type="primary" 
+                style={{margin:5}} 
+                onClick={handleLogIn} > 
                 Login
             </Button>
             </div>

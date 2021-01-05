@@ -22,13 +22,9 @@
 }
 
 .main-display-all{
-  display: flex;
-  flex-direction: column;
   background: #fff;
   padding: 24px; 
   min-height: 535px;
-  align-items:center;
-  justify-content:center;
 }
 
 .chosen_tag_block{

@@ -1,11 +1,11 @@
-import React from 'react'
-import '../style.css'
-import {LoadingOutlined} from '@ant-design/icons';
+import React from 'react';
+import '../style.css';
+import {Spin} from 'antd';
 
 export const SEARCH= () =>{
 	return(
 		<div className="main-display">
-			<LoadingOutlined style={{fontSize: "300%", color: "blue"}}/>
+			<Spin tip="Searching" size="large"/>
 		</div>
 	)
 }
