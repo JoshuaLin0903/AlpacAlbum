@@ -10,7 +10,6 @@ export const ALL= () =>{
 	const [addvis, setAddvis] = useState(false)
 	const [state, setState] = useState('none')
 
-
 	return(
 		<>
 			<Breadcrumb style={{margin: "16px 0", textAlign: "right"}}>

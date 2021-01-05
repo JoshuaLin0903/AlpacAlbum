@@ -1,6 +1,7 @@
 import '../style.css';
 import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER} from '../components'
 import React, { useEffect, useState } from 'react'
+import {login} from '../axios'
 import 'antd/dist/antd.css';
 import alpaca from '../images/alpaca.png';
 import { Layout, Menu, message, Input, Button, Popconfirm, Avatar} from 'antd';
@@ -14,7 +15,6 @@ import {
 } from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider} = Layout;
-const PASSWORD = '123456789'
 
 function App() {
 	const [menuCollapsed, setMenuCollapsed] = useState(true);
@@ -25,15 +25,17 @@ function App() {
   const [username, setUserName] = useState('')
   const [password, setPassword]= useState('')
 
-  const handleLogIn = () => {
+  const handleLogIn = async () => {
+    const msg = await login(password)
     if (username === '' || password === ''){
       message.error('Both username and password must be entered!')
     }
-    else if(password !== PASSWORD)
+    else if(msg === 'Wrong password')
     {
       message.error('Wrong password!')
     }
-    else{
+    else if(msg === 'Correct password')
+    {
       message.success('Successfully login!')
       setLogIN(true)
     }
@@ -115,7 +117,7 @@ function App() {
               <div>
                 <Popconfirm placement="bottom" 
                   onConfirm={handleLogOut} 
-                  title="Are you sure you want to log out?"
+                  title="Are you sure you want to logout?"
                   okText="Yes"
                   cancelText="No"
                 >
