@@ -6,14 +6,11 @@ const { Panel } = Collapse;
 const { CheckableTag } = Tag;
 const {Search} = Input;
 
-const tagsData = ["Family", "Alpaca", "Kpop", "GreenIsland"]
-
 var chosen = []
 
-export const SEARCH_SIDER = ()=>{
+export const SEARCH_SIDER = ({taglist})=>{
 	const [selectedTags, setSelectedTags] = useState(chosen);
-  const [search, setSearch] = useState('');
-  const [showingTags, setShowingTags] = useState(tagsData)
+  const [showingTags, setShowingTags] = useState(taglist)
 
 	const chooseTags = (tag, checked) => {
     const nextSelectedTags = checked ? [...selectedTags, tag] : selectedTags.filter(t => t !== tag);
@@ -32,19 +29,18 @@ export const SEARCH_SIDER = ()=>{
     setSelectedTags([])
   }
 
-  const filterTags = () => {
+  const filterTags = (search) => {
     const l = search.length
-    const _filter = tagsData.filter((t) => 
-      (t.toLowerCase().substr(0,l) === search)
-    )
-    setShowingTags(_filter)
-  }
-
-  const handleSearchOnChange = (e) => {
-    if (e.target.value === ""){
-      setShowingTags(tagsData)
+    if(l === 0){
+      setShowingTags(taglist)
     }
-    setSearch(e.target.value.toLowerCase())
+    else{
+      const _filter = taglist.filter((t) => 
+        (t.toLowerCase().substr(0,l) === search.toLowerCase())
+      )
+      setShowingTags(_filter)
+    }
+    
   }
 
 	return(
@@ -54,16 +50,11 @@ export const SEARCH_SIDER = ()=>{
       	header={<><SearchOutlined/> Search by Tags</>}
       	key="1">
       	<div style={{margin: '5px'}}>
-	  			<Search 
+	  			<Input
 		 				allowClear 
+            prefix={<SearchOutlined/>}
 		 				style={{ width: 400, margin: '10px' }}
-            onChange={(e) => {handleSearchOnChange(e)}}
-            onSearch={filterTags}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                filterTags() 
-              }
-            }}/>
+            onChange={(e) => {filterTags(e.target.value)}}/>
 				</div>
         <div className="chosen_tag_block">
         	<Tag icon={<StarFilled />} color="volcano" style={{marginTop: "5px"}}>
@@ -101,7 +92,7 @@ export const SEARCH_SIDER = ()=>{
             </div>:<></>}
         <Divider style={{margin:1}}/>
     	  <div className="tags_group">
-    	  	{(tagsData.length === 0) ?
+    	  	{(taglist.length === 0) ?
           <p style={{color:"gray", textAlign: "center"}}> No tags ... </p> 
           :
           ((showingTags.length === 0)?
