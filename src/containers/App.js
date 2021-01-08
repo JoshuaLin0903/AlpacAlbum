@@ -17,6 +17,9 @@ import {
 
 const { Header, Content, Footer, Sider} = Layout;
 
+const tagsData = ["Family", "Alpaca", "Kpop", "GreenIsland"]
+const URLLIST = []
+
 function App() {
 	const [menuCollapsed, setMenuCollapsed] = useState(true);
 	const [searchCollapsed, setSearchCollapsed] = useState(true);
@@ -62,10 +65,10 @@ function App() {
         setMainDisplay(<SEARCH/>)
         break
       case 'all':
-        setMainDisplay(<ALL/>)
+        setMainDisplay(<ALL URLLIST={URLLIST}/>)
         break
       case 'upload':
-        setMainDisplay(<UPLOAD/>)
+        setMainDisplay(<UPLOAD URLLIST={URLLIST} taglist={tagsData}/>)
         break
       default:
         setMainDisplay(<HOMEPAGE/>)
@@ -99,7 +102,7 @@ function App() {
             		Search by Tags
             	</Menu.Item>
               :
-             	<SEARCH_SIDER/>
+             	<SEARCH_SIDER taglist={tagsData}/>
             }
           <Menu.Item key="3" icon={<PictureOutlined />}
           	onClick={()=>{setCurrentEvent("all");setSearchCollapsed(true);}}>

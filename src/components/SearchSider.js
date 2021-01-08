@@ -6,14 +6,13 @@ const { Panel } = Collapse;
 const { CheckableTag } = Tag;
 const {Search} = Input;
 
-const tagsData = ["Family", "Alpaca", "Kpop", "GreenIsland"]
-
 var chosen = []
 
-export const SEARCH_SIDER = ()=>{
+export const SEARCH_SIDER = ({taglist})=>{
+  console.log(taglist)
 	const [selectedTags, setSelectedTags] = useState(chosen);
   const [search, setSearch] = useState('');
-  const [showingTags, setShowingTags] = useState(tagsData)
+  const [showingTags, setShowingTags] = useState(taglist)
 
 	const chooseTags = (tag, checked) => {
     const nextSelectedTags = checked ? [...selectedTags, tag] : selectedTags.filter(t => t !== tag);
@@ -34,7 +33,7 @@ export const SEARCH_SIDER = ()=>{
 
   const filterTags = () => {
     const l = search.length
-    const _filter = tagsData.filter((t) => 
+    const _filter = taglist.filter((t) => 
       (t.toLowerCase().substr(0,l) === search)
     )
     setShowingTags(_filter)
@@ -42,7 +41,7 @@ export const SEARCH_SIDER = ()=>{
 
   const handleSearchOnChange = (e) => {
     if (e.target.value === ""){
-      setShowingTags(tagsData)
+      setShowingTags(taglist)
     }
     setSearch(e.target.value.toLowerCase())
   }
@@ -101,7 +100,7 @@ export const SEARCH_SIDER = ()=>{
             </div>:<></>}
         <Divider style={{margin:1}}/>
     	  <div className="tags_group">
-    	  	{(tagsData.length === 0) ?
+    	  	{(taglist.length === 0) ?
           <p style={{color:"gray", textAlign: "center"}}> No tags ... </p> 
           :
           ((showingTags.length === 0)?

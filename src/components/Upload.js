@@ -1,17 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import '../style.css';
-import {Breadcrumb, Input, Upload, message, Tag, Divider, Button, Popconfirm} from 'antd'
+import {Breadcrumb, Input, Upload, message, Tag, Divider, Button, Popconfirm, AutoComplete} from 'antd'
 import {RocketTwoTone, InboxOutlined} from '@ant-design/icons'
 import axios from 'axios';
 
 const { Dragger } = Upload;
 const client_id = 'bcdefbeb2fcc6da';
-const URLLIST = [];
 
-export const UPLOAD= () =>{
+export const UPLOAD = ({URLLIST, taglist}) =>{
 	const [tagValue, setTagValue] = useState('')
 	const [select, setSelect] = useState([])
 	const [urllist, setUrls] = useState([])
+	const [open, setOpen] = useState(false)
 
 	useEffect(() => {
 		if (urllist.length !== 0){
@@ -69,6 +69,10 @@ export const UPLOAD= () =>{
 		setSelect(buf)
 	}
 
+	const Options = taglist.map((m) =>{
+		return {value: m}
+	})
+
 	return(
 		<>
 			<Breadcrumb style={{margin: "21px 0"}}>
@@ -79,14 +83,26 @@ export const UPLOAD= () =>{
 			<div className="main-display" style={{minHeight: 535}}>
 				<div style={{width: 350, textAlign:"center"}}>
 					<h1 style={{fontSize: 35, marginBottom:25, color:"#00008B"}}> Upload to ... </h1>
-       		<Input.Search
-       			allowClear
-       			value={tagValue}
-       			enterButton="Enter"
-       		 	placeholder="Enter the tag you want" 
-       		 	style={{marginBottom: 10, width: 350}}
-       		 	onChange={(e) => setTagValue(e.target.value)}
-       		 	onSearch={selectTag}/>
+					<AutoComplete
+						style={{marginBottom: 10, width: 350}}
+						open={open}
+						onBlur={() => setOpen(false)}
+						onClick={() => setOpen(true)}
+						onSelect={()=> setOpen(false)}
+						value={tagValue}
+						options={Options}
+						filterOption={(inputValue, option) =>
+      				option.value.toUpperCase().substr(0,inputValue.length) === inputValue.toUpperCase()
+    				}
+    				onChange={(value) => {setTagValue(value);setOpen(true)}}
+					>
+       			<Input.Search
+       				enterButton="Enter"
+       		 		placeholder="Enter the tag you want"
+       		 		onChange={(e) => {setTagValue(e.target.value)}}
+       		 		onSearch={() => {selectTag();setOpen(false);}}
+       		 	/>
+       		 </AutoComplete>
        		<div style={{textAlign:"left"}}>
        			<Tag color="geekblue"> Selected </Tag>
        			:
@@ -103,10 +119,12 @@ export const UPLOAD= () =>{
        		</div>
        		{select.length?
           		<Button size="small" 
-          		style={{marginTop:15}} 
+          		style={{marginTop:15, borderColor:"#E9967A", fontSize: 12}} 
           		danger
-          		onClick={() => setSelect([])}> 
-          		Clear All </Button>:
+          		onClick={() => setSelect([])}
+          		shape="round"> 
+          			Clear All 
+          		</Button>:
           		<div style={{marginTop:15}}></div>
           }
        		<Divider/>
@@ -134,5 +152,3 @@ export const UPLOAD= () =>{
 		</>
 	)
 }
-
-export {URLLIST}

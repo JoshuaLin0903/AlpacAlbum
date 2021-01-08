@@ -2,11 +2,9 @@ import React, {useState} from 'react'
 import '../style.css'
 import {Breadcrumb} from 'antd';
 import {PictureTwoTone} from '@ant-design/icons';
-import {URLLIST} from './Upload.js'
 
-
-export const ALL = () =>{
-
+export const ALL = ({URLLIST}) =>{
+	console.log(URLLIST)
 	return(
 		<>
 			<Breadcrumb style={{margin: "21px 0"}}>
