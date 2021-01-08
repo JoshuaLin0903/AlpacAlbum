@@ -8,49 +8,34 @@ const { Dragger } = Upload;
 const client_id = 'bcdefbeb2fcc6da';
 const URLLIST = [];
 
-export const UPLOAD= () =>{
+export const UPLOAD = () =>{
 	const [tagValue, setTagValue] = useState('')
 	const [select, setSelect] = useState([])
 	const [urllist, setUrls] = useState([])
+	const [fileList, setFileList] = useState([])
+	const [uploading, setUploading] = useState(false)
 
 	useEffect(() => {
 		if (urllist.length !== 0){
 			URLLIST.push(urllist[urllist.length-1])
 		}
-	}, [urllist]) 
+	}, [urllist])
 
 	// imgur upload props
-	const props = {
-		name: 'file',
-		action: 'https://api.imgur.com/3/image',
-		headers: {
-			Authorization: `Client-ID ${client_id}`
+	const upload_props = {
+		multiple: true,
+		onRemove: file => {
+			const index = fileList.indexOf(file)
+			const newFileList = fileList.slice();
+			newFileList.splice(index, 1);
+			setFileList(newFileList);
 		},
-		method: 'POST',
-		onChange: (info)=>{
-			if (info.file.status !== 'uploading') {
-				console.log(info.file, info.fileList);
-			}
-			if (info.file.status === 'done') {
-				message.success(`${info.file.name} file uploaded successfully`);
-			}
-			else if (info.file.status === 'error') {
-				message.error(`${info.file.name} file upload failed.`);
-			}
+		beforeUpload: (_, filelist) => {
+			setFileList([...fileList, ...filelist])
+			return false
 		},
-		customRequest: (info) => {
-			const data = new FormData();
-			data.append('image', info.file);
-			const config = { headers: info.headers };
-			axios.post(info.action, data, config).then((res) => {
-				const imgUrl = res.data.data.link
-				console.log(imgUrl)
-				setUrls([...urllist, imgUrl])
-				info.onSuccess(res.data, info.file)
-			}).catch((err) => {
-				info.onError(err, info.file)
-			})
-		}
+		defaultFileList: fileList,
+		fileList,
 	};
 
 	const selectTag = () => {
@@ -60,8 +45,33 @@ export const UPLOAD= () =>{
 		setTagValue('')
 	}
 
+	const handleUpload = async() => {
+		// upload
+		setUploading(true)
+		let errFileList = []
+		for (let index = 0; index < fileList.length; index++) {
+			const file = fileList[index];
+			const data = new FormData();
+			data.append('image', file);
+			const config = { headers: { Authorization: `Client-ID ${client_id}` } };
+			await axios.post('https://api.imgur.com/3/image', data, config).then((res) => {
+				const imgUrl = res.data.data.link
+				console.log(imgUrl)
+				setUrls([...urllist, imgUrl])
+				message.success(`${file.name} uploaded successfully`)
+			}).catch((err) => {
+				message.error(`${file.name} upload failed.`)
+				errFileList.push(file)
+				console.log(err)
+			})
+		}
+		setUploading(false)
+		setFileList(errFileList)
+	}
+
 	const handleCancel = () => {
 		// clear fileList
+		setFileList([])
 	}
 
 	const closeTags = (tag) => {
@@ -110,7 +120,7 @@ export const UPLOAD= () =>{
           		<div style={{marginTop:15}}></div>
           }
        		<Divider/>
-       		<Dragger {...props} style={{width: 350}}>
+       		<Dragger {...upload_props} style={{width: 350}}>
 				<p className="ant-upload-drag-icon">
 					<InboxOutlined />
 				</p>
@@ -124,10 +134,19 @@ export const UPLOAD= () =>{
 					onConfirm={handleCancel} 
 					title="Are you sure to restart? Your photos won't be added."
 					okText="Yes"
-					cancelText="No">
-					<Button style={{marginRight: 5, width: 75}}> Reset </Button>
+					cancelText="No"
+				>
+					<Button style={{marginRight: 5, width: 75}} disabled={fileList.length === 0}> Reset </Button>
 				</Popconfirm>
-				<Button type="primary" style={{marginRight: 5, width: 75}}> OK </Button>
+				<Button 
+					type="primary"
+					onClick={handleUpload}
+					disabled={fileList.length === 0}
+					loading={uploading}
+					style={{marginRight: 5, width: 75}}
+				>
+					OK
+				</Button>
 			</div>
   			</div>
 			</div>
