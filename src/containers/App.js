@@ -1,5 +1,5 @@
 import '../style.css';
-import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER} from '../components'
+import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD} from '../components'
 import React, { useEffect, useState } from 'react'
 import {login} from '../axios'
 import 'antd/dist/antd.css';
@@ -11,6 +11,7 @@ import {
   HeartTwoTone,
   HomeOutlined,
   UserOutlined,
+  UploadOutlined,
   KeyOutlined
 } from '@ant-design/icons';
 
@@ -63,6 +64,9 @@ function App() {
       case 'all':
         setMainDisplay(<ALL/>)
         break
+      case 'upload':
+        setMainDisplay(<UPLOAD/>)
+        break
       default:
         setMainDisplay(<HOMEPAGE/>)
         break
@@ -100,6 +104,10 @@ function App() {
           <Menu.Item key="3" icon={<PictureOutlined />}
           	onClick={()=>{setCurrentEvent("all");setSearchCollapsed(true);}}>
           	View All Albums
+          </Menu.Item>
+          <Menu.Item key="4" icon={<UploadOutlined />}
+            onClick={()=>{setCurrentEvent("upload");setSearchCollapsed(true);}}>
+            Upload photos
           </Menu.Item>
         </Menu>
       </Sider>)

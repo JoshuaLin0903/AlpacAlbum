@@ -3,7 +3,7 @@ import express from 'express'
 const router = express.Router()
 
 router.get('/login', (req, res) => {
-	const PASSWORD = "webprogramming66"
+	const PASSWORD = "6666"
 	const enter = req.query.password
 
 	if (enter === PASSWORD)
