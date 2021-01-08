@@ -61,7 +61,7 @@ export const UPLOAD= () =>{
 	}
 
 	const handleCancel = () => {
-
+		// clear fileList
 	}
 
 	const closeTags = (tag) => {
@@ -111,24 +111,24 @@ export const UPLOAD= () =>{
           }
        		<Divider/>
        		<Dragger {...props} style={{width: 350}}>
-    				<p className="ant-upload-drag-icon">
-      				<InboxOutlined />
-    				</p>
-    				<p className="ant-upload-text">Click or drag file to this area to upload</p>
-    				<p className="ant-upload-hint">
-      				Support for a single or multiple pictures.
-    				</p>
-  				</Dragger>
-  				<div style={{margin: 15}}>
-  					<Popconfirm placement="bottom" 
-              onConfirm={handleCancel} 
-              title="Are you sure to restart? Your photos won't be added."
-              okText="Yes"
-              cancelText="No">
- 							<Button style={{marginRight: 5, width: 75}}> Restart </Button>
- 						</Popconfirm>
-  					<Button type="primary" style={{marginRight: 5, width: 75}}> OK </Button>
-  				</div>
+				<p className="ant-upload-drag-icon">
+					<InboxOutlined />
+				</p>
+				<p className="ant-upload-text">Click or drag file to this area to upload</p>
+				<p className="ant-upload-hint">
+					Support for a single or multiple pictures.
+				</p>
+  			</Dragger>
+			<div style={{margin: 15}}>
+				<Popconfirm placement="bottom" 
+					onConfirm={handleCancel} 
+					title="Are you sure to restart? Your photos won't be added."
+					okText="Yes"
+					cancelText="No">
+					<Button style={{marginRight: 5, width: 75}}> Reset </Button>
+				</Popconfirm>
+				<Button type="primary" style={{marginRight: 5, width: 75}}> OK </Button>
+			</div>
   			</div>
 			</div>
 		</>
