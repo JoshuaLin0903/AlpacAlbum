@@ -9,9 +9,7 @@ const {Search} = Input;
 var chosen = []
 
 export const SEARCH_SIDER = ({taglist})=>{
-  console.log(taglist)
 	const [selectedTags, setSelectedTags] = useState(chosen);
-  const [search, setSearch] = useState('');
   const [showingTags, setShowingTags] = useState(taglist)
 
 	const chooseTags = (tag, checked) => {
@@ -31,19 +29,18 @@ export const SEARCH_SIDER = ({taglist})=>{
     setSelectedTags([])
   }
 
-  const filterTags = () => {
+  const filterTags = (search) => {
     const l = search.length
-    const _filter = taglist.filter((t) => 
-      (t.toLowerCase().substr(0,l) === search)
-    )
-    setShowingTags(_filter)
-  }
-
-  const handleSearchOnChange = (e) => {
-    if (e.target.value === ""){
+    if(l === 0){
       setShowingTags(taglist)
     }
-    setSearch(e.target.value.toLowerCase())
+    else{
+      const _filter = taglist.filter((t) => 
+        (t.toLowerCase().substr(0,l) === search.toLowerCase())
+      )
+      setShowingTags(_filter)
+    }
+    
   }
 
 	return(
@@ -53,16 +50,11 @@ export const SEARCH_SIDER = ({taglist})=>{
       	header={<><SearchOutlined/> Search by Tags</>}
       	key="1">
       	<div style={{margin: '5px'}}>
-	  			<Search 
+	  			<Input
 		 				allowClear 
+            prefix={<SearchOutlined/>}
 		 				style={{ width: 400, margin: '10px' }}
-            onChange={(e) => {handleSearchOnChange(e)}}
-            onSearch={filterTags}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                filterTags() 
-              }
-            }}/>
+            onChange={(e) => {filterTags(e.target.value)}}/>
 				</div>
         <div className="chosen_tag_block">
         	<Tag icon={<StarFilled />} color="volcano" style={{marginTop: "5px"}}>
