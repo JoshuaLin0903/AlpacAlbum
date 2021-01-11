@@ -17,8 +17,29 @@ import {
 
 const { Header, Content, Footer, Sider} = Layout;
 
-const tagsData = ["Family", "Alpaca", "Kpop", "GreenIsland"]
-const URLLIST = []
+const tagsData = [
+  {
+    name:"Alpaca",
+    url: ["https://i.imgur.com/bV5jJrH.jpg",
+          "https://i.imgur.com/ludVJvI.jpg"]
+  },
+  {
+    name:"Kpop",
+    url: ["https://i.imgur.com/c6if1kt.jpg",
+          "https://i.imgur.com/K8k0wLj.jpg", 
+          "https://i.imgur.com/ELXQPjH.jpg",
+          "https://i.imgur.com/wR6BQDg.jpg",
+          "https://i.imgur.com/VsoXPpZ.jpg"]
+  },
+  {
+    name:"Dogs",
+    url: ["https://i.imgur.com/jHn4PtZ.jpg",
+          "https://i.imgur.com/Mbvj7uh.jpg",
+          "https://i.imgur.com/wVfCR83.jpg",
+          "https://i.imgur.com/LVY7GMC.jpg"]
+  }
+]
+const tagName = tagsData.map((t) => {return t.name})
 
 function App() {
 	const [menuCollapsed, setMenuCollapsed] = useState(true);
@@ -65,10 +86,10 @@ function App() {
         setMainDisplay(<SEARCH/>)
         break
       case 'all':
-        setMainDisplay(<ALL URLLIST={URLLIST}/>)
+        setMainDisplay(<ALL tagsData={tagsData}/>)
         break
       case 'upload':
-        setMainDisplay(<UPLOAD URLLIST={URLLIST} taglist={tagsData}/>)
+        setMainDisplay(<UPLOAD tagsData={tagsData} taglist={tagName}/>)
         break
       default:
         setMainDisplay(<HOMEPAGE/>)
@@ -102,7 +123,7 @@ function App() {
             		Search by Tags
             	</Menu.Item>
               :
-             	<SEARCH_SIDER taglist={tagsData}/>
+             	<SEARCH_SIDER taglist={tagName}/>
             }
           <Menu.Item key="3" icon={<PictureOutlined />}
           	onClick={()=>{setCurrentEvent("all");setSearchCollapsed(true);}}>
@@ -147,7 +168,7 @@ function App() {
        	  {logIN ? 
             mainDisplay
             :(
-            <div className="main-display">
+            <div className="main-display-home">
               <div className="image-display">
                 <img src={alpaca}/>
               </div>

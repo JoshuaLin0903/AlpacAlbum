@@ -7,7 +7,7 @@ import axios from 'axios';
 const { Dragger } = Upload;
 const client_id = 'bcdefbeb2fcc6da';
 
-export const UPLOAD = ({URLLIST, taglist}) =>{
+export const UPLOAD = ({tagsData, taglist}) =>{
 	const [tagValue, setTagValue] = useState('')
 	const [select, setSelect] = useState([])
 	const [urllist, setUrls] = useState([])
@@ -16,8 +16,24 @@ export const UPLOAD = ({URLLIST, taglist}) =>{
 	const [uploading, setUploading] = useState(false)
 
 	useEffect(() => {
+		//upload tagsData
 		if (urllist.length !== 0){
-			URLLIST.push(urllist[urllist.length-1])
+			for (let i = 0; i < select.length; i ++){
+				var count = 0
+				for (let j = 0; j < tagsData.length; j++){
+					if (tagsData[j].name === select[i]){
+						tagsData[j].url = tagsData[j].url.concat(urllist)
+						break
+					}
+					else {count++}
+				}
+				if (count === tagsData.length){
+					tagsData.push({
+						name: select[i],
+						url: urllist
+					})
+				}
+			}
 		}
 	}, [urllist])
 
@@ -40,8 +56,14 @@ export const UPLOAD = ({URLLIST, taglist}) =>{
 
 	const selectTag = () => {
 		var buf = select
-		buf.push(tagValue)
-		setSelect(buf)
+		if (buf.indexOf(tagValue) === -1 && tagValue !== ''){
+			buf.push(tagValue)
+			setSelect(buf)
+		}
+		else if (buf.indexOf(tagValue) !== -1){
+			const str = '"'+ tagValue + '" has already been selected.'
+			message.info(str)
+		}
 		setTagValue('')
 	}
 
@@ -67,6 +89,7 @@ export const UPLOAD = ({URLLIST, taglist}) =>{
 		}
 		setUploading(false)
 		setFileList(errFileList)
+		setSelect([])
 	}
 
 	const handleCancel = () => {
@@ -90,7 +113,7 @@ export const UPLOAD = ({URLLIST, taglist}) =>{
 					<RocketTwoTone twoToneColor="#eb2f96" /> Upload new photos here!
 				</Breadcrumb.Item>
 			</Breadcrumb>
-			<div className="main-display" style={{minHeight: 535}}>
+			<div className="main-display-cen">
 				<div style={{width: 350, textAlign:"center"}}>
 					<h1 style={{fontSize: 35, marginBottom:25, color:"#00008B"}}> Upload to ... </h1>
 					<AutoComplete

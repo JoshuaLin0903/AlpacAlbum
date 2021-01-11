@@ -1,27 +1,34 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import '../style.css'
-import {Breadcrumb} from 'antd';
-import {PictureTwoTone} from '@ant-design/icons';
+import {Breadcrumb, Divider, Button} from 'antd';
+import {PictureTwoTone, RollbackOutlined} from '@ant-design/icons';
+import {PREVIEW, CONTENT} from './Album'
 
-export const ALL = ({URLLIST}) =>{
-	console.log(URLLIST)
+export const ALL = ({tagsData}) =>{
+	const [state, setState] = useState('preview')
+	const [choose, setChoose] = useState('')
+
 	return(
 		<>
 			<Breadcrumb style={{margin: "21px 0"}}>
 				<Breadcrumb.Item style={{color:"gray"}}>
-					<PictureTwoTone twoToneColor="#9932CC"/> Choose an album to view!
+					<PictureTwoTone twoToneColor="#9932CC"/>
+					{(state === 'preview')?
+						<> Choose an album to view!</>
+						:
+						<> Current Album : {choose} <Button icon={<RollbackOutlined />} size="small" onClick={()=>{setState('preview')}}/> </>
+					}
 				</Breadcrumb.Item>
 			</Breadcrumb>
 
-			<div className="main-display-all">
-				{URLLIST.length === 0 ? (
-					<p>No photos ...</p>
-				):(
-					URLLIST.map((url, i) => {
-						return (<p key={i}><a target="_blank" rel="noopener noreferrer" href={url}>image {i}</a></p>)
-					})
-				)}
-			</div>
+			<div className="main-display-left">
+				{(state === 'preview') ? 
+					(tagsData.map((td) => {
+						return (<PREVIEW onChoose={() => {setState('content');setChoose(td.name)}} data={td}/>)})
+					):
+					<CONTENT tagsData={tagsData} choose={choose}/>
+				}
+			</div>			
 		</>
 	)
 }
