@@ -15,31 +15,11 @@ import {
   KeyOutlined
 } from '@ant-design/icons';
 
+import {imgData} from '../data'
+
 const { Header, Content, Footer, Sider} = Layout;
 
-const tagsData = [
-  {
-    name:"Alpaca",
-    url: ["https://i.imgur.com/bV5jJrH.jpg",
-          "https://i.imgur.com/ludVJvI.jpg"]
-  },
-  {
-    name:"Kpop",
-    url: ["https://i.imgur.com/c6if1kt.jpg",
-          "https://i.imgur.com/K8k0wLj.jpg", 
-          "https://i.imgur.com/ELXQPjH.jpg",
-          "https://i.imgur.com/wR6BQDg.jpg",
-          "https://i.imgur.com/VsoXPpZ.jpg"]
-  },
-  {
-    name:"Dogs",
-    url: ["https://i.imgur.com/jHn4PtZ.jpg",
-          "https://i.imgur.com/Mbvj7uh.jpg",
-          "https://i.imgur.com/wVfCR83.jpg",
-          "https://i.imgur.com/LVY7GMC.jpg"]
-  }
-]
-const tagName = tagsData.map((t) => {return t.name})
+const tagName = ["Alpaca", "Dogs", "Kpop"]
 
 function App() {
 	const [menuCollapsed, setMenuCollapsed] = useState(true);
@@ -86,10 +66,10 @@ function App() {
         setMainDisplay(<SEARCH/>)
         break
       case 'all':
-        setMainDisplay(<ALL tagsData={tagsData}/>)
+        setMainDisplay(<ALL imgData={imgData} taglist={tagName}/>)
         break
       case 'upload':
-        setMainDisplay(<UPLOAD tagsData={tagsData} taglist={tagName}/>)
+        setMainDisplay(<UPLOAD imgData={imgData} taglist={tagName} user={username}/>)
         break
       default:
         setMainDisplay(<HOMEPAGE/>)

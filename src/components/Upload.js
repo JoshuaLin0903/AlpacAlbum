@@ -7,7 +7,7 @@ import axios from 'axios';
 const { Dragger } = Upload;
 const client_id = 'bcdefbeb2fcc6da';
 
-export const UPLOAD = ({tagsData, taglist}) =>{
+export const UPLOAD = ({imgData, taglist, user}) =>{
 	const [tagValue, setTagValue] = useState('')
 	const [select, setSelect] = useState([])
 	const [urllist, setUrls] = useState([])
@@ -15,25 +15,25 @@ export const UPLOAD = ({tagsData, taglist}) =>{
 	const [fileList, setFileList] = useState([])
 	const [uploading, setUploading] = useState(false)
 
+	const Today = new Date()
+	const today = Today.getFullYear() +'/' + (Today.getMonth()+1) + '/' + Today.getDate()
+
 	useEffect(() => {
-		//upload tagsData
+		//updata imgData
 		if (urllist.length !== 0){
-			for (let i = 0; i < select.length; i ++){
-				var count = 0
-				for (let j = 0; j < tagsData.length; j++){
-					if (tagsData[j].name === select[i]){
-						tagsData[j].url = tagsData[j].url.concat(urllist)
-						break
-					}
-					else {count++}
-				}
-				if (count === tagsData.length){
-					tagsData.push({
-						name: select[i],
-						url: urllist
-					})
-				}
-			}
+			var s = ['All']
+			s = s.concat(select)
+			urllist.forEach((u) => {
+				imgData.push({
+					url: u,
+					tags: s,
+					author: user,
+					data: today,
+					msg: []
+				})
+			})
+			const new_tag = select.filter((t) => (taglist.indexOf(t) === -1))
+			new_tag.forEach((t) => {taglist.push(t)})
 		}
 	}, [urllist])
 

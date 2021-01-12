@@ -4,9 +4,12 @@ import {Breadcrumb, Divider, Button} from 'antd';
 import {PictureTwoTone, RollbackOutlined} from '@ant-design/icons';
 import {PREVIEW, CONTENT} from './Album'
 
-export const ALL = ({tagsData}) =>{
+export const ALL = ({imgData, taglist}) =>{
 	const [state, setState] = useState('preview')
 	const [choose, setChoose] = useState('')
+
+	var taglist_ad = ['All']
+	taglist_ad = taglist_ad.concat(taglist)
 
 	return(
 		<>
@@ -23,10 +26,12 @@ export const ALL = ({tagsData}) =>{
 
 			<div className="main-display-left">
 				{(state === 'preview') ? 
-					(tagsData.map((td) => {
-						return (<PREVIEW onChoose={() => {setState('content');setChoose(td.name)}} data={td}/>)})
+					(taglist_ad.map((td) => {
+						const cor_img = imgData.filter((im) => (im.tags.indexOf(td) !== -1))
+						const cor_data = cor_img.map((im) => {return(im.url)})
+						return (<PREVIEW onChoose={() => {setState('content');setChoose(td)}} data={cor_data} tag={td}/>)})
 					):
-					<CONTENT tagsData={tagsData} choose={choose}/>
+					<CONTENT imgData={imgData} choose={choose}/>
 				}
 			</div>			
 		</>
