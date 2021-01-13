@@ -21,6 +21,12 @@ import {
   USER_LOGOUT,
   USER_SUBSCRIPTION
 } from '../graphql/users'
+import {
+  IMAGE_QUERY
+} from '../graphql/images'
+import {
+  TAG_ALL
+} from '../graphql/tags'
 
 // temp imports
 import {imgData} from '../data'
@@ -40,7 +46,8 @@ function App() {
 
   const [login] = useMutation(USER_LOGIN)
   const [logout] = useMutation(USER_LOGOUT)
-  const {_, error, data: currentUser, subscribeToMore} = useQuery(USER_GET)
+  const {loading: UserLoading, data: currentUser, subscribeToMore} = useQuery(USER_GET)
+  const {loading: tagLoading, data: tagData} = useQuery(TAG_ALL)
 
   const handleLogIn = async () => {
     if (username === '' || password === ''){
@@ -89,10 +96,10 @@ function App() {
         setMainDisplay(<SEARCH/>)
         break
       case 'all':
-        setMainDisplay(<ALL imgData={imgData} taglist={tagName}/>)
+        setMainDisplay(<ALL imgData={imgData} taglist={tagLoading ? [] : tagData.tags}/>)
         break
       case 'upload':
-        setMainDisplay(<UPLOAD imgData={imgData} taglist={tagName} user={username}/>)
+        setMainDisplay(<UPLOAD taglist={tagLoading ? [] : tagData.tags} user={UserLoading?'':currentUser.getUser.name}/>)
         break
       default:
         setMainDisplay(<HOMEPAGE/>)
@@ -147,7 +154,7 @@ function App() {
             		Search by Tags
             	</Menu.Item>
               :
-             	<SEARCH_SIDER taglist={tagName}/>
+             	<SEARCH_SIDER taglist={tagLoading ? [] : tagData.tags}/>
             }
           <Menu.Item key="3" icon={<PictureOutlined />}
           	onClick={()=>{setCurrentEvent("all");setSearchCollapsed(true);}}>
@@ -168,7 +175,7 @@ function App() {
             <div className="user">
               <div>
                 <Avatar icon={<UserOutlined/>} style={{marginRight: 8}}/>
-                {username}
+                {UserLoading ? '' : currentUser.getUser.name}
               </div>
               <div>
                 <Popconfirm placement="bottom" 
@@ -189,34 +196,35 @@ function App() {
           <></>}
       	</Header>
         <Content style={{ margin: '0 16px' }}>
-       	  {logIN ? 
-            mainDisplay
-            :(
-            <div className="main-display-home">
-              <div className="image-display">
-                <img src={alpaca}/>
+          {UserLoading ? '' :
+            logIN ? 
+              mainDisplay
+              :(
+              <div className="main-display-home">
+                <div className="image-display">
+                  <img src={alpaca}/>
+                </div>
+                <Input 
+                  placeholder="Enter your username" 
+                  prefix={<UserOutlined/>} 
+                  style={{width: 250, margin:5}}
+                  onChange={(e) => setUserName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if(e.key === 'Enter') {handleLogIn()}
+                  }}/>
+                <Input.Password placeholder="Enter your password"
+                  prefix={<KeyOutlined />}
+                  style={{width:250, margin:5}}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => {
+                    if(e.key === 'Enter') {handleLogIn()}
+                  }}/>
+                <Button type="primary" 
+                  style={{margin:5}} 
+                  onClick={handleLogIn} > 
+                  Login
+              </Button>
               </div>
-              <Input 
-                placeholder="Enter your username" 
-                prefix={<UserOutlined/>} 
-                style={{width: 250, margin:5}}
-                onChange={(e) => setUserName(e.target.value)}
-                onKeyDown={(e) => {
-                  if(e.key === 'Enter') {handleLogIn()}
-                }}/>
-              <Input.Password placeholder="Enter your password"
-                prefix={<KeyOutlined />}
-                style={{width:250, margin:5}}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => {
-                  if(e.key === 'Enter') {handleLogIn()}
-                }}/>
-              <Button type="primary" 
-                style={{margin:5}} 
-                onClick={handleLogIn} > 
-                Login
-            </Button>
-            </div>
           )}
         </Content>
         <Footer style={{ textAlign: 'center' }}> Footer</Footer>

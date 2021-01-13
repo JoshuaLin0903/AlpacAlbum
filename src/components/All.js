@@ -7,10 +7,7 @@ import {PREVIEW, CONTENT} from './Album'
 export const ALL = ({imgData, taglist}) =>{
 	const [state, setState] = useState('preview')
 	const [choose, setChoose] = useState('')
-
-	var taglist_ad = ['All']
-	taglist_ad = taglist_ad.concat(taglist)
-
+	
 	return(
 		<>
 			<Breadcrumb style={{margin: "21px 0"}}>
@@ -25,13 +22,17 @@ export const ALL = ({imgData, taglist}) =>{
 			</Breadcrumb>
 
 			<div className="main-display-left">
-				{(state === 'preview') ? 
-					(taglist_ad.map((td) => {
-						const cor_img = imgData.filter((im) => (im.tags.indexOf(td) !== -1))
-						const cor_data = cor_img.map((im) => {return(im.url)})
-						return (<PREVIEW onChoose={() => {setState('content');setChoose(td)}} data={cor_data} tag={td}/>)})
-					):
-					<CONTENT imgData={imgData} choose={choose}/>
+				{(state === 'preview') ?
+					(
+					<>
+					<PREVIEW onChoose={() => {setState('content');setChoose('All')}} tag={'All'} key={0}/>
+					{taglist.map((td, index) => {
+						return (<PREVIEW onChoose={() => {setState('content');setChoose(td)}} tag={td} key={index+1}/>)
+					})}
+					</>
+					)
+					: <CONTENT imgData={imgData} choose={choose}/>
+					
 				}
 			</div>			
 		</>

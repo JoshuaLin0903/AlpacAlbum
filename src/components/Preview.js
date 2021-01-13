@@ -1,37 +1,48 @@
 import React, {useState} from 'react'
+import { useQuery } from '@apollo/react-hooks'
 import '../style.css'
 import {Divider} from 'antd';
 
-export const PREVIEW = ({onChoose, data, tag}) => {
-	const l = data.length
-	const show = []
-	data.map((u,i) => {
-		if (i >= l-4){
-			const len = u.length
-			const new_u = u.substr(0,len-4)+'s.jpg'
-			show.push(<img className="img-preview" src={new_u}/>)
-		}
-	})
+import {
+	ALBUM_PREVIEW,
+	ALBUM_COUNT
+} from '../graphql/images'
 
-	for (let i = 0; i < 4-l; i++){
-		show.push(<img className="img-empty" src={"https://imgur.com/OKg01CIs.png"}/>)
+export const PREVIEW = ({onChoose, tag}) => {
+	const {loading, error, data: imgData} = useQuery(ALBUM_PREVIEW, { variables: {tag: (tag === 'All') ? null : tag}})
+	const {loading:countLoading, data: countData} = useQuery(ALBUM_COUNT, { variables: {tag: (tag === 'All') ? null : tag}})
+
+	const showImg = (idx) => {
+		if(idx >= imgData.albumPreview.length){
+			return <img className="img-empty" src={"https://imgur.com/OKg01CIs.png"}/>
+		}
+		const url = imgData.albumPreview[idx].url.slice(0, -4)+'s.jpg'
+		return <img className="img-preview" src={url}/>
 	}
 
 	return(
 		<div className="album" onClick={onChoose}>
-			<div className="four-img">
-				<div className="preview-row">
-					{show[0]}
-					{show[1]}
+			{loading ? (
+				<p> loading </p>
+			) : error ? (
+				<p> error </p>
+			) : 
+				<>
+				<div className="four-img">
+					<div className="preview-row">
+						{showImg(0)}
+						{showImg(1)}
+					</div>
+					<div className="preview-row">
+						{showImg(2)}
+						{showImg(3)}
+					</div>
 				</div>
-				<div className="preview-row">
-					{show[2]}
-					{show[3]}
-				</div>
-			</div>
-			<Divider style={{margin: 5}}/>
-			<h1 style={{marginLeft: 5, marginBottom: 0}}> {tag} </h1>
-			<div style={{marginLeft: 5}}>{l} photos</div>
+				<Divider style={{margin: 5}}/>
+				<h1 style={{marginLeft: 5, marginBottom: 0}}> {tag} </h1>
+				<div style={{marginLeft: 5}}>{countLoading?'':countData.albumCount} photos</div>
+				</>
+			}
 		</div>
 	)
 }

@@ -1,6 +1,9 @@
 type Query {
     getUser: User
     images(tags: [String!]): [Image!]
+    albumPreview(tag: String): [Image!]
+    albumCount(tag: String): Int!
+    tags(query: String): [String!]
 }
 
 type Mutation {
@@ -27,7 +30,6 @@ type Image {
     url: String!
     tags: [String!]
 }
-
 
 type User {
     _id: ID!

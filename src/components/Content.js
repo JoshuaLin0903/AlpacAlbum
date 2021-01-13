@@ -1,9 +1,14 @@
 import React, {useState} from 'react'
-import '../style.css'
+import { useQuery } from '@apollo/react-hooks'
 import {Modal, Avatar} from 'antd'
 import {
   UserOutlined,
 } from '@ant-design/icons';
+
+import '../style.css'
+import {
+	IMAGE_QUERY
+} from '../graphql/images'
 
 const Single_pic = ({url}) => {
 	const [visible, setVisible] = useState(false)
@@ -16,10 +21,10 @@ const Single_pic = ({url}) => {
 			<Modal
 				bodyStyle={{height: "80vh", display: "flex", flexDirection: "row"}}
 				centered
-        visible={visible}
-        onCancel={() => setVisible(false)}
-        width={"80vw"}
-      >
+				visible={visible}
+				onCancel={() => setVisible(false)}
+				width={"80vw"}
+      		>
       		<div className="img_big_box">
       			<img className="img_big" src={url}/>
       		</div>
@@ -29,25 +34,26 @@ const Single_pic = ({url}) => {
       				下面的cancel OK不要理他
       			</div>
       		</div>
-      	
 			</Modal>
 		</>
 	)
 }
 
-export const CONTENT = ({imgData, choose}) => {
-	//album content
-	const cor_img = imgData.filter((im) => (im.tags.indexOf(choose) !== -1))
-	const URL = cor_img.map((im) => {return(im.url)})
+export const CONTENT = ({choose}) => {
+	const taglist = (choose === 'All') ? null : [choose]
+	const {loading, error, data: imgData} = useQuery(IMAGE_QUERY, { variables: {tags: taglist}})
 
 	return(
 		<div>
-			{
-				URL.map((u) => {
-					const len = u.length
-					const new_u = u.substr(0,len-4)+'b.jpg'
-					return (<Single_pic url={u}/>)})
-			}
+			{loading ? (
+				<p></p>
+			) : error ? (
+				<p>error</p>
+			) : (
+				imgData.images.map((img, index) => {
+					return (<Single_pic url={img.url} key={index}/>)
+				})
+			)}
 		</div>
 	)
 }

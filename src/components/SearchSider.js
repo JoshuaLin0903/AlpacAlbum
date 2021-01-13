@@ -9,6 +9,8 @@ const {Search} = Input;
 var chosen = []
 
 export const SEARCH_SIDER = ({taglist})=>{
+
+  console.log(taglist)
 	const [selectedTags, setSelectedTags] = useState(chosen);
   const [showingTags, setShowingTags] = useState(taglist)
 
