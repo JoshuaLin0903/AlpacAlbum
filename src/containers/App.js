@@ -20,7 +20,7 @@ import {
   USER_LOGIN,
   USER_LOGOUT,
   USER_SUBSCRIPTION
-} from '../graphql'
+} from '../graphql/users'
 
 // temp imports
 import {imgData} from '../data'
@@ -168,7 +168,7 @@ function App() {
             <div className="user">
               <div>
                 <Avatar icon={<UserOutlined/>} style={{marginRight: 8}}/>
-                {currentUser.getUser ? currentUser.getUser.name : ''}
+                {username}
               </div>
               <div>
                 <Popconfirm placement="bottom" 

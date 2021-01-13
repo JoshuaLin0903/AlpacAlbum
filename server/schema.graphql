@@ -4,7 +4,7 @@ type Query {
 }
 
 type Mutation {
-    registarUser(name: String!, email: String!, password: String!): User
+    registerUser(name: String!, email: String!, password: String!): User
     loginUser(name: String, email: String, password: String!): User
     logoutUser: Boolean
     createImage(data: ImageInput!): Image
@@ -27,6 +27,7 @@ type Image {
     url: String!
     tags: [String!]
 }
+
 
 type User {
     _id: ID!

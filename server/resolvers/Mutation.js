@@ -6,7 +6,7 @@ const Image = require('../models/image')
 const User = require('../models/user')
 
 const Mutation = {
-    registarUser: async(_, args) => {
+    registerUser: async(_, args) => {
         const hashedpassword = await bcrypt.hash(args.password, 10)
         args.password = hashedpassword
         const user = new User(args)

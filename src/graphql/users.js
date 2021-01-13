@@ -1,5 +1,15 @@
 import { gql } from 'apollo-boost'
 
+const USER_GET = gql`
+    query{
+        getUser{
+            _id
+            name
+            email
+        }
+    }
+`
+
 const USER_LOGIN = gql`
     mutation loginUser(
         $name: String
@@ -24,4 +34,17 @@ const USER_LOGOUT = gql `
     }
 `
 
-export { USER_LOGIN, USER_LOGOUT }
+const USER_SUBSCRIPTION = gql`
+  subscription {
+    user {
+      mutation
+      data {
+        _id
+        name
+        email
+      }
+    }
+  }
+`
+
+export { USER_GET, USER_LOGIN, USER_LOGOUT, USER_SUBSCRIPTION }
