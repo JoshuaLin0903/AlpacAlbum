@@ -23,7 +23,6 @@ import {
 } from '../graphql'
 
 // temp imports
-// import {login} from '../axios'
 import {imgData} from '../data'
 
 const { Header, Content, Footer, Sider} = Layout;
