@@ -9,6 +9,7 @@ import { getMainDefinition } from 'apollo-utilities'
 import './index.css';
 import App from './containers/App';
 import reportWebVitals from './reportWebVitals';
+import Home from './containers/Home';
 
 // Create an http link:
 const httpLink = new HttpLink({
@@ -44,7 +45,7 @@ const client = new ApolloClient({
 
 const wrappedApp = (
   <ApolloProvider client={client}>
-    <App />
+    <Home />
   </ApolloProvider>
 )
 

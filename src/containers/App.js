@@ -219,7 +219,10 @@ function App() {
             </div>
           )}
         </Content>
-        <Footer style={{ textAlign: 'center' }}> Footer</Footer>
+        <Footer style={{ textAlign: 'center' }}>
+           No a user yet?
+           <a href="/#/register">Click to register!</a>
+        </Footer>
       </Layout>
     </Layout>
   );
