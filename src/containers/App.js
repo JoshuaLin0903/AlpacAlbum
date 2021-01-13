@@ -1,9 +1,6 @@
-import '../style.css';
-import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD} from '../components'
 import React, { useEffect, useState } from 'react'
-import {login} from '../axios'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import 'antd/dist/antd.css';
-import alpaca from '../images/alpaca.png';
 import { Layout, Menu, message, Input, Button, Popconfirm, Avatar} from 'antd';
 import {
   SearchOutlined,
@@ -15,6 +12,18 @@ import {
   KeyOutlined
 } from '@ant-design/icons';
 
+import '../style.css';
+import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD} from '../components'
+import alpaca from '../images/alpaca.png';
+import {
+  USER_GET,
+  USER_LOGIN,
+  USER_LOGOUT,
+  USER_SUBSCRIPTION
+} from '../graphql'
+
+// temp imports
+// import {login} from '../axios'
 import {imgData} from '../data'
 
 const { Header, Content, Footer, Sider} = Layout;
@@ -30,23 +39,38 @@ function App() {
   const [username, setUserName] = useState('')
   const [password, setPassword]= useState('')
 
+  const [login] = useMutation(USER_LOGIN)
+  const [logout] = useMutation(USER_LOGOUT)
+  const {_, error, data: currentUser, subscribeToMore} = useQuery(USER_GET)
+
   const handleLogIn = async () => {
-    const msg = await login(password)
     if (username === '' || password === ''){
       message.error('Both username and password must be entered!')
     }
-    else if(msg === 'Wrong password')
-    {
-      message.error('Wrong password!')
-    }
-    else if(msg === 'Correct password')
-    {
+    try{
+      const {data} = await login({variables: { name: username, password: password }})
+      console.log(data.loginUser)
       message.success('Successfully login!')
       setLogIN(true)
+    } catch(e){
+      console.log(e.message)
+      switch (e.message) {
+        case 'GraphQL error: User not found' :
+          message.error('User not found!')
+          break;
+        case 'GraphQL error: Invaild password!' :
+          message.error('Wrong password!')
+          break;
+        default:
+          message.error('ERROR')
+          break;
+      }
     }
+    console.log(currentUser)
   }
 
-  const handleLogOut = () =>{
+  const handleLogOut = async() =>{
+    await logout()
     window.location.reload()
   }
 
@@ -76,6 +100,27 @@ function App() {
         break
     }
   }, [currentEvent])
+
+  useEffect(() => {
+    subscribeToMore({
+      document: USER_SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev
+        return {
+          prev,
+          getUser: subscriptionData.data.user.data
+        }
+      }
+    })
+  }, [subscribeToMore])
+
+  useEffect(()=>{
+    if(currentUser){
+      if(currentUser.getUser){
+        setLogIN(true)
+      }
+    }
+  }, [currentUser])
 
   return (
    	<Layout style={{ minHeight: '100vh'}}>
@@ -124,7 +169,7 @@ function App() {
             <div className="user">
               <div>
                 <Avatar icon={<UserOutlined/>} style={{marginRight: 8}}/>
-                {username}
+                {currentUser.getUser ? currentUser.getUser.name : ''}
               </div>
               <div>
                 <Popconfirm placement="bottom" 
