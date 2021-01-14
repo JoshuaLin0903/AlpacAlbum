@@ -10,13 +10,22 @@ const Query = {
         return await User.findOne({_id: req.session.userId})
     },
     images: async(_, args) => {
+        if(!args.num){
+            if(!args.tags){
+                return await Image.find().sort({$natural: -1})
+            }
+            if(args.tags.length === 0){
+                throw new Error("Empty tags array.")
+            }
+            return await Image.find({ tags: { $all: args.tags } }).sort({$natural: -1})
+        }
         if(!args.tags){
-            return await Image.find().sort({$natural: -1})
+            return await Image.find().sort({$natural: -1}).limit(args.num)
         }
         if(args.tags.length === 0){
             throw new Error("Empty tags array.")
         }
-        return await Image.find({ tags: { $all: args.tags } }).sort({$natural: -1})
+        return await Image.find({ tags: { $all: args.tags } }).sort({$natural: -1}).limit(args.num)
     },
     albumPreview: async(_, args) => {
         if(!args.tag){

@@ -8,9 +8,17 @@ import {
 	ALBUM_COUNT
 } from '../graphql/images'
 
-export const PREVIEW = ({onChoose, tag}) => {
-	const {loading, error, data: imgData} = useQuery(ALBUM_PREVIEW, { variables: {tag: (tag === 'All') ? null : tag}})
-	const {loading:countLoading, data: countData} = useQuery(ALBUM_COUNT, { variables: {tag: (tag === 'All') ? null : tag}})
+export const PREVIEW = ({onChoose, tag, upd}) => {
+	const {loading, error, data: imgData, refetch: previewRefetch} = useQuery(ALBUM_PREVIEW, { variables: {tag: (tag === 'All') ? null : tag}})
+	const {loading:countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT, { variables: {tag: (tag === 'All') ? null : tag}})
+
+	useEffect(() => {
+		if(upd){
+			console.log('need preview refetch')
+			previewRefetch()
+			countRefetch()
+		}
+	}, [upd])
 
 	const showImg = (idx) => {
 		if(idx >= imgData.albumPreview.length){

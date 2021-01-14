@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useLazyQuery } from '@apollo/react-hooks'
 import {Modal, Avatar} from 'antd'
 import {
   UserOutlined,
@@ -8,7 +8,7 @@ import {
 import '../style.css'
 import {
 	IMAGE_QUERY,
-	ALBUM_SUBSCRIPTION
+	ALBUM_COUNT
 } from '../graphql/images'
 
 const Single_pic = ({url}) => {
@@ -42,23 +42,35 @@ const Single_pic = ({url}) => {
 
 export const CONTENT = ({choose}) => {
 	const taglist = (choose === 'All') ? null : [choose]
-	const {loading, error, data: imgData, subscribeToMore} = useQuery(IMAGE_QUERY, { variables: {tags: taglist}})
+	const {loading, error, data: imgData, updateQuery} = useQuery(IMAGE_QUERY, { variables: {tags: taglist} })
+	const {loading: countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT, { variables: {tag: (choose === 'All') ? null : choose}})
+	const [fetchImg, {loading: fetchLoading, data: fetchImgData}] = useLazyQuery(IMAGE_QUERY)
 
-	useEffect(() => {
-		subscribeToMore({
-			document: ALBUM_SUBSCRIPTION,
-			variables: {tag: (choose === 'All') ? null : choose},
-			updateQuery: (prev, {subscriptionData}) => {
-				if(!subscriptionData.data) return prev
-				const newImg = subscriptionData.data.album.data
-				console.log(newImg)
-				return {
-					...prev,
-					images: [...prev.images, newImg]
+	useEffect(()=>{
+		countRefetch()
+	}, [])
+
+	useEffect(()=>{
+		if(imgData && countData && !loading && !countLoading){
+			if(imgData.images && countData.albumCount){
+				if(imgData.images.length < countData.albumCount){
+					console.log(`need update: local(${imgData.images.length}), server(${countData.albumCount})`)
+					const fetchNum = countData.albumCount - imgData.images.length
+					fetchImg({variables: {tags: taglist, num: fetchNum}})
 				}
 			}
-		})
-	}, [subscribeToMore, choose])
+		}
+	}, [imgData, countData])
+
+	useEffect(() => {
+		if(fetchImgData && !fetchLoading){
+			if(fetchImgData.images){
+				updateQuery(prev => ({
+					images: [...fetchImgData.images, ...prev.images]
+				}))
+			}
+		}
+	}, [fetchImgData])
 
 	return(
 		<div>

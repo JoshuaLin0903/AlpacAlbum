@@ -1,15 +1,15 @@
+const { withFilter } = require('graphql-yoga');
+
 const Subscription = {
-    user: {
-        subscribe: async(_, __, { pubsub }) => {
-            return await pubsub.asyncIterator('user')
-        }
-    },
     album:{
-        subscribe: async(_, args, { pubsub }) => {
-            if(!args.tag) return await pubsub.asyncIterator('album')
-            return await pubsub.asyncIterator(`album ${args.tag}`)
-        }
+        subscribe: withFilter((_, __, {pubsub}) => pubsub.asyncIterator(['album']),
+            (payload, variables) => {
+                console.log("subscribe")
+                if(!variables.tag) return true
+                return payload.album.tags.includes(variables.tag)  
+            }
+        )
     }
-  }
-  
-  export { Subscription as default }
+}
+
+export { Subscription as default }

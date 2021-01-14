@@ -34,17 +34,4 @@ const USER_LOGOUT = gql `
     }
 `
 
-const USER_SUBSCRIPTION = gql`
-  subscription {
-    user {
-      mutation
-      data {
-        _id
-        name
-        email
-      }
-    }
-  }
-`
-
-export { USER_GET, USER_LOGIN, USER_LOGOUT, USER_SUBSCRIPTION }
+export { USER_GET, USER_LOGIN, USER_LOGOUT }

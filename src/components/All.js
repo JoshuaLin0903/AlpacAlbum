@@ -1,12 +1,20 @@
 import React, {useState, useEffect} from 'react'
-import '../style.css'
 import {Breadcrumb, Divider, Button} from 'antd';
 import {PictureTwoTone, RollbackOutlined} from '@ant-design/icons';
+
+import '../style.css'
 import {PREVIEW, CONTENT} from './Album'
 
-export const ALL = ({imgData, taglist}) =>{
+export const ALL = ({taglist, updPreview}) =>{
 	const [state, setState] = useState('preview')
 	const [choose, setChoose] = useState('')
+	const [upd, setUpd] = useState(false)
+
+	useEffect(()=>{
+		if(updPreview){
+			setUpd(true)
+		}
+	}, [])
 	
 	return(
 		<>
@@ -16,7 +24,7 @@ export const ALL = ({imgData, taglist}) =>{
 					{(state === 'preview')?
 						<> Choose an album to view!</>
 						:
-						<> Current Album : {choose} <Button icon={<RollbackOutlined />} size="small" onClick={()=>{setState('preview')}}/> </>
+						<> Current Album : {choose} <Button icon={<RollbackOutlined />} size="small" onClick={()=>{setState('preview');}}/> </>
 					}
 				</Breadcrumb.Item>
 			</Breadcrumb>
@@ -25,13 +33,19 @@ export const ALL = ({imgData, taglist}) =>{
 				{(state === 'preview') ?
 					(
 					<>
-					<PREVIEW onChoose={() => {setState('content');setChoose('All')}} tag={'All'} key={0}/>
+					<PREVIEW 
+						onChoose={() => {setState('content'); setChoose('All'); setUpd(false)}}
+						tag={'All'} key={0} upd={updPreview && upd}
+					/>
 					{taglist.map((td, index) => {
-						return (<PREVIEW onChoose={() => {setState('content');setChoose(td)}} tag={td} key={index+1}/>)
+						return (<PREVIEW 
+							onChoose={() => {setState('content'); setChoose(td); setUpd(false)}} 
+							tag={td} key={index+1} upd={updPreview && upd}
+						/>)
 					})}
 					</>
 					)
-					: <CONTENT imgData={imgData} choose={choose}/>
+					: <CONTENT choose={choose}/>
 					
 				}
 			</div>			

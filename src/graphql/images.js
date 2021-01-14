@@ -1,8 +1,8 @@
 import { gql } from 'apollo-boost'
 
 const IMAGE_QUERY = gql`
-    query($tags: [String!]){
-        images(tags: $tags){
+    query($tags: [String!], $num: Int){
+        images(tags: $tags, num: $num){
             url
             tags
         }
@@ -41,11 +41,8 @@ const ALBUM_COUNT = gql`
 const ALBUM_SUBSCRIPTION = gql`
     subscription($tag: String) {
         album(tag: $tag) {
-            mutation
-            data {
-                url
-                tags
-            }
+            url
+            tags
         }
     }
 `

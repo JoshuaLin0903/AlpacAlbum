@@ -10,10 +10,9 @@ import { IMAGE_CREATE } from '../graphql/images'
 const { Dragger } = Upload;
 const client_id = 'bcdefbeb2fcc6da';
 
-export const UPLOAD = ({taglist, user}) =>{
+export const UPLOAD = ({taglist, user, AppWhenUpload}) =>{
 	const [tagValue, setTagValue] = useState('')
 	const [select, setSelect] = useState([])
-	const [urllist, setUrls] = useState([])
 	const [open, setOpen] = useState(false)
 	const [fileList, setFileList] = useState([])
 	const [uploading, setUploading] = useState(false)
@@ -70,7 +69,6 @@ export const UPLOAD = ({taglist, user}) =>{
 					tags: select
 				}})
 				console.log(data)
-				setUrls([...urllist, imgUrl])
 				message.success(`${file.name} uploaded successfully`)
 			}).catch((err) => {
 				message.error(`${file.name} upload failed.`)
@@ -78,6 +76,7 @@ export const UPLOAD = ({taglist, user}) =>{
 				console.log(err)
 			})
 		}
+		await AppWhenUpload()
 		setUploading(false)
 		setFileList(errFileList)
 		setSelect([])

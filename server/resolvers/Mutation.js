@@ -14,7 +14,7 @@ const Mutation = {
 
         return user
     },
-    loginUser: async(_, args, {req, pubsub}) => {
+    loginUser: async(_, args, {req}) => {
         if(!args.name && !args.email){
             throw new Error ('Should have either name or email to login.')
         }
@@ -35,28 +35,14 @@ const Mutation = {
             throw new Error ('Invaild password!')
         }
         req.session.userId = user._id
-
-        await pubsub.publish('user', {
-            user: {
-                mutation: 'LOGIN',
-                data: user
-            }
-        })
         
         return user
     },
-    logoutUser: async(_, __, {req, pubsub}) => {
+    logoutUser: async(_, __, {req}) => {
         if(!req.session.userId){
             return false
         }
         req.session.destroy()
-
-        await pubsub.publish('user', {
-            user: {
-                mutation: 'LOGOUT',
-                data: null
-            }
-        })
 
         return true
     },
@@ -65,23 +51,6 @@ const Mutation = {
         args.data.tags = newTags
         const img = new Image(args.data)
         await img.save()
-
-        for (let index = 0; index < newTags.length; index++) {
-            const tag = newTags[index];
-            console.log(tag)
-            await pubsub.publish(`album ${tag}`, {
-                album: {
-                    mutation: 'CREATED',
-                    data: img
-                }
-            })
-        }
-        await pubsub.publish('album', {
-            album: {
-                mutation: 'CREATED',
-                data: img
-            }
-        })
 
         return img
     },

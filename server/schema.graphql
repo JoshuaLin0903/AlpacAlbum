@@ -1,6 +1,6 @@
 type Query {
     getUser: User
-    images(tags: [String!]): [Image!]
+    images(tags: [String!], num: Int): [Image!]
     albumPreview(tag: String): [Image!]
     albumCount(tag: String): Int!
     tags(query: String): [String!]
@@ -17,8 +17,7 @@ type Mutation {
 }
 
 type Subscription {
-    user: UserSubscriptionPayload!
-    album(tag: String): TagSubscriptionPayload!
+    album(tag: String): Image!
 }
 
 input ImageInput {
@@ -46,14 +45,4 @@ enum MutationType{
     DELETE
     LOGIN
     LOGOUT
-}
-
-type UserSubscriptionPayload {
-    mutation: MutationType!
-    data: User
-}
-
-type TagSubscriptionPayload {
-    mutation: MutationType!
-    data: Image!
 }

@@ -18,36 +18,29 @@ import alpaca from '../images/alpaca.png';
 import {
   USER_GET,
   USER_LOGIN,
-  USER_LOGOUT,
-  USER_SUBSCRIPTION
+  USER_LOGOUT
 } from '../graphql/users'
-import {
-  IMAGE_QUERY
-} from '../graphql/images'
 import {
   TAG_ALL
 } from '../graphql/tags'
 
-// temp imports
-import {imgData} from '../data'
-
 const { Header, Content, Footer, Sider} = Layout;
-
-const tagName = ["Alpaca", "Dogs", "Kpop"]
 
 function App() {
 	const [menuCollapsed, setMenuCollapsed] = useState(true);
-	const [searchCollapsed, setSearchCollapsed] = useState(true);
+  const [searchCollapsed, setSearchCollapsed] = useState(true);
+  const [lastEvent, setLastEvent] = useState('')
 	const [currentEvent, setCurrentEvent] = useState('home')
   const [mainDisplay, setMainDisplay] = useState(<HOMEPAGE/>)
   const [logIN, setLogIN] = useState(false)
   const [username, setUserName] = useState('')
   const [password, setPassword]= useState('')
+  const [updPreview, setUpdPreview] = useState(false)
 
   const [login] = useMutation(USER_LOGIN)
   const [logout] = useMutation(USER_LOGOUT)
-  const {loading: UserLoading, data: currentUser, subscribeToMore} = useQuery(USER_GET)
-  const {loading: tagLoading, data: tagData} = useQuery(TAG_ALL)
+  const {loading: UserLoading, data: currentUser, refetch: userRefetch} = useQuery(USER_GET)
+  const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
 
   const handleLogIn = async () => {
     if (username === '' || password === ''){
@@ -57,6 +50,7 @@ function App() {
       const {data} = await login({variables: { name: username, password: password }})
       console.log(data.loginUser)
       message.success('Successfully login!')
+      await userRefetch();
       setLogIN(true)
     } catch(e){
       console.log(e.message)
@@ -87,6 +81,12 @@ function App() {
   	setMenuCollapsed(!menuCollapsed);
   }
 
+  // trigger when upload
+  const whenUpload = async() => {
+    setUpdPreview(true);
+    await tagRefetch();
+  }
+
   useEffect(()=>{
     switch(currentEvent){
       case 'home':
@@ -96,10 +96,19 @@ function App() {
         setMainDisplay(<SEARCH/>)
         break
       case 'all':
-        setMainDisplay(<ALL imgData={imgData} taglist={tagLoading ? [] : tagData.tags}/>)
+        setMainDisplay(
+        <ALL 
+          taglist={tagLoading ? [] : tagData.tags}
+          updPreview={updPreview}
+        />)
         break
       case 'upload':
-        setMainDisplay(<UPLOAD taglist={tagLoading ? [] : tagData.tags} user={UserLoading?'':currentUser.getUser.name}/>)
+        setMainDisplay(
+        <UPLOAD 
+          taglist={tagLoading ? [] : tagData.tags} 
+          user={UserLoading?'':currentUser.getUser.name}
+          AppWhenUpload={whenUpload}
+        />)
         break
       default:
         setMainDisplay(<HOMEPAGE/>)
@@ -107,19 +116,18 @@ function App() {
     }
   }, [currentEvent])
 
-  useEffect(() => {
-    subscribeToMore({
-      document: USER_SUBSCRIPTION,
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev
-        return {
-          prev,
-          getUser: subscriptionData.data.user.data
-        }
+  // handle actions on event change
+  useEffect(()=>{
+    console.log(`Event Change: ${lastEvent} to ${currentEvent}`)
+    if(lastEvent === 'all'){
+      if(updPreview){
+        setUpdPreview(false)
       }
-    })
-  }, [subscribeToMore])
+    }
 
+  }, [currentEvent])
+
+  // auto login
   useEffect(()=>{
     if(currentUser){
       if(currentUser.getUser){
@@ -143,25 +151,25 @@ function App() {
         <Menu theme="dark" mode="inline" style={{ textAlign: 'center' }} defaultSelectedKeys={['1']}>
           <Menu.Item key="1" 
            	icon={<HomeOutlined />} 
-           	onClick={()=>{setCurrentEvent("home");setSearchCollapsed(true);}}>
+           	onClick={()=>{setLastEvent(currentEvent);setCurrentEvent("home");setSearchCollapsed(true);}}>
            	Home Page
           </Menu.Item>
           	{searchCollapsed?
             	<Menu.Item 
            	   	key="2" 
            	   	icon={<SearchOutlined/>} 
-           	   	onClick={() => {setSearchCollapsed(false);setCurrentEvent("search");setMenuCollapsed(false);}}>
+           	   	onClick={() => {setSearchCollapsed(false);setLastEvent(currentEvent);setCurrentEvent("search");setMenuCollapsed(false);}}>
             		Search by Tags
             	</Menu.Item>
               :
              	<SEARCH_SIDER taglist={tagLoading ? [] : tagData.tags}/>
             }
           <Menu.Item key="3" icon={<PictureOutlined />}
-          	onClick={()=>{setCurrentEvent("all");setSearchCollapsed(true);}}>
+          	onClick={()=>{setLastEvent(currentEvent);setCurrentEvent("all");setSearchCollapsed(true);}}>
           	View All Albums
           </Menu.Item>
           <Menu.Item key="4" icon={<UploadOutlined />}
-            onClick={()=>{setCurrentEvent("upload");setSearchCollapsed(true);}}>
+            onClick={()=>{setLastEvent(currentEvent);setCurrentEvent("upload");setSearchCollapsed(true);}}>
             Upload photos
           </Menu.Item>
         </Menu>
