@@ -36,7 +36,7 @@ const Mutation = {
         }
         req.session.userId = user._id
 
-        pubsub.publish('user', {
+        await pubsub.publish('user', {
             user: {
                 mutation: 'LOGIN',
                 data: user
@@ -51,7 +51,7 @@ const Mutation = {
         }
         req.session.destroy()
 
-        pubsub.publish('user', {
+        await pubsub.publish('user', {
             user: {
                 mutation: 'LOGOUT',
                 data: null
@@ -60,15 +60,32 @@ const Mutation = {
 
         return true
     },
-    createImage: async(_, args) => {
+    createImage: async(_, args, {pubsub}) => {
         const newTags = [...new Set(args.data.tags)]
         args.data.tags = newTags
         const img = new Image(args.data)
         await img.save()
 
+        for (let index = 0; index < newTags.length; index++) {
+            const tag = newTags[index];
+            console.log(tag)
+            await pubsub.publish(`album ${tag}`, {
+                album: {
+                    mutation: 'CREATED',
+                    data: img
+                }
+            })
+        }
+        await pubsub.publish('album', {
+            album: {
+                mutation: 'CREATED',
+                data: img
+            }
+        })
+
         return img
     },
-    deleteImage: async(_, args) => {
+    deleteImage: async(_, args, {pubsub}) => {
         if(!args.id){
             await Image.remove({ })
             throw new Error ('Delete all message')
@@ -79,7 +96,7 @@ const Mutation = {
         }
         return msg
     },
-    addImageTags: async(_, args) => {
+    addImageTags: async(_, args, {pubsub}) => {
         if(args.tags.length === 0){
             throw new Error("Empty tags array.")
         }
@@ -93,7 +110,7 @@ const Mutation = {
         }
         return img
     },
-    deleteImageTags: async(_, args) => {
+    deleteImageTags: async(_, args, {pubsub}) => {
         if(args.tags.length === 0){
             throw new Error("Empty tags array.")
         }

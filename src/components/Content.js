@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import {Modal, Avatar} from 'antd'
 import {
@@ -7,7 +7,8 @@ import {
 
 import '../style.css'
 import {
-	IMAGE_QUERY
+	IMAGE_QUERY,
+	ALBUM_SUBSCRIPTION
 } from '../graphql/images'
 
 const Single_pic = ({url}) => {
@@ -41,7 +42,23 @@ const Single_pic = ({url}) => {
 
 export const CONTENT = ({choose}) => {
 	const taglist = (choose === 'All') ? null : [choose]
-	const {loading, error, data: imgData} = useQuery(IMAGE_QUERY, { variables: {tags: taglist}})
+	const {loading, error, data: imgData, subscribeToMore} = useQuery(IMAGE_QUERY, { variables: {tags: taglist}})
+
+	useEffect(() => {
+		subscribeToMore({
+			document: ALBUM_SUBSCRIPTION,
+			variables: {tag: (choose === 'All') ? null : choose},
+			updateQuery: (prev, {subscriptionData}) => {
+				if(!subscriptionData.data) return prev
+				const newImg = subscriptionData.data.album.data
+				console.log(newImg)
+				return {
+					...prev,
+					images: [...prev.images, newImg]
+				}
+			}
+		})
+	}, [subscribeToMore, choose])
 
 	return(
 		<div>

@@ -26,9 +26,9 @@ const Query = {
     },
     albumCount: async(_, args) => {
         if(!args.tag){
-            return await Image.count()
+            return await Image.countDocuments()
         }
-        return await Image.find({tags: args.tag}).count()
+        return await Image.find({tags: args.tag}).countDocuments()
     },
     tags: async(_, args) => {
         if(!args.query){

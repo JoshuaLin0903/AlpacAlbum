@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect} from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import '../style.css'
 import {Divider} from 'antd';

@@ -18,6 +18,7 @@ type Mutation {
 
 type Subscription {
     user: UserSubscriptionPayload!
+    album(tag: String): TagSubscriptionPayload!
 }
 
 input ImageInput {
@@ -50,4 +51,9 @@ enum MutationType{
 type UserSubscriptionPayload {
     mutation: MutationType!
     data: User
+}
+
+type TagSubscriptionPayload {
+    mutation: MutationType!
+    data: Image!
 }

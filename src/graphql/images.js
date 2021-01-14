@@ -38,4 +38,16 @@ const ALBUM_COUNT = gql`
     }
 `
 
-export { IMAGE_CREATE, IMAGE_QUERY, ALBUM_PREVIEW, ALBUM_COUNT }
+const ALBUM_SUBSCRIPTION = gql`
+    subscription($tag: String) {
+        album(tag: $tag) {
+            mutation
+            data {
+                url
+                tags
+            }
+        }
+    }
+`
+
+export { IMAGE_CREATE, IMAGE_QUERY, ALBUM_PREVIEW, ALBUM_COUNT, ALBUM_SUBSCRIPTION }
