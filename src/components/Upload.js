@@ -28,7 +28,7 @@ export const UPLOAD = ({imgData, taglist, user}) =>{
 					url: u,
 					tags: s,
 					author: user,
-					data: today,
+					date: today,
 					msg: []
 				})
 			})

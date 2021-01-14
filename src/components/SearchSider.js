@@ -43,6 +43,11 @@ export const SEARCH_SIDER = ({taglist})=>{
     
   }
 
+  const handleConfirm = () => {
+    setSelectedTags([])
+    setShowingTags(taglist)
+  }
+
 	return(
 		<Collapse defaultActiveKey={['1']}>
       <Panel 
@@ -53,7 +58,7 @@ export const SEARCH_SIDER = ({taglist})=>{
 	  			<Input
 		 				allowClear 
             prefix={<SearchOutlined/>}
-		 				style={{ width: 400, margin: '10px' }}
+		 				style={{ width: "88%", margin: '10px' }}
             onChange={(e) => {filterTags(e.target.value)}}/>
 				</div>
         <div className="chosen_tag_block">
@@ -79,7 +84,8 @@ export const SEARCH_SIDER = ({taglist})=>{
                   style={{color:"#52c41a"}} 
                   icon={<CheckCircleTwoTone twoToneColor="#52c41a"/>}
                   shape="circle"
-                  type="dashed"/>
+                  type="dashed"
+                  onClick={handleConfirm}/>
               </Tooltip>
               <Tooltip title="Clear All" placement="bottom">
                 <Button size="small" 
