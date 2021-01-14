@@ -1,42 +1,27 @@
 import React, {useState, useEffect} from 'react';
-import '../style.css';
+import { useMutation } from '@apollo/react-hooks'
 import {Breadcrumb, Input, Upload, message, Tag, Divider, Button, Popconfirm, AutoComplete} from 'antd'
 import {RocketTwoTone, InboxOutlined} from '@ant-design/icons'
 import axios from 'axios';
 
+import '../style.css';
+import { IMAGE_CREATE } from '../graphql/images'
+
 const { Dragger } = Upload;
 const client_id = 'bcdefbeb2fcc6da';
 
-export const UPLOAD = ({imgData, taglist, user}) =>{
+export const UPLOAD = ({taglist, user, AppWhenUpload}) =>{
 	const [tagValue, setTagValue] = useState('')
 	const [select, setSelect] = useState([])
-	const [urllist, setUrls] = useState([])
 	const [open, setOpen] = useState(false)
 	const [fileList, setFileList] = useState([])
 	const [uploading, setUploading] = useState(false)
 
+	const [addImg] = useMutation(IMAGE_CREATE)
+
 	const Today = new Date()
 	const today = Today.getFullYear() +'/' + (Today.getMonth()+1) + '/' + Today.getDate()
-
-	useEffect(() => {
-		//updata imgData
-		if (urllist.length !== 0){
-			var s = ['All']
-			s = s.concat(select)
-			urllist.forEach((u) => {
-				imgData.push({
-					url: u,
-					tags: s,
-					author: user,
-					date: today,
-					msg: []
-				})
-			})
-			const new_tag = select.filter((t) => (taglist.indexOf(t) === -1))
-			new_tag.forEach((t) => {taglist.push(t)})
-		}
-	}, [urllist])
-
+	
 	// imgur upload props
 	const upload_props = {
 		multiple: true,
@@ -76,10 +61,14 @@ export const UPLOAD = ({imgData, taglist, user}) =>{
 			const data = new FormData();
 			data.append('image', file);
 			const config = { headers: { Authorization: `Client-ID ${client_id}` } };
-			await axios.post('https://api.imgur.com/3/image', data, config).then((res) => {
+			await axios.post('https://api.imgur.com/3/image', data, config).then(async(res) => {
 				const imgUrl = res.data.data.link
 				console.log(imgUrl)
-				setUrls([...urllist, imgUrl])
+				const {data} = await addImg({ variables: {
+					url: imgUrl,
+					tags: select
+				}})
+				console.log(data)
 				message.success(`${file.name} uploaded successfully`)
 			}).catch((err) => {
 				message.error(`${file.name} upload failed.`)
@@ -87,6 +76,7 @@ export const UPLOAD = ({imgData, taglist, user}) =>{
 				console.log(err)
 			})
 		}
+		await AppWhenUpload()
 		setUploading(false)
 		setFileList(errFileList)
 		setSelect([])

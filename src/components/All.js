@@ -1,16 +1,21 @@
 import React, {useState, useEffect} from 'react'
-import '../style.css'
 import {Breadcrumb, Divider, Button} from 'antd';
 import {PictureTwoTone, RollbackOutlined} from '@ant-design/icons';
+
+import '../style.css'
 import {PREVIEW, CONTENT} from './Album'
 
-export const ALL = ({imgData, taglist}) =>{
+export const ALL = ({taglist, updPreview}) =>{
 	const [state, setState] = useState('preview')
 	const [choose, setChoose] = useState('')
+	const [upd, setUpd] = useState(false)
 
-	var taglist_ad = ['All']
-	taglist_ad = taglist_ad.concat(taglist)
-
+	useEffect(()=>{
+		if(updPreview){
+			setUpd(true)
+		}
+	}, [])
+	
 	return(
 		<>
 			<Breadcrumb style={{margin: "21px 0"}}>
@@ -19,19 +24,29 @@ export const ALL = ({imgData, taglist}) =>{
 					{(state === 'preview')?
 						<> Choose an album to view!</>
 						:
-						<> Current Album : {choose} <Button icon={<RollbackOutlined />} size="small" onClick={()=>{setState('preview')}}/> </>
+						<> Current Album : {choose} <Button icon={<RollbackOutlined />} size="small" onClick={()=>{setState('preview');}}/> </>
 					}
 				</Breadcrumb.Item>
 			</Breadcrumb>
 
 			<div className="main-display-left">
-				{(state === 'preview') ? 
-					(taglist_ad.map((td) => {
-						const cor_img = imgData.filter((im) => (im.tags.indexOf(td) !== -1))
-						const cor_data = cor_img.map((im) => {return(im.url)})
-						return (<PREVIEW onChoose={() => {setState('content');setChoose(td)}} data={cor_data} tag={td}/>)})
-					):
-					<CONTENT imgData={imgData} choose={choose}/>
+				{(state === 'preview') ?
+					(
+					<>
+					<PREVIEW 
+						onChoose={() => {setState('content'); setChoose('All'); setUpd(false)}}
+						tag={'All'} key={0} upd={updPreview && upd}
+					/>
+					{taglist.map((td, index) => {
+						return (<PREVIEW 
+							onChoose={() => {setState('content'); setChoose(td); setUpd(false)}} 
+							tag={td} key={index+1} upd={updPreview && upd}
+						/>)
+					})}
+					</>
+					)
+					: <CONTENT choose={choose}/>
+					
 				}
 			</div>			
 		</>
