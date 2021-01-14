@@ -45,6 +45,7 @@ function App() {
   const handleLogIn = async () => {
     if (username === '' || password === ''){
       message.error('Both username and password must be entered!')
+      return
     }
     try{
       const {data} = await login({variables: { name: username, password: password }})

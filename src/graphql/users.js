@@ -1,5 +1,23 @@
 import { gql } from 'apollo-boost'
 
+const USER_REGISTER = gql`
+    mutation registerUser(
+        $name: String!
+        $email: String!
+        $password: String!
+    ){
+        registerUser(
+            name: $name
+            email: $email
+            password: $password
+        ){
+            _id
+            name
+            email
+        }
+    }
+`
+
 const USER_GET = gql`
     query{
         getUser{
@@ -34,4 +52,4 @@ const USER_LOGOUT = gql `
     }
 `
 
-export { USER_GET, USER_LOGIN, USER_LOGOUT }
+export { USER_GET, USER_LOGIN, USER_LOGOUT, USER_REGISTER }

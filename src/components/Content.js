@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { useQuery, useLazyQuery } from '@apollo/react-hooks'
-import {Modal, Avatar} from 'antd'
+import {Modal, Avatar, Button} from 'antd'
 import {
   UserOutlined,
   HeartOutlined,
@@ -13,16 +13,19 @@ import {
 	ALBUM_COUNT
 } from '../graphql/images'
 
-const Single_pic = ({url}) => {
+const Single_pic = ({img}) => {
 	const [visible, setVisible] = useState(false)
 
 	const Today = new Date()
 	const today = { year: Today.getFullYear().toString(), month : (Today.getMonth()+1).toString(), date : Today.getDate().toString()}
 
-	const len = url.length
-	const new_u = url.substr(0,len-4)+'b.jpg'
+	const newURL = img.url.slice(0, -4)+'b.jpg'
 
-	const determinState = () => {
+	const determinState = (date) => {
+		if(!date){
+			console.log("no date")
+			date = "yyyy/mm/dd"
+		}
 		const d_sep = date.split('/')
 		if(d_sep[0] === today.year && d_sep[1] === today.month && d_sep[2] === today.date)
 		{
@@ -33,7 +36,7 @@ const Single_pic = ({url}) => {
 
 	return(
 		<>
-			<img className="img-show" onClick={() => setVisible(true)} src={new_u}/>
+			<img className="img-show" onClick={() => setVisible(true)} src={newURL}/>
 			<Modal
 				bodyStyle={{height: "80vh", display: "flex", flexDirection: "row"}}
 				centered
@@ -42,14 +45,14 @@ const Single_pic = ({url}) => {
 				width={"80vw"}
       		>
       		<div className="img_big_box">
-      			<img className="img_big" src={url}/>
+      			<img className="img_big" src={img.url}/>
       		</div>
       		<div className="social">
       			<div className="social-publish-data">
       				<div style={{paddingTop: 7}}> <Avatar icon={<UserOutlined/>} size="large"/> </div>
       				<div className="publish-data-word">
-      					<p style={{margin: 0, fontWeight: "bold", fontSize: 20}}> {author} </p>
-      					<p style={{margin: 0, fontStyle: "italic", fontSize: 12}}> {determinState(date)} </p>
+      					<p style={{margin: 0, fontWeight: "bold", fontSize: 20}}> {(img.author) ? img.author : "author"} </p>
+      					<p style={{margin: 0, fontStyle: "italic", fontSize: 12}}> {determinState(img.date)} </p>
       				</div>
       			</div>
       			<br/>
@@ -106,7 +109,7 @@ export const CONTENT = ({choose}) => {
 				<p>error</p>
 			) : (
 				imgData.images.map((img, index) => {
-					return (<Single_pic url={img.url} key={index}/>)
+					return (<Single_pic img={img} key={index}/>)
 				})
 			)}
 		</div>
