@@ -3,6 +3,7 @@ import { gql } from 'apollo-boost'
 const IMAGE_QUERY = gql`
     query($tags: [String!], $num: Int){
         images(tags: $tags, num: $num){
+            _id
             url
             tags
         }
@@ -18,6 +19,17 @@ const IMAGE_CREATE = gql`
             url: $url
             tags: $tags
         }){
+            url
+            tags
+        }
+    }
+`
+
+const IMAGE_DELETE = gql`
+    mutation deleteImage(
+        $id: ID!
+    ) {
+        deleteImage(id: $id){
             url
             tags
         }
@@ -41,10 +53,11 @@ const ALBUM_COUNT = gql`
 const ALBUM_SUBSCRIPTION = gql`
     subscription($tag: String) {
         album(tag: $tag) {
+            _id
             url
             tags
         }
     }
 `
 
-export { IMAGE_CREATE, IMAGE_QUERY, ALBUM_PREVIEW, ALBUM_COUNT, ALBUM_SUBSCRIPTION }
+export { IMAGE_CREATE, IMAGE_QUERY, IMAGE_DELETE, ALBUM_PREVIEW, ALBUM_COUNT, ALBUM_SUBSCRIPTION }

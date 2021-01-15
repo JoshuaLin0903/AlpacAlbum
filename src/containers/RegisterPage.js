@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import React, { useState } from 'react'
+import { useMutation } from '@apollo/react-hooks'
 import 'antd/dist/antd.css';
-import { Layout, Menu, message, Input, Button, Popconfirm, Avatar} from 'antd';
+import { Layout, message, Input, Button} from 'antd';
 import {
-  SearchOutlined,
-  PictureOutlined,
-  HeartTwoTone,
-  HomeOutlined,
   UserOutlined,
-  UploadOutlined,
   KeyOutlined
 } from '@ant-design/icons';
 
 import '../style.css';
-import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD} from '../components'
-import alpaca from '../images/alpaca.png';
 import {
   USER_REGISTER
 } from '../graphql/users'

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import { useQuery, useLazyQuery } from '@apollo/react-hooks'
-import {Modal, Avatar, Button} from 'antd'
+import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks'
+import {Modal, Avatar, Button, Popconfirm} from 'antd'
 import {
   UserOutlined,
   HeartOutlined,
@@ -13,11 +13,13 @@ import {
 import '../style.css'
 import {
 	IMAGE_QUERY,
+	IMAGE_DELETE,
 	ALBUM_COUNT
 } from '../graphql/images'
 
 const Single_pic = ({img}) => {
 	const [visible, setVisible] = useState(false)
+	const [delImage] = useMutation(IMAGE_DELETE)
 
 	const Today = new Date()
 	const today = { year: Today.getFullYear().toString(), month : (Today.getMonth()+1).toString(), date : Today.getDate().toString()}
@@ -39,6 +41,12 @@ const Single_pic = ({img}) => {
 
 	const deletePic = ()=>{
 		//delete the picture
+		console.log(img)
+		delImage({ variables: {id: img._id} }).then((res)=>{
+			console.log(res)
+		}).catch((err)=>{
+			console.log(err)
+		})
 	}
 
 	const changeTag = () =>{
@@ -51,7 +59,12 @@ const Single_pic = ({img}) => {
 				<img className="img-show"  src={newURL}/>
 				<div className="img-show-button">
 					<Button icon={<EyeOutlined />} type="text" onClick={() => setVisible(true)}/>
-					<Button icon={<DeleteOutlined />} ghost type="text" onClick={deletePic}/>
+					<Popconfirm placement="bottom" onConfirm={deletePic} 
+						title="Are you sure you want to delete this picture?" 
+						okText="Yes" cancelText="No" 
+					>
+						<Button icon={<DeleteOutlined />} ghost type="text"/>
+					</Popconfirm>
 					<Button icon={<FolderAddOutlined />} ghost type="text" onClick={changeTag}/>
 				</div>
 			</div>
