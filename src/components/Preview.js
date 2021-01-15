@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, forwardRef, useImperativeHandle} from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import '../style.css'
 import {Divider} from 'antd';
@@ -13,12 +13,9 @@ export const PREVIEW = ({onChoose, tag, upd}) => {
 	const {loading:countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT, { variables: {tag: (tag === 'All') ? null : tag}})
 
 	useEffect(() => {
-		if(upd){
-			console.log('need preview refetch')
-			previewRefetch()
-			countRefetch()
-		}
-	}, [upd])
+		previewRefetch()
+		countRefetch()
+	}, [])
 
 	const showImg = (idx) => {
 		if(idx >= imgData.albumPreview.length){

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import 'antd/dist/antd.css';
 import { Layout, Menu, message, Input, Button, Popconfirm, Avatar} from 'antd';
@@ -20,9 +20,6 @@ import {
   USER_LOGIN,
   USER_LOGOUT
 } from '../graphql/users'
-import {
-  TAG_ALL
-} from '../graphql/tags'
 
 const { Header, Content, Footer, Sider} = Layout;
 
@@ -40,7 +37,8 @@ function App() {
   const [login] = useMutation(USER_LOGIN)
   const [logout] = useMutation(USER_LOGOUT)
   const {loading: UserLoading, data: currentUser, refetch: userRefetch} = useQuery(USER_GET)
-  const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
+
+  const allRef = useRef()
 
   const handleLogIn = async () => {
     if (username === '' || password === ''){
@@ -84,8 +82,11 @@ function App() {
 
   // trigger when upload
   const whenUpload = async() => {
+    console.log("whenUpload")
     setUpdPreview(true);
-    await tagRefetch();
+    if(allRef.current){
+      allRef.current.uploadUpdate()
+    }
   }
 
   useEffect(()=>{
@@ -99,14 +100,13 @@ function App() {
       case 'all':
         setMainDisplay(
         <ALL 
-          taglist={tagLoading ? [] : tagData.tags}
+          ref = {allRef}
           updPreview={updPreview}
         />)
         break
       case 'upload':
         setMainDisplay(
         <UPLOAD 
-          taglist={tagLoading ? [] : tagData.tags} 
           user={UserLoading?'':currentUser.getUser.name}
           AppWhenUpload={whenUpload}
         />)
@@ -163,7 +163,7 @@ function App() {
             		Search by Tags
             	</Menu.Item>
               :
-             	<SEARCH_SIDER taglist={tagLoading ? [] : tagData.tags}/>
+             	<SEARCH_SIDER/>
             }
           <Menu.Item key="3" icon={<PictureOutlined />}
           	onClick={()=>{setLastEvent(currentEvent);setCurrentEvent("all");setSearchCollapsed(true);}}>

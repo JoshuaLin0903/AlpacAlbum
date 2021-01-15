@@ -1,27 +1,33 @@
-import React, {useState, useEffect} from 'react';
-import { useMutation } from '@apollo/react-hooks'
+import React, {useState, useEffect, useRef} from 'react';
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import {Breadcrumb, Input, Upload, message, Tag, Divider, Button, Popconfirm, AutoComplete} from 'antd'
 import {RocketTwoTone, InboxOutlined} from '@ant-design/icons'
 import axios from 'axios';
 
 import '../style.css';
 import { IMAGE_CREATE } from '../graphql/images'
+import {
+	TAG_ALL
+  } from '../graphql/tags'
 
 const { Dragger } = Upload;
 const client_id = 'bcdefbeb2fcc6da';
 
-export const UPLOAD = ({taglist, user, AppWhenUpload}) =>{
+export const UPLOAD = ({ user, AppWhenUpload}) =>{
 	const [tagValue, setTagValue] = useState('')
 	const [select, setSelect] = useState([])
 	const [open, setOpen] = useState(false)
 	const [fileList, setFileList] = useState([])
 	const [uploading, setUploading] = useState(false)
 
+	const isMountedRef = useRef(null)
+
 	const [addImg] = useMutation(IMAGE_CREATE)
+	const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
 
 	const Today = new Date()
 	const today = Today.getFullYear() +'/' + (Today.getMonth()+1) + '/' + Today.getDate()
-	
+
 	// imgur upload props
 	const upload_props = {
 		multiple: true,
@@ -77,9 +83,15 @@ export const UPLOAD = ({taglist, user, AppWhenUpload}) =>{
 			})
 		}
 		await AppWhenUpload()
-		setUploading(false)
-		setFileList(errFileList)
-		setSelect([])
+		if(isMountedRef.current){
+			await tagRefetch()
+			setUploading(false)
+			setFileList(errFileList)
+			if(errFileList.length === 0){
+				// upload success
+				setSelect([])
+			}
+		}
 	}
 
 	const handleCancel = () => {
@@ -92,9 +104,15 @@ export const UPLOAD = ({taglist, user, AppWhenUpload}) =>{
 		setSelect(buf)
 	}
 
-	const Options = taglist.map((m) =>{
+	const Options = tagLoading ? [] : tagData.tags.map((m) =>{
 		return {value: m}
 	})
+
+	useEffect(()=>{
+		isMountedRef.current = true
+		tagRefetch()
+		return () => isMountedRef.current = false
+	},[])
 
 	return(
 		<>

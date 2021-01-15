@@ -1,6 +1,11 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
+import { useQuery } from '@apollo/react-hooks'
 import { Collapse, Tag, Button, Input, Divider, Tooltip} from 'antd';
 import { StarFilled, CheckCircleTwoTone, SearchOutlined, CloseCircleOutlined} from '@ant-design/icons';
+
+import {
+	TAG_ALL
+} from '../graphql/tags'
 
 const { Panel } = Collapse;
 const { CheckableTag } = Tag;
@@ -8,11 +13,11 @@ const {Search} = Input;
 
 var chosen = []
 
-export const SEARCH_SIDER = ({taglist})=>{
-
-  console.log(taglist)
+export const SEARCH_SIDER = ()=>{
 	const [selectedTags, setSelectedTags] = useState(chosen);
-  const [showingTags, setShowingTags] = useState(taglist)
+  const [showingTags, setShowingTags] = useState([])
+
+  const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
 
 	const chooseTags = (tag, checked) => {
     const nextSelectedTags = checked ? [...selectedTags, tag] : selectedTags.filter(t => t !== tag);
@@ -34,10 +39,10 @@ export const SEARCH_SIDER = ({taglist})=>{
   const filterTags = (search) => {
     const l = search.length
     if(l === 0){
-      setShowingTags(taglist)
+      setShowingTags(tagData.tags)
     }
     else{
-      const _filter = taglist.filter((t) => 
+      const _filter = tagData.tags.filter((t) => 
         (t.toLowerCase().substr(0,l) === search.toLowerCase())
       )
       setShowingTags(_filter)
@@ -47,8 +52,21 @@ export const SEARCH_SIDER = ({taglist})=>{
 
   const handleConfirm = () => {
     setSelectedTags([])
-    setShowingTags(taglist)
+    setShowingTags(tagData.tags)
   }
+
+  useEffect(()=>{
+    tagRefetch();
+  },[])
+
+
+  useEffect(()=> {
+    if(tagData){
+      if(tagData.tags){
+        setShowingTags(tagData.tags)
+      }
+    }
+  }, [tagData])
 
 	return(
 		<Collapse defaultActiveKey={['1']}>
@@ -99,8 +117,11 @@ export const SEARCH_SIDER = ({taglist})=>{
               </Tooltip>
             </div>:<></>}
         <Divider style={{margin:1}}/>
-    	  <div className="tags_group">
-    	  	{(taglist.length === 0) ?
+        {tagLoading ? (
+          <p>loading</p>
+        ):(
+          <div className="tags_group">
+    	  	{(tagData.tags.length === 0) ?
           <p style={{color:"gray", textAlign: "center"}}> No tags ... </p> 
           :
           ((showingTags.length === 0)?
@@ -114,7 +135,8 @@ export const SEARCH_SIDER = ({taglist})=>{
    				#{tag}
   				</CheckableTag>
  					))))}
-    	  </div>
+        </div>
+        )}
     	</Panel>
     </Collapse>
 	)

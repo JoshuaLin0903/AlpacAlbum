@@ -28,7 +28,6 @@ const Single_pic = ({img}) => {
 
 	const determinState = (date) => {
 		if(!date){
-			console.log("no date")
 			date = "yyyy/mm/dd"
 		}
 		const d_sep = date.split('/')
@@ -63,9 +62,9 @@ const Single_pic = ({img}) => {
 						title="Are you sure you want to delete this picture?" 
 						okText="Yes" cancelText="No" 
 					>
-						<Button icon={<DeleteOutlined />} ghost type="text"/>
+						<Button icon={<DeleteOutlined />} type="text"/>
 					</Popconfirm>
-					<Button icon={<FolderAddOutlined />} ghost type="text" onClick={changeTag}/>
+					<Button icon={<FolderAddOutlined />} type="text" onClick={changeTag}/>
 				</div>
 			</div>
 			<Modal
