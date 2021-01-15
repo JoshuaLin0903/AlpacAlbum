@@ -228,17 +228,23 @@ function App() {
                   onKeyDown={(e) => {
                     if(e.key === 'Enter') {handleLogIn()}
                   }}/>
-                <Button type="primary" 
-                  style={{margin:5}} 
-                  onClick={handleLogIn} > 
-                  Login
-              </Button>
+                <div className="login-button">
+                  <Button type="primary" 
+                    style={{margin:10}} 
+                    onClick={handleLogIn} 
+                    size="large"> 
+                    Login
+                  </Button>
+                  <div style={{margin: 2}}> 
+                    Not a user yet?
+                    <a href="/#/register"> Sign up</a>
+                  </div>
+                </div>
               </div>
           )}
         </Content>
         <Footer style={{ textAlign: 'center' }}>
-           No a user yet?
-           <a href="/#/register">Click to register!</a>
+           footer
         </Footer>
       </Layout>
     </Layout>

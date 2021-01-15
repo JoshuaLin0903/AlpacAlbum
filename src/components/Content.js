@@ -4,7 +4,10 @@ import {Modal, Avatar, Button} from 'antd'
 import {
   UserOutlined,
   HeartOutlined,
-  CommentOutlined
+  CommentOutlined,
+  EyeOutlined,
+  DeleteOutlined,
+  FolderAddOutlined
 } from '@ant-design/icons';
 
 import '../style.css'
@@ -34,9 +37,24 @@ const Single_pic = ({img}) => {
 		return(date)
 	}
 
+	const deletePic = ()=>{
+		//delete the picture
+	}
+
+	const changeTag = () =>{
+		//changeTag, addTag
+	}
+
 	return(
-		<>
-			<img className="img-show" onClick={() => setVisible(true)} src={newURL}/>
+		<>	
+			<div className="img-show-div">
+				<img className="img-show"  src={newURL}/>
+				<div className="img-show-button">
+					<Button icon={<EyeOutlined />} type="text" onClick={() => setVisible(true)}/>
+					<Button icon={<DeleteOutlined />} ghost type="text" onClick={deletePic}/>
+					<Button icon={<FolderAddOutlined />} ghost type="text" onClick={changeTag}/>
+				</div>
+			</div>
 			<Modal
 				bodyStyle={{height: "80vh", display: "flex", flexDirection: "row"}}
 				centered
@@ -102,7 +120,7 @@ export const CONTENT = ({choose}) => {
 	}, [fetchImgData])
 
 	return(
-		<div>
+		<>
 			{loading ? (
 				<p></p>
 			) : error ? (
@@ -112,6 +130,6 @@ export const CONTENT = ({choose}) => {
 					return (<Single_pic img={img} key={index}/>)
 				})
 			)}
-		</div>
+		</>
 	)
 }

@@ -33,16 +33,16 @@ export const ALL = ({taglist, updPreview}) =>{
 				{(state === 'preview') ?
 					(
 					<>
-					<PREVIEW 
-						onChoose={() => {setState('content'); setChoose('All'); setUpd(false)}}
-						tag={'All'} key={0} upd={updPreview && upd}
-					/>
-					{taglist.map((td, index) => {
-						return (<PREVIEW 
+						<PREVIEW 
+							onChoose={() => {setState('content'); setChoose('All'); setUpd(false)}}
+							tag={'All'} key={0} upd={updPreview && upd}
+						/>
+						{taglist.map((td, index) => {
+							return (<PREVIEW 
 							onChoose={() => {setState('content'); setChoose(td); setUpd(false)}} 
 							tag={td} key={index+1} upd={updPreview && upd}
-						/>)
-					})}
+							/>)
+						})}
 					</>
 					)
 					: <CONTENT choose={choose}/>

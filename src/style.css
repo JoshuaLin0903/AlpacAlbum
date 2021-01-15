@@ -7,8 +7,15 @@
   color: white;
 }
 
+.login-button{
+  display: flex;
+  flex-direction: row;
+  align-items:center; 
+  justify-content:center;
+}
+
 .site-layout {
-  background: #fff;
+  background: #F5F5F5;
   min-width: 600px;
 }
 
@@ -102,13 +109,38 @@
   margin: 5px;
 }
 
-.img-show{
+.img-show-div{
+  height: 160px;
+  width: 160px;
   margin: 5px;
+  overflow: hidden;
 }
 
-.img-show:hover{
-  cursor: pointer;
-  box-shadow: 2px 2px 2px 2px gray;
+.img-show-div:hover .img-show, .img-show-div:focus .img-show{
+  opacity: 0.5;
+  transform: scale(1.2);
+}
+
+.img-show-div:hover .img-show-button{
+  opacity: 1;
+}
+
+
+.img-show{
+  z-index: 1;
+}
+
+.img-show-button{
+  height: 160px;
+  width: 160px;
+  opacity: 0;
+  position: relative;
+  bottom: 160px;
+  display: flex;
+  flex-direction: row;
+  align-items:center;
+  justify-content:center;
+
 }
 
 .img_big{
