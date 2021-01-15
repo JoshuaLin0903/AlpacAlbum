@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import { useQuery, useLazyQuery, useMutation } from '@apollo/react-hooks'
-import {Modal, Avatar, Button, Popconfirm} from 'antd'
+import {Modal, Avatar, Button, Popconfirm, Popover, Affix} from 'antd'
 import {
   UserOutlined,
   HeartOutlined,
   CommentOutlined,
   EyeOutlined,
   DeleteOutlined,
-  FolderAddOutlined
+  FolderAddOutlined,
+  CheckCircleTwoTone
 } from '@ant-design/icons';
 
 import '../style.css'
@@ -17,14 +18,19 @@ import {
 	ALBUM_COUNT
 } from '../graphql/images'
 
-const Single_pic = ({img}) => {
+const Single_pic = ({img, multi}) => {
 	const [visible, setVisible] = useState(false)
 	const [delImage] = useMutation(IMAGE_DELETE)
+	const [choose, setChoose] = useState(false)
 
 	const Today = new Date()
 	const today = { year: Today.getFullYear().toString(), month : (Today.getMonth()+1).toString(), date : Today.getDate().toString()}
 
 	const newURL = img.url.slice(0, -4)+'b.jpg'
+
+	useEffect(() =>{
+		setChoose(false)
+	},[multi])
 
 	const determinState = (date) => {
 		if(!date){
@@ -55,17 +61,29 @@ const Single_pic = ({img}) => {
 	return(
 		<>	
 			<div className="img-show-div">
-				<img className="img-show"  src={newURL}/>
-				<div className="img-show-button">
-					<Button icon={<EyeOutlined />} type="text" onClick={() => setVisible(true)}/>
-					<Popconfirm placement="bottom" onConfirm={deletePic} 
-						title="Are you sure you want to delete this picture?" 
-						okText="Yes" cancelText="No" 
-					>
-						<Button icon={<DeleteOutlined />} type="text"/>
-					</Popconfirm>
-					<Button icon={<FolderAddOutlined />} type="text" onClick={changeTag}/>
-				</div>
+				{(multi)?
+					<>
+					{choose? <img className="img-show-blur"  src={newURL}/>:<img className="img-show"  src={newURL}/>}
+					<div className="img-show-choose" onClick={() => {setChoose(!choose);}}>
+						{choose?
+							<CheckCircleTwoTone twoToneColor="#32CD32" style={{fontSize: 30}}/>:<></>
+						}
+					</div>
+					</>
+					:
+					<>
+					<img className="img-show"  src={newURL}/>
+					<div className="img-show-button">
+						<Button icon={<EyeOutlined />} type="text" onClick={() => setVisible(true)}/>
+						<Popconfirm placement="bottom" onConfirm={deletePic} 
+							title="Are you sure you want to delete this picture?" 
+							okText="Yes" cancelText="No" 
+						>
+							<Button icon={<DeleteOutlined />} ghost type="text"/>
+						</Popconfirm>
+						<Button icon={<FolderAddOutlined />} ghost type="text" onClick={changeTag}/>
+					</div>
+					</>}
 			</div>
 			<Modal
 				bodyStyle={{height: "80vh", display: "flex", flexDirection: "row"}}
@@ -99,7 +117,7 @@ const Single_pic = ({img}) => {
 	)
 }
 
-export const CONTENT = ({choose}) => {
+export const CONTENT = ({choose, multi}) => {
 	const taglist = (choose === 'All') ? null : [choose]
 	const {loading, error, data: imgData, updateQuery} = useQuery(IMAGE_QUERY, { variables: {tags: taglist} })
 	const {loading: countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT, { variables: {tag: (choose === 'All') ? null : choose}})
@@ -131,15 +149,32 @@ export const CONTENT = ({choose}) => {
 		}
 	}, [fetchImgData])
 
+	const deletePics = () => {
+		//delete pictures
+	}
+
 	return(
 		<>
+			{multi?
+				<Affix offsetTop={10} 
+					style={{position: "absolute", left: "50%", top: "11%"}}>
+					<Popconfirm placement="bottom" onConfirm={deletePics}
+						title="Are you sure you want to delete these pictures?" 
+						okText="Yes" cancelText="No" 
+					>
+						<Button icon={<DeleteOutlined />} size="large" type="primary" danger/>
+					</Popconfirm>
+					<Button icon={<FolderAddOutlined />} size="large" type="primary"/>
+				</Affix>
+				:<></>
+			}
 			{loading ? (
 				<p></p>
 			) : error ? (
 				<p>error</p>
 			) : (
 				imgData.images.map((img, index) => {
-					return (<Single_pic img={img} key={index}/>)
+					return (<Single_pic img={img} key={index} multi={multi}/>)
 				})
 			)}
 		</>

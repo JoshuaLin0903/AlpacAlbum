@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef, forwardRef, useImperativeHandle} from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import {Breadcrumb, Button} from 'antd';
-import {PictureTwoTone, RollbackOutlined} from '@ant-design/icons';
+import {Breadcrumb, Button, Tooltip} from 'antd';
+import {PictureTwoTone, RollbackOutlined, CloseOutlined, CheckOutlined} from '@ant-design/icons';
 
 import '../style.css'
 import {PREVIEW, CONTENT} from './Album'
@@ -16,6 +16,7 @@ export const ALL = forwardRef(({updPreview}, ref) => {
 	const [state, setState] = useState('preview')
 	const [choose, setChoose] = useState('')
 	const [upd, setUpd] = useState(false)
+	const [multi, setMulti] = useState(false)
 	
 	const {loading:countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT)
 	const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
@@ -47,7 +48,21 @@ export const ALL = forwardRef(({updPreview}, ref) => {
 					{(state === 'preview')?
 						<> Choose an album to view!</>
 						:
-						<> Current Album : {choose} <Button icon={<RollbackOutlined />} size="small" onClick={()=>{setState('preview');}}/> </>
+						<> 
+							Current Album : {choose}
+							<Tooltip title="Go Back" type="bottom">
+								<Button style={{marginLeft: 5}} icon={<RollbackOutlined />} size="small" onClick={()=>{setState('preview');setMulti(false);}}/>
+							</Tooltip> 
+							<Tooltip title="Choose mutiple pictures" type="bottom">
+								<Button icon={<CheckOutlined />} size="small" onClick={()=>{setMulti(true);}}/>
+							</Tooltip>
+							{multi?
+								<Tooltip title="Choose mutiple pictures" type="bottom">
+									<Button icon={<CloseOutlined />} size="small" onClick={()=>{setMulti(false);}}/>
+								</Tooltip>:
+								<></>
+							}
+						</>
 					}
 				</Breadcrumb.Item>
 			</Breadcrumb>
@@ -70,7 +85,7 @@ export const ALL = forwardRef(({updPreview}, ref) => {
 					):(
 						<p>no photos</p>
 					)
-				): <CONTENT choose={choose}/>
+				): <CONTENT choose={choose} multi={multi}/>
 					
 				}
 			</div>			

@@ -117,7 +117,7 @@
 }
 
 .img-show-div:hover .img-show, .img-show-div:focus .img-show{
-  opacity: 0.5;
+  opacity: 0.3;
   transform: scale(1.2);
 }
 
@@ -125,9 +125,18 @@
   opacity: 1;
 }
 
+.img-show-choose:hover {
+  cursor: pointer;
+}
 
 .img-show{
   z-index: 1;
+}
+
+.img-show-blur{
+  z-index: 1;
+  opacity: 0.3;
+  transform: scale(1.2);
 }
 
 .img-show-button{
@@ -141,6 +150,17 @@
   align-items:center;
   justify-content:center;
 
+}
+
+.img-show-choose {
+  height: 160px;
+  width: 160px;
+  position: relative;
+  bottom: 160px;
+  display: flex;
+  flex-direction: row;
+  align-items:center;
+  justify-content:center;
 }
 
 .img_big{
