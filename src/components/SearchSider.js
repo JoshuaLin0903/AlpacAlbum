@@ -132,7 +132,7 @@ export const SEARCH_SIDER = ()=>{
    		   		key={tag}
     				checked={selectedTags.indexOf(tag) > -1}
    					onChange={checked => chooseTags(tag, checked)}>
-   				#{tag}
+   				 {tag}
   				</CheckableTag>
  					))))}
         </div>

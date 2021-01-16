@@ -221,6 +221,13 @@
   padding-left: 10px;
 }
 
+.change_tag_cur{
+  width: 100%;
+  border-radius: 10px;
+  background: #F5F5F5;
+  padding: 10px;
+}
+
   [data-theme="dark"] .site-layout .site-layout-background {
     background: #141414;
   }
