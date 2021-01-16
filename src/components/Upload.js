@@ -13,7 +13,7 @@ import {
 const { Dragger } = Upload;
 const client_id = 'bcdefbeb2fcc6da';
 
-export const UPLOAD = ({ user, AppWhenUpload}) =>{
+export const UPLOAD = ({ user, AppWhenUpload, updPics, setUpdPics}) =>{
 	const [tagValue, setTagValue] = useState('')
 	const [select, setSelect] = useState([])
 	const [open, setOpen] = useState(false)
@@ -62,6 +62,7 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
 		// upload
 		setUploading(true)
 		let errFileList = []
+		let sucFileIDList = []
 		for (let index = 0; index < fileList.length; index++) {
 			const file = fileList[index];
 			const data = new FormData();
@@ -75,6 +76,7 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
 					tags: select
 				}})
 				console.log(data)
+				sucFileIDList.push(data.createImage)
 				message.success(`${file.name} uploaded successfully`)
 			}).catch((err) => {
 				message.error(`${file.name} upload failed.`)
@@ -82,6 +84,21 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
 				console.log(err)
 			})
 		}
+		// START: update UpdPics object
+		const newUpdPics = updPics
+		select.map((tag)=>{
+			if(!newUpdPics[tag]){
+				newUpdPics[tag] = []
+			}
+			newUpdPics[tag] = [...sucFileIDList , ...newUpdPics[tag]]
+		})
+		if(!newUpdPics["All"]){
+			newUpdPics["All"] = []
+		}
+		newUpdPics["All"] = [...sucFileIDList , ...newUpdPics["All"]]
+		console.log(newUpdPics)
+		setUpdPics(newUpdPics)
+		// END: update UpdPics object
 		await AppWhenUpload()
 		if(isMountedRef.current){
 			await tagRefetch()

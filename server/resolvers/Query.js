@@ -3,7 +3,6 @@ const Image = require('../models/image')
 
 const Query = {
     getUser: async(_, __, {req}) => {
-        console.log("in getUser:", req.session)
         if(!req.session.userId){
             return null
         }

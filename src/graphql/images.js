@@ -10,6 +10,15 @@ const IMAGE_QUERY = gql`
     }
 `
 
+// const IMAGE_SINGEL_QUERY = gql`
+//     query($id: ID){
+//         imgData(id: $id){
+//             tags
+//             user
+//         }
+// }
+// `
+
 const IMAGE_CREATE = gql`
     mutation createImage(
         $url: String!
@@ -19,6 +28,7 @@ const IMAGE_CREATE = gql`
             url: $url
             tags: $tags
         }){
+            _id
             url
             tags
         }

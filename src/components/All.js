@@ -12,7 +12,7 @@ import {
 	TAG_ALL
 } from '../graphql/tags'
 
-export const ALL = forwardRef(({updPreview}, ref) => {
+export const ALL = forwardRef(({updPreview, updPics, setUpdPics, delPics, setDelPics}, ref) => {
 	const [state, setState] = useState('preview')
 	const [choose, setChoose] = useState('')
 	const [upd, setUpd] = useState(false)
@@ -28,7 +28,8 @@ export const ALL = forwardRef(({updPreview}, ref) => {
 			countRefetch();
 			tagRefetch();
 			pvRefs.forEach(ref => {
-				ref.current.uploadUpdate()
+				if(ref.current)
+					ref.current.uploadUpdate()
 			});
 		}
 	}))
@@ -96,8 +97,10 @@ export const ALL = forwardRef(({updPreview}, ref) => {
 					):(
 						<p>no photos</p>
 					)
-				): <CONTENT choose={choose} multi={multi}/>
-					
+				): <CONTENT choose={choose} multi={multi} 
+					updPics={updPics} setUpdPics={setUpdPics}
+					delPics={delPics} setDelPics={setDelPics} 
+				/>	
 				}
 			</div>			
 		</>

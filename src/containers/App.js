@@ -33,6 +33,8 @@ function App() {
   const [username, setUserName] = useState('')
   const [password, setPassword]= useState('')
   const [updPreview, setUpdPreview] = useState(false)
+  const [updPics, setUpdPics] = useState({})
+  const [delPics, setDelPics] = useState({})
 
   const [login] = useMutation(USER_LOGIN)
   const [logout] = useMutation(USER_LOGOUT)
@@ -102,6 +104,8 @@ function App() {
         <ALL 
           ref = {allRef}
           updPreview={updPreview}
+          updPics={updPics} setUpdPics={setUpdPics}
+					delPics={delPics} setDelPics={setDelPics} 
         />)
         break
       case 'upload':
@@ -109,6 +113,7 @@ function App() {
         <UPLOAD 
           user={UserLoading?'':currentUser.getUser.name}
           AppWhenUpload={whenUpload}
+          updPics={updPics} setUpdPics={setUpdPics}
         />)
         break
       default:
