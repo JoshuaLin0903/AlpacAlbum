@@ -70,12 +70,13 @@ export const UPLOAD = ({ user, AppWhenUpload, updPics, setUpdPics}) =>{
 			const config = { headers: { Authorization: `Client-ID ${client_id}` } };
 			await axios.post('https://api.imgur.com/3/image', data, config).then(async(res) => {
 				const imgUrl = res.data.data.link
+				console.log(res)
 				console.log(imgUrl)
 				const {data} = await addImg({ variables: {
 					url: imgUrl,
 					tags: select
 				}})
-				console.log(data)
+				// console.log(data)
 				sucFileIDList.push(data.createImage)
 				message.success(`${file.name} uploaded successfully`)
 			}).catch((err) => {
@@ -96,7 +97,7 @@ export const UPLOAD = ({ user, AppWhenUpload, updPics, setUpdPics}) =>{
 			newUpdPics["All"] = []
 		}
 		newUpdPics["All"] = [...sucFileIDList , ...newUpdPics["All"]]
-		console.log(newUpdPics)
+		// console.log(newUpdPics)
 		setUpdPics(newUpdPics)
 		// END: update UpdPics object
 		await AppWhenUpload()

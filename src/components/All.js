@@ -12,10 +12,9 @@ import {
 	TAG_ALL
 } from '../graphql/tags'
 
-export const ALL = forwardRef(({updPreview, updPics, setUpdPics, delPics, setDelPics}, ref) => {
+export const ALL = forwardRef(({updPics, setUpdPics, delPics, setDelPics}, ref) => {
 	const [state, setState] = useState('preview')
 	const [choose, setChoose] = useState('')
-	const [upd, setUpd] = useState(false)
 	const [multi, setMulti] = useState(false)
 	const [pvRefs, setPvRefs] = useState([])
 	
@@ -24,7 +23,7 @@ export const ALL = forwardRef(({updPreview, updPics, setUpdPics, delPics, setDel
 
 	useImperativeHandle(ref, () => ({
 		uploadUpdate(){
-		//   console.log("uploadUpdate from All");
+			// console.log("uploadUpdate from All");
 			countRefetch();
 			tagRefetch();
 			pvRefs.forEach(ref => {
@@ -36,9 +35,6 @@ export const ALL = forwardRef(({updPreview, updPics, setUpdPics, delPics, setDel
 
 	useEffect(()=>{
 		countRefetch()
-		if(updPreview){
-			setUpd(true)
-		}
 	}, [])
 
 	useEffect(() => {
@@ -51,6 +47,17 @@ export const ALL = forwardRef(({updPreview, updPics, setUpdPics, delPics, setDel
 			}
 		}
 	}, [tagData])
+
+	const onClickGoBack = async() => {
+		if(Object.values(delPics).some(picArr => Array.isArray(picArr) && picArr.length > 0)){
+			console.log("refetch due to delete")
+			console.log(delPics)
+			await countRefetch();
+			await tagRefetch();
+		}
+		setState('preview')
+		setMulti(false);
+	}
 	
 	return(
 		<>
@@ -63,7 +70,7 @@ export const ALL = forwardRef(({updPreview, updPics, setUpdPics, delPics, setDel
 						<> 
 							Current Album : {choose}
 							<Tooltip title="Go Back" type="bottom">
-								<Button style={{marginLeft: 5}} icon={<RollbackOutlined />} size="small" onClick={()=>{setState('preview');setMulti(false);}}/>
+								<Button style={{marginLeft: 5}} icon={<RollbackOutlined />} size="small" onClick={onClickGoBack}/>
 							</Tooltip> 
 							<Tooltip title="Choose mutiple pictures" type="bottom">
 								<Button icon={<CheckOutlined />} size="small" onClick={()=>{setMulti(true);}}/>
@@ -84,13 +91,13 @@ export const ALL = forwardRef(({updPreview, updPics, setUpdPics, delPics, setDel
 					(!tagLoading && !countLoading && countData.albumCount > 0) ? (
 						<>
 						<PREVIEW 
-							onChoose={() => {setState('content'); setChoose('All'); setUpd(false)}}
-							tag={'All'} key={0} upd={updPreview && upd} ref={pvRefs[0]}
+							onChoose={() => {setState('content'); setChoose('All');}}
+							tag={'All'} key={0} ref={pvRefs[0]}
 						/>
 						{tagData.tags.map((td, index) => {
 							return (<PREVIEW 
-							onChoose={() => {setState('content'); setChoose(td); setUpd(false)}} 
-							tag={td} key={index+1} upd={updPreview && upd} ref={pvRefs[index+1]}
+							onChoose={() => {setState('content'); setChoose(td);}} 
+							tag={td} key={index+1} ref={pvRefs[index+1]}
 							/>)
 						})}
 						</>

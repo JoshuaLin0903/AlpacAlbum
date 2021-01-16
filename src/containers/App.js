@@ -32,7 +32,6 @@ function App() {
   const [logIN, setLogIN] = useState(false)
   const [username, setUserName] = useState('')
   const [password, setPassword]= useState('')
-  const [updPreview, setUpdPreview] = useState(false)
   const [updPics, setUpdPics] = useState({})
   const [delPics, setDelPics] = useState({})
 
@@ -84,8 +83,7 @@ function App() {
 
   // trigger when upload
   const whenUpload = async() => {
-    console.log("whenUpload")
-    setUpdPreview(true);
+    // console.log("whenUpload")
     if(allRef.current){
       allRef.current.uploadUpdate()
     }
@@ -103,7 +101,7 @@ function App() {
         setMainDisplay(
         <ALL 
           ref = {allRef}
-          updPreview={updPreview}
+
           updPics={updPics} setUpdPics={setUpdPics}
 					delPics={delPics} setDelPics={setDelPics} 
         />)
@@ -125,11 +123,6 @@ function App() {
   // handle actions on event change
   useEffect(()=>{
     console.log(`Event Change: ${lastEvent} to ${currentEvent}`)
-    if(lastEvent === 'all'){
-      if(updPreview){
-        setUpdPreview(false)
-      }
-    }
 
   }, [currentEvent])
 
