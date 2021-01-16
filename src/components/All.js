@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, forwardRef, useImperativeHandle} from 'react'
+import React, {useState, useEffect, createRef, forwardRef, useImperativeHandle} from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import {Breadcrumb, Button, Tooltip} from 'antd';
 import {PictureTwoTone, RollbackOutlined, CloseOutlined, CheckOutlined} from '@ant-design/icons';
@@ -17,15 +17,19 @@ export const ALL = forwardRef(({updPreview}, ref) => {
 	const [choose, setChoose] = useState('')
 	const [upd, setUpd] = useState(false)
 	const [multi, setMulti] = useState(false)
+	const [pvRefs, setPvRefs] = useState([])
 	
 	const {loading:countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT)
 	const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
 
 	useImperativeHandle(ref, () => ({
 		uploadUpdate(){
-		  console.log("uploadUpdate from All");
-		  countRefetch();
-		  tagRefetch();
+		//   console.log("uploadUpdate from All");
+			countRefetch();
+			tagRefetch();
+			pvRefs.forEach(ref => {
+				ref.current.uploadUpdate()
+			});
 		}
 	}))
 
@@ -37,8 +41,15 @@ export const ALL = forwardRef(({updPreview}, ref) => {
 	}, [])
 
 	useEffect(() => {
-		console.log(`updPreview = ${updPreview}`)
-	}, [updPreview])
+		if(tagData){
+			if(tagData.tags){
+				// console.log("current tags:", tagData.tags)
+				setPvRefs(refs => (
+					Array(tagData.tags.length+1).fill().map((_, i) => refs[i] || createRef())
+				))
+			}
+		}
+	}, [tagData])
 	
 	return(
 		<>
@@ -73,12 +84,12 @@ export const ALL = forwardRef(({updPreview}, ref) => {
 						<>
 						<PREVIEW 
 							onChoose={() => {setState('content'); setChoose('All'); setUpd(false)}}
-							tag={'All'} key={0} upd={updPreview && upd}
+							tag={'All'} key={0} upd={updPreview && upd} ref={pvRefs[0]}
 						/>
 						{tagData.tags.map((td, index) => {
 							return (<PREVIEW 
 							onChoose={() => {setState('content'); setChoose(td); setUpd(false)}} 
-							tag={td} key={index+1} upd={updPreview && upd}
+							tag={td} key={index+1} upd={updPreview && upd} ref={pvRefs[index+1]}
 							/>)
 						})}
 						</>

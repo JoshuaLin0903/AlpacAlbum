@@ -8,7 +8,7 @@ import {
 	ALBUM_COUNT
 } from '../graphql/images'
 
-export const PREVIEW = ({onChoose, tag, upd}) => {
+export const PREVIEW = forwardRef(({onChoose, tag, upd}, ref) => {
 	const {loading, error, data: imgData, refetch: previewRefetch} = useQuery(ALBUM_PREVIEW, { variables: {tag: (tag === 'All') ? null : tag}})
 	const {loading:countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT, { variables: {tag: (tag === 'All') ? null : tag}})
 
@@ -16,6 +16,14 @@ export const PREVIEW = ({onChoose, tag, upd}) => {
 		previewRefetch()
 		countRefetch()
 	}, [])
+
+	useImperativeHandle(ref, () => ({
+		uploadUpdate(){
+			// console.log(`uploadUpdate from Preview ${tag}`);
+			previewRefetch()
+			countRefetch()
+		}
+	}))
 
 	const showImg = (idx) => {
 		if(idx >= imgData.albumPreview.length){
@@ -50,4 +58,4 @@ export const PREVIEW = ({onChoose, tag, upd}) => {
 			}
 		</div>
 	)
-}
+})
