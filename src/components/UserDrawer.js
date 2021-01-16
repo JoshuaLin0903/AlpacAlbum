@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Drawer, Avatar, Button, Popconfirm, Divider, Popover, Collapse, Input} from 'antd'
+import {Drawer, Avatar, Button, Popconfirm, Divider, Popover, Collapse, Input, message} from 'antd'
 import {UserOutlined, SettingOutlined, LogoutOutlined, KeyOutlined} from '@ant-design/icons';
 import { useMutation } from '@apollo/react-hooks'
 import '../style.css';
@@ -18,6 +18,13 @@ const avatar_src = [pig, alpaca, shark, giwua, strongSiba, siba, tableCat]
 const avatar = ["pig", "alpaca", "shark", "giwua", "strongSiba", "siba", "tableCat"]
 
 export const USER_DRAWER = ({UserLoading, currentUser}) => {
+	//user settings
+	const [NewUsername, setNewUserName] = useState('')
+	const [CheckPassword, setCheckPassword] = useState('')
+    const [NewPassword, setNewPassword]= useState('')
+	const [NewPassword2, setNewPassword2]= useState('')
+	const [avatarID, setAvatarID]= useState('')
+	//
 	const [open, setOpen] = useState(false) 
 	const [profilePic, setProfilePic] = useState('unset')
 
@@ -49,10 +56,10 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
 		}
 	}
 
-	const handleLogOut = async() =>{
+const handleLogOut = async() =>{
     await logout()
     window.location.reload()
-  }
+}
 
   const avatarOption = () => {
   	return(
@@ -65,6 +72,27 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
   			})}
   		</div>
   	)
+  }
+
+  const handleUsernameChange = async()=>{
+	if(NewUsername==""){
+		message.error("Username cannot be empty!")
+		return
+	}
+  }
+  const handlePwdChange = async()=>{
+	  if(CheckPassword!=currentUser.Password){
+		  message.error("Wrong current password!")
+		  return
+	  }
+	  else if(NewPassword==""||NewPassword2==""){
+		  message.error("Password cannot be empty!")
+		  return
+	  }
+	  else if(NewPassword!=NewPassword2){
+		  message.error("Please confirm your new password!")
+		  return
+	  }
   }
 
 	return(
@@ -90,12 +118,35 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
    		<h1 style={{textAlign: 'center', color: "#483D8B"}}> {currentUser.getUser.name} </h1>
       <br/>
       <Collapse style={{textAlign: 'center'}}>
+	 	 <Panel showArrow={false} header={<><KeyOutlined /> Change your username </>} key="1">
+          <Input placeholder="Your new username"
+            style={{width:200, margin:5}}
+			onChange={(e) => setNewUserName(e.target.value)}
+			/>
+          <Button style={{margin:5}} type="primary"
+		  	onClick={handleUsernameChange}
+		  > Confirm </Button>
+        </Panel>
+		</Collapse>
+		<Collapse style={{textAlign: 'center'}}>
         <Panel showArrow={false} header={<><KeyOutlined /> Change your password </>} key="1">
           <Input.Password placeholder="Your current password"
-            style={{width:200, margin:5}}/>
+            style={{width:200, margin:5}}
+			onChange={(e) => setCheckPassword(e.target.value)}
+			/>
           <Input.Password placeholder="New password"
-            style={{width:200, margin:5}}/>
-          <Button style={{margin:5}} type="primary"> Confirm </Button>
+            style={{width:200, margin:5}}
+			onChange={(e) => setNewPassword(e.target.value)}
+			/>
+		  <Input.Password placeholder="Confirm new password"
+            style={{width:200, margin:5}}
+			onChange={(e) => setNewPassword2(e.target.value)}
+			/>
+          <Button style={{margin:5}} type="primary"
+		  	onClick={handlePwdChange}
+		  > 
+		  	Confirm 
+		  </Button>
         </Panel>
       </Collapse>
   		<Popconfirm placement="top" 
