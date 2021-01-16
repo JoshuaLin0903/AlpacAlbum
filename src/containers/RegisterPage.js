@@ -21,6 +21,7 @@ const RegisterPage=()=>{
     const [password2, setPassword2]= useState('')
     const [email, setEmail]= useState('')
     const [register] = useMutation(USER_REGISTER)
+    const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
 
     const handleRegister = async() => {
         if (username === ''){
@@ -33,6 +34,10 @@ const RegisterPage=()=>{
         }
         else if(email === ''){
             message.error('Email must be entered!')
+            return
+        }
+        else if(email.search(emailRule)===-1){
+            message.error('Email format is not correct.')
             return
         }
         if (password !== password2){
