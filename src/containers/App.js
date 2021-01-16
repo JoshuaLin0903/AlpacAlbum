@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 
 import '../style.css';
-import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD} from '../components'
+import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD, USER_DRAWER} from '../components'
 import alpaca from '../images/alpaca.png';
 import {
   USER_GET,
@@ -182,10 +182,7 @@ function App() {
           {logIN?
           <>
             <div className="user">
-              <div>
-                <Avatar icon={<UserOutlined/>} style={{marginRight: 8}}/>
-                {UserLoading ? '' : currentUser.getUser.name}
-              </div>
+              <USER_DRAWER UserLoading={UserLoading} currentUser={currentUser}/>
               <div>
                 <Popconfirm placement="bottom" 
                   onConfirm={handleLogOut} 

@@ -75,6 +75,28 @@
   float: right;
 }
 
+.userAvatar:hover{
+  cursor: pointer;
+}
+
+.userSettingAva:hover {
+  cursor: pointer;
+}
+
+.userSettingAva{
+  text-align: center;
+}
+
+.avatar_choose:hover {
+  cursor: pointer;
+}
+
+.avatar_choose{
+  width: 60px;
+  height: 60px;
+  margin: 5px;
+}
+
 .album{
   width: 220px;
   height: 280px;
