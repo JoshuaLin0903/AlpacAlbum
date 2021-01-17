@@ -10,14 +10,13 @@ const IMAGE_QUERY = gql`
     }
 `
 
-// const IMAGE_SINGEL_QUERY = gql`
-//     query($id: ID){
-//         imgData(id: $id){
-//             tags
-//             user
-//         }
-// }
-// `
+const IMAGE_SINGEL_QUERY = gql`
+    query($id: ID){
+        imgData(id: $id){
+            user
+        }
+    }
+`
 
 const IMAGE_CREATE = gql`
     mutation createImage(
@@ -70,4 +69,4 @@ const ALBUM_SUBSCRIPTION = gql`
     }
 `
 
-export { IMAGE_CREATE, IMAGE_QUERY, IMAGE_DELETE, ALBUM_PREVIEW, ALBUM_COUNT, ALBUM_SUBSCRIPTION }
+export { IMAGE_CREATE, IMAGE_QUERY, IMAGE_SINGEL_QUERY, IMAGE_DELETE, ALBUM_PREVIEW, ALBUM_COUNT, ALBUM_SUBSCRIPTION }

@@ -91,7 +91,7 @@ export const UPLOAD = ({ user, AppWhenUpload, updPics, setUpdPics}) =>{
 			if(!newUpdPics[tag]){
 				newUpdPics[tag] = []
 			}
-			newUpdPics[tag] = [...sucFileIDList , ...newUpdPics[tag]]
+			newUpdPics[tag] = [...sucFileIDList.reverse() , ...newUpdPics[tag]]
 		})
 		if(!newUpdPics["All"]){
 			newUpdPics["All"] = []

@@ -1,6 +1,7 @@
 type Query {
     getUser: User
     images(tags: [String!], num: Int): [Image!]
+    imgData(id: ID): Image
     albumPreview(tag: String): [Image!]
     albumCount(tag: String): Int!
     tags(query: String): [String!]

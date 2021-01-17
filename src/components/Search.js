@@ -1,13 +1,24 @@
-import React, {useState, useEffect} from 'react';
-import '../style.css';
-import {Spin, Breadcrumb} from 'antd';
+import React, {useState, useEffect} from 'react'
+import { useQuery, useLazyQuery } from '@apollo/react-hooks'
+import {Spin, Breadcrumb} from 'antd'
 import {SmileTwoTone } from '@ant-design/icons'
+
+import '../style.css'
+import { SINGLE_PIC } from './Single_Pic'
+import { IMAGE_QUERY } from '../graphql/images'
 
 export const SEARCH= ({selectTags}) =>{
 	const [showTags,setShowTags] = useState([])
 
+	const [getSearchImages, {loading, data}] = useLazyQuery(IMAGE_QUERY, {
+		fetchPolicy: 'cache-and-network'
+	})
+
 	useEffect(() => {
 		setShowTags(selectTags)
+		if(selectTags.length > 0){
+			getSearchImages({variables: {tags: selectTags}})
+		}
 	}
 	,[selectTags])
 
@@ -21,15 +32,25 @@ export const SEARCH= ({selectTags}) =>{
 							<SmileTwoTone twoToneColor="coral" /> Pictures with 
 							{showTags.map((t) => {
 									return(
-										<> #{t} </>
+										` #${t} `
 									)
 								})
 							}
 						</Breadcrumb.Item>
 					</Breadcrumb>
-					<div className="main-display-left">
-						
-					</div>
+					<>
+						{(loading || !data) ? (
+							<div className="main-display-cen">
+								<Spin tip="Searching" size="large"/>
+							</div>
+						) : (
+							<div className="main-display-left">
+								{data.images.map((img, index)=>{
+									return (<SINGLE_PIC img={img} key={index} multi={false} delPic={()=>{return true}}/>)
+								})}
+							</div>
+						)}
+					</>
 				</>
 				:<>
 					<Breadcrumb style={{margin: "21px 0"}}>
