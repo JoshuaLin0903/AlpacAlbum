@@ -13,17 +13,29 @@ import {
 	IMAGE_DELETE
 } from '../graphql/images'
 
-export const SINGLE_PIC = ({img, multi, delPic}) => {
+export const SINGLE_PIC = ({img, multi, delPic, choosePic, setChoosePic}) => {
 	const [visible, setVisible] = useState(false)
 	const [delImage] = useMutation(IMAGE_DELETE)
 	const [choose, setChoose] = useState(false)
 	const [state, setState] = useState('none')
+	const [tagRecord, setTagRecord] = useState({})//pic's tag change 存成{ADD:[...],DEL:[...]}
 
 	const newURL = img.url.slice(0, -4)+'b.jpg'
 
 	useEffect(() =>{
 		setChoose(false)
 	},[multi])
+
+	useEffect(()=>{
+		if(choose){
+			setChoosePic([...choosePic, img])
+		}
+		else{
+			const newPic = choosePic.filter((p) => (p !== img))
+			setChoosePic(newPic)
+		}
+
+	},[choose])
 
 	const deletePic = async()=>{
 		//delete the picture
@@ -34,6 +46,7 @@ export const SINGLE_PIC = ({img, multi, delPic}) => {
 
 	const changeTag = () =>{
 		//changeTag, addTag
+		//tagRecord有存tag的變化
 	}
 
 	return(
@@ -63,15 +76,20 @@ export const SINGLE_PIC = ({img, multi, delPic}) => {
 					</div>
 					</>}
 			</div>
-			<Modal
-				bodyStyle={{height: "80vh", display: "flex", flexDirection: "row"}}
-				centered
-				visible={visible}
-				onCancel={() => {setVisible(false);setState('none');}}
-				width={(state==="view")? "80vw" : "30vw"}
-      >
-      	{(state==="view")? <VIEW_MODAL img={img}/>: <TAG_MODAL img={img} visible={visible}/>}
-			</Modal>
+			{(state === "tag")?
+				<Modal
+					bodyStyle={{height: "80vh", display: "flex", flexDirection: "row"}}
+					centered
+					visible={visible}
+					onCancel={() => {setVisible(false);setState('none');}}
+					onOk={changeTag}
+					width={"40vw"}
+      	>
+      		<TAG_MODAL img={img} setTagRecord={setTagRecord}/>
+				</Modal>
+				:
+				<></>
+      }
 		</>
 	)
 }

@@ -46,7 +46,7 @@ export const SEARCH= ({selectTags}) =>{
 						) : (
 							<div className="main-display-left">
 								{data.images.map((img, index)=>{
-									return (<SINGLE_PIC img={img} key={index} multi={false} delPic={()=>{return true}}/>)
+									return (<SINGLE_PIC img={img} key={index} multi={false} delPic={()=>{return true}} choosePic={[]} setChoosePic={()=>{return true}}/>)
 								})}
 							</div>
 						)}
