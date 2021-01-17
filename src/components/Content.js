@@ -16,7 +16,6 @@ import {
 import { TAG_MODAL_MULTI } from './Modal'
 
 
-
 export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics}) => {
 	const [visible, setVisible] = useState(false)
 	const [tagRecord, setTagRecord] = useState({})//muti pic's tag change 存成{ADD:[...],DEL:[...]}

@@ -228,6 +228,22 @@
   padding: 10px;
 }
 
+.comment-div{
+  display: flex;
+  flex-direction: row;
+  margin: 5px;
+}
+
+.comment-input{
+  margin-left: 5px;
+  width: 90%;
+  background: #F5F5F5;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  outline: none;
+}
+
   [data-theme="dark"] .site-layout .site-layout-background {
     background: #141414;
   }

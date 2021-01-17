@@ -88,8 +88,19 @@ export const SINGLE_PIC = ({img, multi, delPic, choosePic, setChoosePic}) => {
       		<TAG_MODAL img={img} setTagRecord={setTagRecord}/>
 				</Modal>
 				:
-				<></>
-      }
+				((state === "view")?
+				<Modal
+					bodyStyle={{height: "80vh", display: "flex", flexDirection: "row"}}
+					centered
+					visible={visible}
+					onCancel={() => {setVisible(false);setState('none');}}
+					footer={null}
+					width={"80vw"}
+      	>
+      		<VIEW_MODAL img={img}/>
+				</Modal>
+				:<></>
+      )}
 		</>
 	)
 }

@@ -12,6 +12,8 @@ import '../style.css'
 import {
 	TAG_ALL
 } from '../graphql/tags'
+import tableCat from '../images/tableCat.png'
+import giwua from '../images/giwua.png'
   
 const {Panel} = Collapse
 
@@ -182,8 +184,19 @@ const VIEW_MODAL = ({img}) => {
       			<Button icon={<HeartOutlined />} style={{width: "50%"}}> like </Button>
       			<Button icon={<CommentOutlined />} style={{width: "50%"}}> comment </Button>
       		</div>
-      		<div className="comment">
-      				
+      		<br/>
+      		<div className="comments">
+      			<div className="comment-div">
+      				<Avatar src={giwua} size="large"/>
+      				<div className="comment-input"> 
+      					<div style={{fontWeight: "bold"}}> Giwuawua </div> 
+      					<div> Why am I so ugly? </div> 
+      				</div>
+      			</div>
+      		</div>
+      		<div className="comment-div">
+      			<Avatar src={tableCat} size="large"/>
+      			<input className="comment-input" type="text" placeholder="Write a comment"/>
       		</div>
       	</div>
      </>
