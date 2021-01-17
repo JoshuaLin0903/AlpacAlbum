@@ -13,12 +13,12 @@ import {
 	IMAGE_DELETE
 } from '../graphql/images'
 
-export const SINGLE_PIC = ({img, multi, delPic, choosePic, setChoosePic}) => {
+export const SINGLE_PIC = ({img, multi, delPic, choosePic, setChoosePic, getUserByID}) => {
 	const [visible, setVisible] = useState(false)
 	const [delImage] = useMutation(IMAGE_DELETE)
 	const [choose, setChoose] = useState(false)
 	const [state, setState] = useState('none')
-	const [tagRecord, setTagRecord] = useState({})//pic's tag change 存成{ADD:[...],DEL:[...]}
+	const [tagRecord, setTagRecord] = useState({}) //pic's tag change 存成{ADD:[...],DEL:[...]}
 
 	const newURL = img.url.slice(0, -4)+'b.jpg'
 
@@ -84,8 +84,8 @@ export const SINGLE_PIC = ({img, multi, delPic, choosePic, setChoosePic}) => {
 					onCancel={() => {setVisible(false);setState('none');}}
 					onOk={changeTag}
 					width={"40vw"}
-      	>
-      		<TAG_MODAL img={img} setTagRecord={setTagRecord}/>
+      			>
+      				<TAG_MODAL img={img} setTagRecord={setTagRecord}/>
 				</Modal>
 				:
 				((state === "view")?
@@ -96,8 +96,8 @@ export const SINGLE_PIC = ({img, multi, delPic, choosePic, setChoosePic}) => {
 					onCancel={() => {setVisible(false);setState('none');}}
 					footer={null}
 					width={"80vw"}
-      	>
-      		<VIEW_MODAL img={img}/>
+				>
+					<VIEW_MODAL img={img} getUserByID={getUserByID}/>
 				</Modal>
 				:<></>
       )}

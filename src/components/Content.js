@@ -16,7 +16,7 @@ import {
 import { TAG_MODAL_MULTI } from './Modal'
 
 
-export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics}) => {
+export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics, getUserByID}) => {
 	const [visible, setVisible] = useState(false)
 	const [tagRecord, setTagRecord] = useState({})//muti pic's tag change 存成{ADD:[...],DEL:[...]}
 	const [choosePic, setChoosePic] = useState([])//Chosen pic list
@@ -107,7 +107,7 @@ export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics
 			) : (
 				imgData.images.map((img, index) => {
 					return (<SINGLE_PIC img={img} key={index} multi={multi} delPic={deletePic} 
-									choosePic={choosePic} setChoosePic={setChoosePic}/>)
+									choosePic={choosePic} setChoosePic={setChoosePic} getUserByID={getUserByID}/>)
 				})
 			)}
 
@@ -117,8 +117,8 @@ export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics
 				visible={visible}
 				onCancel={() => {setVisible(false)}}
 				width={(choose === "All")? "30vw":"40vw"}
-      >
-      	<TAG_MODAL_MULTI album={choose} setTagRecord={setTagRecord}/>
+      		>
+      			<TAG_MODAL_MULTI album={choose} setTagRecord={setTagRecord}/>
 			</Modal>
 		</>
 	)

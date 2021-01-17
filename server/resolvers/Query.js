@@ -8,6 +8,9 @@ const Query = {
         }
         return await User.findOne({_id: req.session.userId})
     },
+    getUsers: async () => {
+        return await User.find()
+    },
     images: async(_, args) => {
         if(!args.num){
             if(!args.tags){
@@ -25,6 +28,10 @@ const Query = {
             throw new Error("Empty tags array.")
         }
         return await Image.find({ tags: { $all: args.tags } }).sort({$natural: -1}).limit(args.num)
+    },
+    imgData: async(_, args) => {
+        if(!args.id){ return null }
+        return await Image.findOne({_id: args.id})
     },
     albumPreview: async(_, args) => {
         if(!args.tag){

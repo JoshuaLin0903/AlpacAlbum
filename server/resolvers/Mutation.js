@@ -61,6 +61,7 @@ const Mutation = {
     createImage: async(_, args, {pubsub}) => {
         const newTags = [...new Set(args.data.tags)]
         args.data.tags = newTags
+        args.data.comments = []
         const img = new Image(args.data)
         await img.save()
 

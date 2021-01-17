@@ -12,7 +12,7 @@ import {
 	TAG_ALL
 } from '../graphql/tags'
 
-export const ALL = forwardRef(({updPics, setUpdPics, delPics, setDelPics}, ref) => {
+export const ALL = forwardRef(({updPics, setUpdPics, delPics, setDelPics, getUserByID}, ref) => {
 	const [state, setState] = useState('preview')
 	const [choose, setChoose] = useState('')
 	const [multi, setMulti] = useState(false)
@@ -106,7 +106,8 @@ export const ALL = forwardRef(({updPics, setUpdPics, delPics, setDelPics}, ref) 
 					)
 				): <CONTENT choose={choose} multi={multi} 
 					updPics={updPics} setUpdPics={setUpdPics}
-					delPics={delPics} setDelPics={setDelPics} 
+					delPics={delPics} setDelPics={setDelPics}
+					getUserByID={getUserByID}
 				/>	
 				}
 			</div>			

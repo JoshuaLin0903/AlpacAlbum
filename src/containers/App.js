@@ -17,6 +17,7 @@ import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD, USER_DRAWER} from '../compo
 import alpaca from '../images/alpaca.png';
 import {
   USER_GET,
+  USER_GET_ALL,
   USER_LOGIN,
   USER_LOGOUT
 } from '../graphql/users'
@@ -39,6 +40,7 @@ function App() {
   const [login] = useMutation(USER_LOGIN)
   const [logout] = useMutation(USER_LOGOUT)
   const {loading: UserLoading, data: currentUser, refetch: userRefetch} = useQuery(USER_GET)
+  const {data: userData} = useQuery(USER_GET_ALL)
 
   const allRef = useRef()
 
@@ -67,7 +69,6 @@ function App() {
           break;
       }
     }
-    console.log(currentUser)
   }
 
   const handleLogOut = async() =>{
@@ -90,6 +91,11 @@ function App() {
     }
   }
 
+  const getUserByID = (id) => {
+    if(!userData){return null}
+    return userData.getUsers.find(user => user._id === id)
+  }
+
   useEffect(()=>{
     switch(currentEvent){
       case 'home':
@@ -102,15 +108,15 @@ function App() {
         setMainDisplay(
         <ALL 
           ref = {allRef}
-
           updPics={updPics} setUpdPics={setUpdPics}
-					delPics={delPics} setDelPics={setDelPics} 
+          delPics={delPics} setDelPics={setDelPics}
+          getUserByID={getUserByID}
         />)
         break
       case 'upload':
         setMainDisplay(
         <UPLOAD 
-          user={UserLoading?'':currentUser.getUser.name}
+          user={currentUser.getUser}
           AppWhenUpload={whenUpload}
           updPics={updPics} setUpdPics={setUpdPics}
         />)

@@ -74,7 +74,9 @@ export const UPLOAD = ({ user, AppWhenUpload, updPics, setUpdPics}) =>{
 				console.log(imgUrl)
 				const {data} = await addImg({ variables: {
 					url: imgUrl,
-					tags: select
+					tags: select,
+					author: user._id,
+					date: today
 				}})
 				// console.log(data)
 				sucFileIDList.push(data.createImage)

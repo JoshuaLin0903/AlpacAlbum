@@ -18,6 +18,15 @@ const USER_REGISTER = gql`
     }
 `
 
+const USER_GET_ALL = gql`
+    query{
+        getUsers{
+            _id
+            name
+        }
+    }
+`
+
 const USER_GET = gql`
     query{
         getUser{
@@ -67,4 +76,4 @@ const USER_LOGOUT = gql `
     }
 `
 
-export { USER_GET, USER_LOGIN, USER_LOGOUT, USER_REGISTER, PWD_CHECK }
+export { USER_GET, USER_GET_ALL, USER_LOGIN, USER_LOGOUT, USER_REGISTER, PWD_CHECK }

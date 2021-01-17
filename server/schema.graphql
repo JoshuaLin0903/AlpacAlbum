@@ -1,7 +1,8 @@
 type Query {
     getUser: User
+    getUsers: [User!]
     images(tags: [String!], num: Int): [Image!]
-    imgData(id: ID): Image
+    imgData(id: ID!): Image
     albumPreview(tag: String): [Image!]
     albumCount(tag: String): Int!
     tags(query: String): [String!]
@@ -25,12 +26,17 @@ type Subscription {
 input ImageInput {
     url: String!
     tags: [String!]
+    author: ID!
+    date: String
 }
 
 type Image {
     _id: ID!
     url: String!
     tags: [String!]
+    author: ID!
+    date: String
+    comments: [Comment!]
 }
 
 type User {
@@ -40,11 +46,14 @@ type User {
     password: String!
 }
 
+type Comment {
+    _id: ID!
+    author: ID!
+    text: String!
+}
 
 enum MutationType{
     CREATE
     UPDATE
     DELETE
-    LOGIN
-    LOGOUT
 }

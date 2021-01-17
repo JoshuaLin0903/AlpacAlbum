@@ -11,9 +11,15 @@ const IMAGE_QUERY = gql`
 `
 
 const IMAGE_SINGEL_QUERY = gql`
-    query($id: ID){
+    query($id: ID!){
         imgData(id: $id){
-            user
+            author
+            date
+            comments{
+                _id
+                author
+                text
+            }
         }
     }
 `
@@ -22,10 +28,14 @@ const IMAGE_CREATE = gql`
     mutation createImage(
         $url: String!
         $tags: [String!]
+        $author: ID!
+        $date: String
     ) {
         createImage(data:{
             url: $url
             tags: $tags
+            author: $author
+            date: $date
         }){
             _id
             url

@@ -12,6 +12,9 @@ import '../style.css'
 import {
 	TAG_ALL
 } from '../graphql/tags'
+import {
+	IMAGE_SINGEL_QUERY
+} from '../graphql/images'
 import tableCat from '../images/tableCat.png'
 import giwua from '../images/giwua.png'
   
@@ -149,13 +152,24 @@ const TAG_MODAL = ({img, setTagRecord}) => {
 }
 
 
-const VIEW_MODAL = ({img}) => {
+const VIEW_MODAL = ({img, getUserByID}) => {
+	const [loading, setLoading] = useState(true)
+	const {loading: imgDataLoading, data} = useQuery(IMAGE_SINGEL_QUERY, {variables: {id: img._id}})
+
 	const Today = new Date()
 	const today = { year: Today.getFullYear().toString(), month : (Today.getMonth()+1).toString(), date : Today.getDate().toString()}
 
+	useEffect(()=>{
+		if(data && !imgDataLoading){
+			Object.assign(img, data.imgData)
+			img.author = getUserByID(img.author)
+			console.log(img)
+			setLoading(false)
+		}
+	}, [data, imgDataLoading])
+
 	const determinState = (date) => {
 		if(!date){
-			console.log("no date")
 			date = "yyyy/mm/dd"
 		}
 		const d_sep = date.split('/')
@@ -169,36 +183,38 @@ const VIEW_MODAL = ({img}) => {
 	return(
 		<>
 			<div className="img_big_box">
-      	<img className="img_big" src={img.url}/>
-    	</div>
-      <div className="social">
-      	<div className="social-publish-data">
-      		<div style={{paddingTop: 7}}> <Avatar icon={<UserOutlined/>} size="large"/> </div>
-      			<div className="publish-data-word">
-      				<p style={{margin: 0, fontWeight: "bold", fontSize: 20}}> {(img.author) ? img.author : "author"} </p>
-      				<p style={{margin: 0, fontStyle: "italic", fontSize: 12}}> {determinState(img.date)} </p>
-      			</div>
-      		</div>
-      		<br/>
-      		<div className= "social-button">
-      			<Button icon={<HeartOutlined />} style={{width: "50%"}}> like </Button>
-      			<Button icon={<CommentOutlined />} style={{width: "50%"}}> comment </Button>
-      		</div>
-      		<br/>
-      		<div className="comments">
-      			<div className="comment-div">
-      				<Avatar src={giwua} size="large"/>
-      				<div className="comment-input"> 
-      					<div style={{fontWeight: "bold"}}> Giwuawua </div> 
-      					<div> Why am I so ugly? </div> 
-      				</div>
-      			</div>
-      		</div>
-      		<div className="comment-div">
-      			<Avatar src={tableCat} size="large"/>
-      			<input className="comment-input" type="text" placeholder="Write a comment"/>
-      		</div>
-      	</div>
+				<img className="img_big" src={img.url}/>
+			</div>
+			<div className="social">
+				<div className="social-publish-data">
+					<div style={{paddingTop: 7}}> <Avatar icon={<UserOutlined/>} size="large"/> </div>
+					{loading ? <></> :
+						<div className="publish-data-word">
+							<p style={{margin: 0, fontWeight: "bold", fontSize: 20}}> {(img.author.name) ? img.author.name : "author"} </p>
+							<p style={{margin: 0, fontStyle: "italic", fontSize: 12}}> {determinState(img.date)} </p>
+						</div>
+					}
+				</div>
+				<br/>
+				<div className= "social-button">
+					<Button icon={<HeartOutlined />} style={{width: "50%"}}> like </Button>
+					<Button icon={<CommentOutlined />} style={{width: "50%"}}> comment </Button>
+				</div>
+				<br/>
+				<div className="comments">
+					<div className="comment-div">
+						<Avatar src={giwua} size="large"/>
+						<div className="comment-input"> 
+							<div style={{fontWeight: "bold"}}> Giwuawua </div> 
+							<div> Why am I so ugly? </div> 
+						</div>
+					</div>
+				</div>
+				<div className="comment-div">
+					<Avatar src={tableCat} size="large"/>
+					<input className="comment-input" type="text" placeholder="Write a comment"/>
+				</div>
+			</div>
      </>
 	)
 }
