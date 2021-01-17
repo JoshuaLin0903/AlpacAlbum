@@ -13,9 +13,10 @@ const {Search} = Input;
 
 var chosen = []
 
-export const SEARCH_SIDER = ()=>{
+export const SEARCH_SIDER = ({onChange})=>{
 	const [selectedTags, setSelectedTags] = useState(chosen);
   const [showingTags, setShowingTags] = useState([])
+  const [searchValue, setSearchValue] = useState('')
 
   const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
 
@@ -51,8 +52,10 @@ export const SEARCH_SIDER = ()=>{
   }
 
   const handleConfirm = () => {
+    onChange(selectedTags)
     setSelectedTags([])
     setShowingTags(tagData.tags)
+    setSearchValue('')
   }
 
   useEffect(()=>{
@@ -77,9 +80,10 @@ export const SEARCH_SIDER = ()=>{
       	<div style={{margin: '5px'}}>
 	  			<Input
 		 				allowClear 
+            value={searchValue}
             prefix={<SearchOutlined/>}
 		 				style={{ width: "88%", margin: '10px' }}
-            onChange={(e) => {filterTags(e.target.value)}}/>
+            onChange={(e) => {filterTags(e.target.value);setSearchValue(e.target.value);}}/>
 				</div>
         <div className="chosen_tag_block">
         	<Tag icon={<StarFilled />} color="volcano" style={{marginTop: "5px"}}>

@@ -34,6 +34,7 @@ function App() {
   const [password, setPassword]= useState('')
   const [updPics, setUpdPics] = useState({})
   const [delPics, setDelPics] = useState({})
+  const [selectTags, setSelectTags] = useState([])
 
   const [login] = useMutation(USER_LOGIN)
   const [logout] = useMutation(USER_LOGOUT)
@@ -95,7 +96,7 @@ function App() {
         setMainDisplay(<HOMEPAGE/>)
         break
       case 'search':
-        setMainDisplay(<SEARCH/>)
+        setMainDisplay(<SEARCH selectTags={selectTags}/>)
         break
       case 'all':
         setMainDisplay(
@@ -118,7 +119,7 @@ function App() {
         setMainDisplay(<HOMEPAGE/>)
         break
     }
-  }, [currentEvent])
+  }, [currentEvent, selectTags])
 
   // handle actions on event change
   useEffect(()=>{
@@ -161,7 +162,7 @@ function App() {
             		Search by Tags
             	</Menu.Item>
               :
-             	<SEARCH_SIDER/>
+             	<SEARCH_SIDER onChange={setSelectTags}/>
             }
           <Menu.Item key="3" icon={<PictureOutlined />}
           	onClick={()=>{setLastEvent(currentEvent);setCurrentEvent("all");setSearchCollapsed(true);}}>

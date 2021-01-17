@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import {Avatar, Button, Divider, Collapse, Tag, Input} from 'antd'
 import {
@@ -15,14 +15,16 @@ import {
   
 const {Panel} = Collapse
 
-const TAG_MODAL = ({img}) => {
+const TAG_MODAL = ({img, visible}) => {
 	const [del, setDelete] = useState([])
 	const [add, setAdd] = useState([])
 	const [newTag, setNewTag] = useState('')
 	const [newTagList, setNewTagList] = useState([])
 	const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
 
-	console.log(add)
+	const leftTags = tagData.tags.concat(img.tags).filter((v,i,arr) => (arr.indexOf(v) === arr.lastIndexOf(v)))
+	console.log(leftTags)
+
 	const removeDel = (e,tag) => {
 		e.preventDefault()
 		var buf = del.filter((t) => (t !==tag ))
@@ -42,6 +44,14 @@ const TAG_MODAL = ({img}) => {
 		setNewTagList(buf2)
 		setNewTag('')
 	}
+
+	const handleNewTagList = (newTag) =>{
+		if (tagData.tags.indexOf(newTag) === -1) {
+			setNewTagList([...newTagList, newTag])
+		}
+		setNewTag('')
+	}
+
 
 	return(
 		<div style={{width: "100%"}}>
@@ -72,7 +82,7 @@ const TAG_MODAL = ({img}) => {
 		 	<Panel header="Add new Tags" key="2">
 		 		<div className="change_tag_cur">
 		 			<h4 style={{color: "#3b5999"}}> Click the tag you want to add </h4>
-		 			{tagData.tags.map((tag) =>{
+		 			{leftTags.map((tag) =>{
 						return (
 							((add.indexOf(tag) === -1)?
 		 						(<Tag.CheckableTag key={tag} 
@@ -92,7 +102,7 @@ const TAG_MODAL = ({img}) => {
        		placeholder="Enter the new tag you want to add"
        		value={newTag}
        		onChange={(e) => setNewTag(e.target.value)}
-       		onSearch={() => {setAdd([...add, newTag]);setNewTagList([...newTagList, newTag]);}}
+       		onSearch={() => {setAdd([...add, newTag]);handleNewTagList(newTag);}}
        	/>
        	<div style={{marginLeft: 10}}>
        	{
@@ -108,7 +118,7 @@ const TAG_MODAL = ({img}) => {
 		 	</Panel>
 		 </Collapse>
 		 <div style={{position:"absolute", bottom: 60, display: "flex", flexDirection: "row"}}>
-		 	<div> Result: </div>
+		 	{(add.length || del.length)? <div> Result: </div> : <></>}
 		 		{del.length?
 		 			<Tag color="red" style={{marginLeft: 5}}>
 		 		 	Remove
@@ -131,6 +141,7 @@ const TAG_MODAL = ({img}) => {
 		</div>
 	)
 }
+
 
 const VIEW_MODAL = ({img}) => {
 	const Today = new Date()

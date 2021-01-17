@@ -68,7 +68,7 @@ export const ALL = forwardRef(({updPics, setUpdPics, delPics, setDelPics}, ref) 
 						<> Choose an album to view!</>
 						:
 						<> 
-							Current Album : {choose}
+							<> Current Album : {choose} </>
 							<Tooltip title="Go Back" type="bottom">
 								<Button style={{marginLeft: 5}} icon={<RollbackOutlined />} size="small" onClick={onClickGoBack}/>
 							</Tooltip> 
