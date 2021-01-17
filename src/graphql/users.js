@@ -45,6 +45,21 @@ const USER_LOGIN = gql`
         }
     }
 `
+const PWD_CHECK = gql`
+    mutation pwdCheck(
+        $name: String
+        $password: String!
+    ) {
+        pwdCheck(
+            name: $name
+            password: $password
+        ){
+            _id
+            name
+            email
+        }
+    }
+`
 
 const USER_LOGOUT = gql `
     mutation logoutUser{
@@ -52,4 +67,4 @@ const USER_LOGOUT = gql `
     }
 `
 
-export { USER_GET, USER_LOGIN, USER_LOGOUT, USER_REGISTER }
+export { USER_GET, USER_LOGIN, USER_LOGOUT, USER_REGISTER, PWD_CHECK }

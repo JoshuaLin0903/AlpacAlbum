@@ -46,6 +46,18 @@ const Mutation = {
 
         return true
     },
+    pwdCheck: async(_, args, {req}) => {
+        let user
+        user = await User.findOne({name: args.name})
+        const valid = await bcrypt.compare(args.password, user.password)
+        if(!valid){
+            throw new Error ('Invaild password!')
+            return false
+        }
+        else{
+            return true
+        }
+    },
     createImage: async(_, args, {pubsub}) => {
         const newTags = [...new Set(args.data.tags)]
         args.data.tags = newTags

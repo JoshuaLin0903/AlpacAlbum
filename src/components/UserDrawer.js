@@ -3,7 +3,7 @@ import {Drawer, Avatar, Button, Popconfirm, Divider, Popover, Collapse, Input, m
 import {UserOutlined, SettingOutlined, LogoutOutlined, KeyOutlined} from '@ant-design/icons';
 import { useMutation } from '@apollo/react-hooks'
 import '../style.css';
-import {USER_LOGOUT} from '../graphql/users'
+import {PWD_CHECK,USER_LOGOUT} from '../graphql/users'
 import pig from '../images/pig.png';
 import alpaca from '../images/alpaca_i.png';
 import shark from '../images/shark.png';
@@ -28,6 +28,7 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
 	const [open, setOpen] = useState(false) 
 	const [profilePic, setProfilePic] = useState('unset')
 
+	const [pwdCheck] = useMutation(PWD_CHECK)
 	const [logout] = useMutation(USER_LOGOUT)
 
 	const currentAvatar = (style, size) => {
@@ -81,18 +82,35 @@ const handleLogOut = async() =>{
 	}
   }
   const handlePwdChange = async()=>{
-	  if(CheckPassword!=currentUser.Password){
-		  message.error("Wrong current password!")
-		  return
-	  }
-	  else if(NewPassword==""||NewPassword2==""){
-		  message.error("Password cannot be empty!")
-		  return
-	  }
-	  else if(NewPassword!=NewPassword2){
-		  message.error("Please confirm your new password!")
-		  return
-	  }
+	let check=false
+	try{
+		const {data} = await pwdCheck({variables: { name: currentUser.getUser.name, password: CheckPassword }})
+		message.success('Successful!')
+		check=true
+		//await userRefetch();
+	} catch(e){
+		console.log(e.message)
+		switch (e.message) {
+		  case 'GraphQL error: Invaild password!' :
+			message.error('Wrong current password!')
+			return;
+			break;
+		  default:
+			break;
+		}
+	}
+	if(NewPassword==""||NewPassword2==""){
+		message.error("Password cannot be empty!")
+		return
+	}
+	else if(NewPassword!=NewPassword2){
+		message.error("Please confirm your new password!")
+		return
+	}
+	else{
+		alert("Change")
+	}
+
   }
 
 	return(
