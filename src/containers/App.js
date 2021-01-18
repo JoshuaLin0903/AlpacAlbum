@@ -15,6 +15,7 @@ import {
 import '../style.css';
 import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD, USER_DRAWER} from '../components'
 import alpaca from '../images/alpaca.png';
+import logo from '../images/logo.png';
 import {
   USER_GET,
   USER_GET_ALL,
@@ -151,9 +152,9 @@ function App() {
        	width={500} 
        	onCollapse={() => handleMenuCollapse()}>
      		<div className="logo-div">
-     			<HeartTwoTone twoToneColor="#eb2f96"/>
-       			LOGO
-      	</div>
+          <img className="logo" src={logo}/>
+          {(menuCollapsed)?<></>:<h1 style={{color: "white", marginLeft: 5}}> AlpacAbulm </h1>}
+        </div>
         <Menu theme="dark" mode="inline" style={{ textAlign: 'center' }} defaultSelectedKeys={['1']}>
           <Menu.Item key="1" 
            	icon={<HomeOutlined />} 

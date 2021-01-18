@@ -71,15 +71,14 @@ export const ALL = forwardRef(({updPics, setUpdPics, delPics, setDelPics, getUse
 							<> Current Album : {choose} </>
 							<Tooltip title="Go Back" type="bottom">
 								<Button style={{marginLeft: 5}} icon={<RollbackOutlined />} size="small" onClick={onClickGoBack}/>
-							</Tooltip> 
-							<Tooltip title="Choose mutiple pictures" type="bottom">
-								<Button icon={<CheckOutlined />} size="small" onClick={()=>{setMulti(true);}}/>
 							</Tooltip>
 							{multi?
 								<Tooltip title="Choose mutiple pictures" type="bottom">
 									<Button icon={<CloseOutlined />} size="small" onClick={()=>{setMulti(false);}}/>
 								</Tooltip>:
-								<></>
+								<Tooltip title="Choose mutiple pictures" type="bottom">
+									<Button icon={<CheckOutlined />} size="small" onClick={()=>{setMulti(true);}}/>
+								</Tooltip>
 							}
 						</>
 					}

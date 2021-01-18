@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import {Avatar, Button, Divider, Collapse, Tag, Input} from 'antd'
+import {Avatar, Button, Divider, Collapse, Tag, Input, message} from 'antd'
 import {
   UserOutlined,
   HeartOutlined,
@@ -61,6 +61,18 @@ const TAG_MODAL = ({img, setTagRecord}) => {
 		setNewTag('')
 	}
 
+	const handleEnter = () =>{
+		if (img.tags.indexOf(newTag) === -1){
+			setAdd([...add, newTag])
+			handleNewTagList(newTag)
+		}
+		else{
+			const str = newTag + " is already with this picture."
+			message.info(str)
+		}
+		setNewTag('')
+	}
+
 
 	return(
 		<div style={{width: "100%"}}>
@@ -111,7 +123,7 @@ const TAG_MODAL = ({img, setTagRecord}) => {
        		placeholder="Enter the new tag you want to add"
        		value={newTag}
        		onChange={(e) => setNewTag(e.target.value)}
-       		onSearch={() => {setAdd([...add, newTag]);handleNewTagList(newTag);}}
+       		onSearch={handleEnter}
        	/>
        	<div style={{marginLeft: 10}}>
        	{
@@ -261,6 +273,18 @@ const TAG_MODAL_MULTI = ({album, setTagRecord}) => {
 		setNewTag('')
 	}
 
+	const handleEnter = () =>{
+		if (newTag !== album){
+			setAdd([...add, newTag])
+			handleNewTagList(newTag)
+		}
+		else{
+			const str = newTag + " is already with these pictures."
+			message.info(str)
+		}
+		setNewTag('')
+	}
+
 
 	return(
 		<div style={{width: "100%"}}>
@@ -282,6 +306,14 @@ const TAG_MODAL_MULTI = ({album, setTagRecord}) => {
      					</Tag>)
        ))})
       }
+      <Input.Search
+		 		style={{margin: 10, width: "97%"}}
+       	enterButton="Add"
+       	placeholder="Enter the new tag you want to add"
+       	value={newTag}
+       	onChange={(e) => setNewTag(e.target.value)}
+       	onSearch={handleEnter}
+       />
 		 </div>
 		 :
 		 <Collapse expandIcon={({isActive}) => <TagsOutlined rotate={isActive ? 90 : 0}/>}
@@ -323,7 +355,7 @@ const TAG_MODAL_MULTI = ({album, setTagRecord}) => {
        		placeholder="Enter the new tag you want to add"
        		value={newTag}
        		onChange={(e) => setNewTag(e.target.value)}
-       		onSearch={() => {setAdd([...add, newTag]);handleNewTagList(newTag);}}
+       		onSearch={handleEnter}
        	/>
        	<div style={{marginLeft: 10}}>
        	{
