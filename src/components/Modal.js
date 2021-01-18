@@ -189,7 +189,7 @@ const VIEW_MODAL = ({img, getUserByID}) => {
 
 	const determinState = (date) => {
 		if(!date){
-			date = "yyyy/mm/dd"
+			date = "yyyy/mm/dd";
 		}
 		const d_sep = date.split('/')
 		if(d_sep[0] === today.year && d_sep[1] === today.month && d_sep[2] === today.date)
@@ -213,6 +213,13 @@ const VIEW_MODAL = ({img, getUserByID}) => {
 							<p style={{margin: 0, fontStyle: "italic", fontSize: 12}}> {determinState(img.date)} </p>
 						</div>
 					}
+				</div>
+				<div style={{marginTop: 10}}>
+					{img.tags.map((t) => {
+						return(
+							<Tag color="#108ee9"> #{t} </Tag>
+						)
+					})}
 				</div>
 				<br/>
 				<div className= "social-button">

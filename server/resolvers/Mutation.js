@@ -10,6 +10,7 @@ const Mutation = {
         const hashedpassword = await bcrypt.hash(args.password, 10)
         args.password = hashedpassword
         const user = new User(args)
+        console.log(user)
         await user.save()
 
         return user

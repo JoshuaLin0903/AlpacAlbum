@@ -1,7 +1,14 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import {Breadcrumb, Input, Upload, message, Tag, Divider, Button, Popconfirm} from 'antd'
-import {RocketTwoTone, InboxOutlined, UploadOutlined, SearchOutlined, StarFilled} from '@ant-design/icons'
+import {
+	RocketTwoTone, 
+	InboxOutlined, 
+	UploadOutlined, 
+	SearchOutlined, 
+	StarFilled,
+	TagsOutlined
+} from '@ant-design/icons'
 import axios from 'axios';
 import 'antd/dist/antd.css';
 
@@ -57,11 +64,7 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
 			if (tagData.tags.indexOf(searchValue) === -1){
 				const str = 'A new tag is added: "'+ searchValue + '".'
 				message.info({
-					content: str,
-					style: {
-						marginTop: '40vh',
-						marginRight: '30vw'
-					}
+					content: str
 				})
 			}
 			setSelect(buf)
@@ -69,11 +72,7 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
 		else if (select.indexOf(searchValue) !== -1){
 			const str = '"'+ searchValue + '" has already been selected.'
 			message.info({
-				content: str,
-				style: {
-					marginTop: '40vh',
-					marginRight: '40vw'
-				}
+				content: str
 			})
 		}
 		setSearchValue('')
@@ -172,23 +171,25 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
 				</Breadcrumb.Item>
 			</Breadcrumb>
 			<div className="main-display-up">
-				<h1 style={{fontSize: 35, marginBottom:25, color:"#00008B"}}> <UploadOutlined /> Upload to ... </h1>
+				<h1 style={{fontSize: 35, marginBottom:25, color:"#00008B", fontWeight: "bold"}}> 
+					Upload to ... 
+				</h1>
 				<div className="upload-div">
 					<div style={{width: "50%"}}>
 						<div className="upload-tag">
-							<h3 style={{color: "white"}}> Search a tag or enter a new tag. </h3>
+							<h2 style={{color: "white"}}> <TagsOutlined /> Search a tag or enter a new tag. </h2>
 							<Input allowClear value={searchValue} prefix={<SearchOutlined/>} style={{ width: "70%" }} 
 								onChange={(e) => {filterTags(e.target.value);setSearchValue(e.target.value);}}
 								onKeyDown={(e) => {
                   if(e.key === 'Enter') {selectTag()}
                 }}/>
 		 					<div className="chosen_tag_block-up">
-        				<Tag icon={<StarFilled />} color="purple" style={{marginTop: "5px"}}>
+        				<Tag icon={<StarFilled />} color="#26004d" style={{marginTop: "5px"}}>
         					Selected
         				</Tag>
         				: 
           			{select.map(tag => (
-         				<Tag key={tag} closable={true} color={(tagData.tags.indexOf(tag) === -1)?"#87d068":"#108ee9"}
+         				<Tag key={tag} closable={true} color={(tagData.tags.indexOf(tag) === -1)?"#87d068":"#6600cc"}
          				style={(select.indexOf(tag)===0)?{marginLeft: "5px",marginTop: "5px"}:{marginLeft: "0px",marginTop: "5px"}} 
              		onClose={() => closeTags(tag)}>
              			{tag}
@@ -202,7 +203,7 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
          						((showingTags.length === 0)?
           						<p style={{color:"gray", textAlign: "center"}}> No tags are found </p>
           						:
-          						(<><h4 style={{color: "#3b5999"}}> Click the tag you want to add </h4>
+          						(<><h3 style={{color: "#3b5999"}}> Click the tag you want to add </h3>
           						{showingTags.map(tag => {
           							return(
   												<CheckableTag	key={tag}	checked={select.indexOf(tag) > -1}
@@ -218,14 +219,13 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
        		</div>
        		<div style={{width: "50%"}}>
        			<div className="upload-dragger">
-       				<h3 style={{color: "white"}}> Upload your pictures here! </h3>
+       				<h2 style={{color: "white"}}> <UploadOutlined /> Upload your pictures here! </h2>
        				<div style={{width: 337, height: 150}}>
        					<Dragger {...upload_props} >
-       						<div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-										<p className="ant-upload-drag-icon">
-											<InboxOutlined style={{fontSize: 50}}/>
-										</p>
-									</div>
+									<p className="ant-upload-drag-icon">
+										<InboxOutlined style={{fontSize: 50}}/>
+									</p>
+									<p> Click or drag file to this area </p>
   							</Dragger>
   						</div>
   						{(fileList.length === 0)?<></>:
