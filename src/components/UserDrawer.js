@@ -21,14 +21,16 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
 	//user settings
 	const [NewUsername, setNewUserName] = useState('')
 	const [CheckPassword, setCheckPassword] = useState('')
-  const [NewPassword, setNewPassword]= useState('')
+  	const [NewPassword, setNewPassword]= useState('')
 	const [NewPassword2, setNewPassword2]= useState('')
-	const [avatarID, setAvatarID]= useState('')
+	const [NewAvatar, setNewAvatar] = useState('')
+	//const [AvatarSaved, setAvatarSaved] = useState('false')
 	//
 	const [open, setOpen] = useState(false) 
 	const [profilePic, setProfilePic] = useState('unset')
 	const {refetch: userRefetch} = useQuery(USER_GET)
 
+	//const [avatarChange] = useMutation(AVATAR_CHANGE)
 	const [pwdCheck] = useMutation(PWD_CHECK)
 	const [logout] = useMutation(USER_LOGOUT)
 
@@ -62,7 +64,6 @@ const handleLogOut = async() =>{
     await logout()
     window.location.reload()
 }
-
   const avatarOption = () => {
   	return(
   		<div>
@@ -75,13 +76,28 @@ const handleLogOut = async() =>{
   		</div>
   	)
   }
-
+  
   const handleUsernameChange = async()=>{
+	
 	if(NewUsername==""){
 		message.error("Username cannot be empty!")
 		return
 	}
   }
+  /*const handleAvatarChange = async()=>{
+	  
+	  try{
+		setNewAvatar(profilePic)
+		console.log(NewAvatar)
+		const {data} = await avatarChange({variables:{
+										name: currentUser.getUser.name,
+										avatar_new: NewAvatar}})
+		message.success('Success')
+	  }catch(e){
+		  console.log(e.message)
+	  }
+	  setAvatarSaved(true)
+  }*/
   const handlePwdChange = async()=>{
 	try{
 		const {data} = await pwdCheck({variables: { 
@@ -90,7 +106,7 @@ const handleLogOut = async() =>{
 									password_new: NewPassword,
 									password_new2: NewPassword2
 								}})
-		message.success('Success! Please log in again!')
+		message.success('Success!')
 	} catch(e){
 		console.log(e.message)
 		switch (e.message) {
@@ -137,6 +153,7 @@ const handleLogOut = async() =>{
    				{currentAvatar('', 80)}
    			</div>
    		</Popover>
+		
    		<h1 style={{textAlign: 'center', color: "#483D8B"}}> {currentUser.getUser.name} </h1>
       <br/>
       <Collapse style={{textAlign: 'center'}}>

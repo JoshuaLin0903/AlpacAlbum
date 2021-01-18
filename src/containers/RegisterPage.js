@@ -45,7 +45,9 @@ const RegisterPage=()=>{
             return
         }
         try{
-            const {data} = await register({variables: { name: username, password: password, email: email }})
+            const default_avatar = "unset"
+            console.log("hello")
+            const {data} = await register({variables: { name: username, password: password, email: email, avatar:default_avatar}})
             console.log(data.registerUser)
             message.success('Successfully registered!')
             window.location.assign("http://localhost:3000/#/")

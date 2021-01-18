@@ -5,15 +5,18 @@ const USER_REGISTER = gql`
         $name: String!
         $email: String!
         $password: String!
+        $avatar: String!
     ){
         registerUser(
             name: $name
             email: $email
             password: $password
+            avatar: $avatar
         ){
             _id
             name
             email
+            avatar
         }
     }
 `
@@ -33,6 +36,7 @@ const USER_GET = gql`
             _id
             name
             email
+            avatar
         }
     }
 `
@@ -42,18 +46,22 @@ const USER_LOGIN = gql`
         $name: String
         $email: String
         $password: String!
+        $avatar: String
     ) {
         loginUser(
             name: $name
             email: $email
             password: $password
+            avatar: $avatar
         ){
             _id
             name
             email
+            avatar
         }
     }
 `
+
 const PWD_CHECK = gql`
     mutation pwdCheck(
         $name: String
@@ -70,6 +78,7 @@ const PWD_CHECK = gql`
             _id
             name
             email
+            avatar
         }
     }
 `
