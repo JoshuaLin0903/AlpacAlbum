@@ -16,101 +16,54 @@ import {
 import { TAG_MODAL_MULTI } from './Modal'
 
 
-export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics, getUserByID}) => {
+export const CONTENT = ({tagData, updTagDataQuery, choose, multi, getUserByID}) => {
 	const [visible, setVisible] = useState(false)
 	const [tagRecord, setTagRecord] = useState({})//muti pic's tag change 存成{ADD:[...],DEL:[...]}
 	const [choosePic, setChoosePic] = useState([])//Chosen pic list
 
-	const [delImage] = useMutation(IMAGE_DELETE)
-
 	const taglist = (choose === 'All') ? null : [choose]
-	const {loading, error, data: imgData, updateQuery} = useQuery(IMAGE_QUERY, { variables: {tags: taglist} })
+	const {loading, error, data: imgData, updateQuery} = useQuery(IMAGE_QUERY, { variables: {tags: taglist}, fetchPolicy: 'cache-and-network' })
+	const [delImage] = useMutation(IMAGE_DELETE)
 
 	useEffect(() => {
 		setChoosePic([])
 	},[multi])
 
-	useEffect(()=>{
-		if(updPics[choose]){
-			if(updPics[choose].length > 0){
-				// console.log(`update Upload : ${updPics[choose].map(pic => pic._id)}`)
-				updateQuery(prev => ({
-					images: prev ? updPics[choose].concat(prev.images) : updPics[choose]
+	const updQueryOnDelete = (imgID) => {
+		// console.log(`delete pic ${image._id}`)
+		updateQuery(prev => {
+			const newImgs = prev.images.filter((img)=> img._id !== imgID)
+			if(newImgs.length === 0){
+				updTagDataQuery(prev => ({
+					tags: prev.tags.filter((tag) => tag !== choose)
 				}))
-				const newUpdPics = updPics
-				newUpdPics[choose] = []
-				setUpdPics(newUpdPics)
 			}
-		}
-		if(delPics[choose]){
-			if(delPics[choose].length > 0){
-				console.log(`update Delete : ${delPics[choose]}`)
-				updateQuery(prev => ({
-					images: prev ? prev.images.filter((img) => !(delPics[choose].includes(img._id))) : []
-				}))
-				const newDelPics = delPics
-				newDelPics[choose] = []
-				setDelPics(newDelPics)
-			}
-		}
-	}, [updPics, delPics, choose])
-
-	const deletePic = async(image) => {
-		// delete picture (single, call by <SINGLE_PIC>)
-		console.log(`delete pic ${image._id}`)
-		updateQuery(prev => ({
-			images: prev.images.filter((img)=> img._id !== image._id)
-		}))
-		// START: update DelPics object
-		const newDelPics = delPics
-		image.tags.map((tag)=>{
-			if(tag !== choose){
-				if(!newDelPics[tag]){
-					newDelPics[tag] = []
-				}
-				newDelPics[tag].push(image._id)
-			}
+			return {images: newImgs}
 		})
-		if(choose !== "All"){
-			if(!newDelPics["All"]){
-				newDelPics["All"] = []
-			}
-			newDelPics["All"].push(image._id)
-		}
-		// console.log(newDelPics)
-		setDelPics(newDelPics)
-		// END: update DelPics object
 	}
 
 	const deletePics = () => {
-		//delete pictures (multiple)
-		console.log(choosePic)
+		// delete pictures (multiple)
+		// console.log(choosePic)
 		setChoosePic([])
-		updateQuery((prev) => ({
-			images: prev.images.filter((img) => !choosePic.map(pic => pic._id).includes(img._id))
-		}))
-		// START: update DelPics object
-		const newDelPics = delPics
+		updateQuery((prev) => {
+			const newImgs = prev.images.filter((img) => !choosePic.map(pic => pic._id).includes(img._id))
+			if(newImgs.length === 0){
+				updTagDataQuery(prev => ({
+					tags: prev.tags.filter((tag) => tag !== choose)
+				}))
+			}
+			return {images: newImgs}
+		})
 		choosePic.map(async image => {
 			await delImage({ variables: {id: image._id} })
-			image.tags.map((tag)=>{
-				if(tag !== choose){
-					if(!newDelPics[tag]){
-						newDelPics[tag] = []
-					}
-					newDelPics[tag].push(image._id)
-				}
-			})
-			if(choose !== "All"){
-				if(!newDelPics["All"]){
-					newDelPics["All"] = []
-				}
-				newDelPics["All"].push(image._id)
-			}
 		})
-		console.log(newDelPics)
-		setDelPics(newDelPics)
-		// END: update DelPics object
+	}
+
+	const onChangeTag = (imgID, delArr) => {
+		if(delArr.includes(choose)){
+			updQueryOnDelete(imgID)
+		}
 	}
 
 	return(
@@ -135,8 +88,9 @@ export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics
 				<p>error</p>
 			) : (
 				imgData.images.map((img, index) => {
-					return (<SINGLE_PIC img={img} key={index} multi={multi} delPic={deletePic} 
-									choosePic={choosePic} setChoosePic={setChoosePic}
+					return (<SINGLE_PIC tagData={tagData} updTagDataQuery={updTagDataQuery}
+									img={img} key={index} multi={multi} onDelete={updQueryOnDelete} 
+									choosePic={choosePic} setChoosePic={setChoosePic} onChangeTag={onChangeTag}
 									getUserByID={getUserByID}/>)
 				})
 			)}
@@ -148,7 +102,7 @@ export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics
 				onCancel={() => {setVisible(false)}}
 				width={(choose === "All")? "30vw":"40vw"}
       		>
-      			<TAG_MODAL_MULTI album={choose} setTagRecord={setTagRecord}/>
+      			<TAG_MODAL_MULTI tagData={tagData} album={choose} setTagRecord={setTagRecord}/>
 			</Modal>
 		</>
 	)

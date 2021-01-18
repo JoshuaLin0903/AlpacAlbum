@@ -12,14 +12,14 @@ import {
 	TAG_ALL
 } from '../graphql/tags'
 
-export const ALL = forwardRef(({updPics, setUpdPics, delPics, setDelPics, getUserByID}, ref) => {
+export const ALL = forwardRef(({getUserByID}, ref) => {
 	const [state, setState] = useState('preview')
 	const [choose, setChoose] = useState('')
 	const [multi, setMulti] = useState(false)
 	const [pvRefs, setPvRefs] = useState([])
 	
-	const {loading:countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT)
-	const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
+	const {loading: countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT, {fetchPolicy: 'cache-and-network'})
+	const {loading: tagLoading, data: tagData, refetch: tagRefetch, updateQuery: updTagDataQuery} = useQuery(TAG_ALL)
 
 	useImperativeHandle(ref, () => ({
 		uploadUpdate(){
@@ -33,10 +33,6 @@ export const ALL = forwardRef(({updPics, setUpdPics, delPics, setDelPics, getUse
 		}
 	}))
 
-	useEffect(()=>{
-		countRefetch()
-	}, [])
-
 	useEffect(() => {
 		if(tagData){
 			if(tagData.tags){
@@ -48,12 +44,9 @@ export const ALL = forwardRef(({updPics, setUpdPics, delPics, setDelPics, getUse
 		}
 	}, [tagData])
 
-	const onClickGoBack = async() => {
-		if(Object.values(delPics).some(picArr => Array.isArray(picArr) && picArr.length > 0)){
-			console.log("refetch due to delete")
-			console.log(delPics)
-			await countRefetch();
-			await tagRefetch();
+	const onClickGoBack = () => {
+		if(choose === 'All'){
+			tagRefetch()
 		}
 		setState('preview')
 		setMulti(false);
@@ -87,25 +80,26 @@ export const ALL = forwardRef(({updPics, setUpdPics, delPics, setDelPics, getUse
 
 			<div className="main-display-left">
 				{(state === 'preview') ? (
-					(!tagLoading && !countLoading && countData.albumCount > 0) ? (
-						<>
-						<PREVIEW 
-							onChoose={() => {setState('content'); setChoose('All');}}
-							tag={'All'} key={0} ref={pvRefs[0]}
-						/>
-						{tagData.tags.map((td, index) => {
-							return (<PREVIEW 
-							onChoose={() => {setState('content'); setChoose(td);}} 
-							tag={td} key={index+1} ref={pvRefs[index+1]}
-							/>)
-						})}
-						</>
-					):(
-						<p>no photos</p>
+					(tagLoading || countLoading) ? (
+						<p>loading</p>
+					) : (
+						(countData.albumCount > 0) ? (
+							<>
+							<PREVIEW 
+								onChoose={() => {setState('content'); setChoose('All');}}
+								tag={'All'} key={0} ref={pvRefs[0]}
+							/>
+							{tagData.tags.map((td, index) => {
+								return (<PREVIEW updTagDataQuery={updTagDataQuery}
+								onChoose={() => {setState('content'); setChoose(td);}} 
+								tag={td} key={index+1} ref={pvRefs[index+1]}
+								/>)
+							})}
+							</>
+						):( <p>no photos</p> )
 					)
-				): <CONTENT choose={choose} multi={multi} 
-					updPics={updPics} setUpdPics={setUpdPics}
-					delPics={delPics} setDelPics={setDelPics}
+				): <CONTENT tagData={tagData.tags} updTagDataQuery={updTagDataQuery}
+					choose={choose} multi={multi}
 					getUserByID={getUserByID}
 				/>	
 				}

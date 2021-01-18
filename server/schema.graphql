@@ -16,6 +16,7 @@ type Mutation {
     deleteImage(id: ID): Image
     addImageTags(id: ID!, tags: [String!]!): Image
     deleteImageTags(id: ID!, tags: [String!]!): Image
+    setImageTags(id: ID!, tags: [String!]!): Image
     pwdCheck(name: String, email: String, password: String!, password_new: String!, password_new2: String!): User
 }
 

@@ -13,12 +13,12 @@ import {
 
 const { Dragger } = Upload;
 const { CheckableTag } = Tag;
-const client_id = 'bcdefbeb2fcc6da';
+const client_id = 'b9ddfed504a8d02';
 
-export const UPLOAD = ({ user, AppWhenUpload, updPics, setUpdPics}) =>{
+export const UPLOAD = ({ user, AppWhenUpload}) =>{
 	const [select, setSelect] = useState([])
 	const [showingTags, setShowingTags] = useState([])
-  const [searchValue, setSearchValue] = useState('')
+  	const [searchValue, setSearchValue] = useState('')
 	const [open, setOpen] = useState(false)
 	const [fileList, setFileList] = useState([])
 	const [uploading, setUploading] = useState(false)
@@ -109,21 +109,6 @@ export const UPLOAD = ({ user, AppWhenUpload, updPics, setUpdPics}) =>{
 				console.log(err)
 			})
 		}
-		// START: update UpdPics object
-		const newUpdPics = updPics
-		select.map((tag)=>{
-			if(!newUpdPics[tag]){
-				newUpdPics[tag] = []
-			}
-			newUpdPics[tag] = [...sucFileIDList.reverse() , ...newUpdPics[tag]]
-		})
-		if(!newUpdPics["All"]){
-			newUpdPics["All"] = []
-		}
-		newUpdPics["All"] = [...sucFileIDList , ...newUpdPics["All"]]
-		// console.log(newUpdPics)
-		setUpdPics(newUpdPics)
-		// END: update UpdPics object
 		await AppWhenUpload()
 		if(isMountedRef.current){
 			await tagRefetch()

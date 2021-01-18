@@ -8,7 +8,7 @@ import {
 	ALBUM_COUNT
 } from '../graphql/images'
 
-export const PREVIEW = forwardRef(({onChoose, tag}, ref) => {
+export const PREVIEW = forwardRef(({updTagDataQuery, onChoose, tag}, ref) => {
 	const {loading, error, data: imgData, refetch: previewRefetch} = useQuery(ALBUM_PREVIEW, { variables: {tag: (tag === 'All') ? null : tag}})
 	const {loading:countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT, { variables: {tag: (tag === 'All') ? null : tag}})
 
@@ -53,7 +53,7 @@ export const PREVIEW = forwardRef(({onChoose, tag}, ref) => {
 				</div>
 				<Divider style={{margin: 5}}/>
 				<h1 style={{marginLeft: 5, marginBottom: 0}}> {tag} </h1>
-				<div style={{marginLeft: 5}}>{countLoading?'':countData.albumCount} photos</div>
+				<div style={{marginLeft: 5}}>{countLoading ? '' :countData.albumCount} photos</div>
 				</>
 			}
 		</div>

@@ -32,8 +32,6 @@ function App() {
 	const [currentEvent, setCurrentEvent] = useState('home')
   const [mainDisplay, setMainDisplay] = useState(<HOMEPAGE/>)
   const [logIN, setLogIN] = useState(false)
-  const [updPics, setUpdPics] = useState({})
-  const [delPics, setDelPics] = useState({})
   const [selectTags, setSelectTags] = useState([])
 
   const [logout] = useMutation(USER_LOGOUT)
@@ -79,8 +77,6 @@ function App() {
         setMainDisplay(
         <ALL 
           ref = {allRef}
-          updPics={updPics} setUpdPics={setUpdPics}
-          delPics={delPics} setDelPics={setDelPics}
           getUserByID={getUserByID}
         />)
         break
@@ -89,7 +85,6 @@ function App() {
         <UPLOAD 
           user={currentUser.getUser}
           AppWhenUpload={whenUpload}
-          updPics={updPics} setUpdPics={setUpdPics}
         />)
         break
       default:

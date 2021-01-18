@@ -116,6 +116,16 @@ const Mutation = {
             throw new Error('Image not found.')
         }
         return img
+    },
+    setImageTags: async(_, args, {pubsub}) => {
+        const img = await Image.findOneAndUpdate(
+            {_id: ObjectId(args.id)},
+            {tags: args.tags}
+        )
+        if(img === null){
+            throw new Error('Image not found.')
+        }
+        return img
     }
 }
 

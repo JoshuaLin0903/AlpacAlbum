@@ -20,14 +20,14 @@ import giwua from '../images/giwua.png'
   
 const {Panel} = Collapse
 
-const TAG_MODAL = ({img, setTagRecord}) => {
+const TAG_MODAL = ({tagData, updTagDataQuery, img, setTagRecord}) => {
 	const [del, setDelete] = useState([])
 	const [add, setAdd] = useState([])
 	const [newTag, setNewTag] = useState('')
 	const [newTagList, setNewTagList] = useState([])
-	const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
+	// const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
 
-	const leftTags = tagData.tags.concat(img.tags).filter((v,i,arr) => (arr.indexOf(v) === arr.lastIndexOf(v)))
+	const leftTags = tagData.concat(img.tags).filter((v,i,arr) => (arr.indexOf(v) === arr.lastIndexOf(v)))
 
 	useEffect(() => {
 		setTagRecord({ADD:add,DEL:del})
@@ -55,10 +55,14 @@ const TAG_MODAL = ({img, setTagRecord}) => {
 	}
 
 	const handleNewTagList = (newTag) =>{
-		if (tagData.tags.indexOf(newTag) === -1) {
+		if (tagData.indexOf(newTag) === -1) {
 			setNewTagList([...newTagList, newTag])
+			updTagDataQuery(prev => {
+				const newTags = [...prev.tags, newTag]
+				newTags.sort()
+				return {tags: newTags}
+			})
 		}
-		setNewTag('')
 	}
 
 	const handleEnter = () =>{
@@ -67,7 +71,7 @@ const TAG_MODAL = ({img, setTagRecord}) => {
 			handleNewTagList(newTag)
 		}
 		else{
-			const str = newTag + " is already with this picture."
+			const str = `#${newTag} is already on this picture.`
 			message.info(str)
 		}
 		setNewTag('')
@@ -83,21 +87,24 @@ const TAG_MODAL = ({img, setTagRecord}) => {
 		 	<Panel header="Current Tags" key="1">
 		 		<div className="change_tag_cur">
 		 			<h4 style={{color: "#3b5999"}}> Click the tag you want to remove </h4>
-		 			{(img.tags.length)?
-		 				(img.tags.map((tag) => {
+		 			{(img.tags.length) ? (
+		 				img.tags.map((tag) => {
 		 					return(
-		 						((del.indexOf(tag) === -1)?
-		 						(<Tag.CheckableTag key={tag} 
-		 							onChange={() => setDelete([...del, tag])}>
-             			#{tag}
-            		</Tag.CheckableTag>)
-            		:
-            		(<Tag key={tag} closable={true} color="#f50" onClose={(e) => removeDel(e,tag)}>
-             			{tag}
-            		</Tag>)
-            	))}))
-		 				: 
-		 					(<p> This picture doesn't have any tags. </p>)}
+		 						((del.indexOf(tag) === -1) ? (
+									<Tag.CheckableTag key={tag} 
+										onChange={() => setDelete([...del, tag])}>
+										#{tag}
+									</Tag.CheckableTag>
+								):(
+								<Tag key={tag} closable={true} color="#f50" onClose={(e) => removeDel(e,tag)}>
+									{tag}
+								</Tag>)
+								)
+							)
+						})
+					) : (
+						<p> This picture doesn't have any tags. </p>
+					)}
 		 		</div>
 		 	</Panel>
 		 	<Panel header="Add new Tags" key="2">
@@ -144,7 +151,7 @@ const TAG_MODAL = ({img, setTagRecord}) => {
 		 			<Tag color="red" style={{marginLeft: 5}}>
 		 		 	Remove
 		 			{del.map((tag) => {
-		 				return(<> #{tag}</>)
+		 				return(` #${tag}`)
 		 			})}
 		 			</Tag>
 		 		:<></>
@@ -153,7 +160,7 @@ const TAG_MODAL = ({img, setTagRecord}) => {
 		 			<Tag color="blue" style={{marginLeft: 5}}>
 		 		 	Add
 		 			{add.map((tag) => {
-		 				return(<> #{tag}</>)
+		 				return(` #${tag}`)
 		 			})}
 		 			</Tag>
 		 		:<></>
@@ -231,15 +238,15 @@ const VIEW_MODAL = ({img, getUserByID}) => {
 	)
 }
 
-const TAG_MODAL_MULTI = ({album, setTagRecord}) => {
+const TAG_MODAL_MULTI = ({tagData, album, setTagRecord}) => {
 	const [del, setDelete] = useState([])
 	const [add, setAdd] = useState([])
 	const [newTag, setNewTag] = useState('')
 	const [newTagList, setNewTagList] = useState([])
 	const [remove, setRemove] = useState(false)
-	const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
+	// const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
 
-	const leftTags = tagData.tags.filter((t) => (t !== album))
+	const leftTags = tagData.filter((t) => (t !== album))
 
 	useEffect(() => {
 		setTagRecord({ADD:add,DEL:del})
@@ -267,7 +274,7 @@ const TAG_MODAL_MULTI = ({album, setTagRecord}) => {
 	}
 
 	const handleNewTagList = (newTag) =>{
-		if (tagData.tags.indexOf(newTag) === -1) {
+		if (tagData.indexOf(newTag) === -1) {
 			setNewTagList([...newTagList, newTag])
 		}
 		setNewTag('')
@@ -279,7 +286,7 @@ const TAG_MODAL_MULTI = ({album, setTagRecord}) => {
 			handleNewTagList(newTag)
 		}
 		else{
-			const str = newTag + " is already with these pictures."
+			const str = `#${newTag} is already on these pictures.`
 			message.info(str)
 		}
 		setNewTag('')

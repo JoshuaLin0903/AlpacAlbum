@@ -12,13 +12,16 @@ import {
 	IMAGE_QUERY,
 	IMAGE_DELETE
 } from '../graphql/images'
+import { TAG_SET } from '../graphql/tags'
 
-export const SINGLE_PIC = ({img, multi, delPic, choosePic, setChoosePic, getUserByID}) => {
+export const SINGLE_PIC = ({tagData, updTagDataQuery, img, multi, onDelete, choosePic, setChoosePic, onChangeTag, getUserByID}) => {
 	const [visible, setVisible] = useState(false)
 	const [delImage] = useMutation(IMAGE_DELETE)
 	const [choose, setChoose] = useState(false)
 	const [state, setState] = useState('none')
 	const [tagRecord, setTagRecord] = useState({}) //pic's tag change 存成{ADD:[...],DEL:[...]}
+
+	const [setImgTags] = useMutation(TAG_SET)
 
 	const newURL = img.url.slice(0, -4)+'b.jpg'
 
@@ -41,12 +44,17 @@ export const SINGLE_PIC = ({img, multi, delPic, choosePic, setChoosePic, getUser
 		//delete the picture
 		console.log(img)
 		await delImage({ variables: {id: img._id} })
-		await delPic(img)
+		onDelete(img._id)
 	}
 
-	const changeTag = () =>{
+	const changeTag = async() =>{
 		//changeTag, addTag
 		//tagRecord有存tag的變化
+		// console.log(tagRecord)
+		onChangeTag(img._id, tagRecord.DEL)
+		const newTags = (img.tags).filter(tag => !tagRecord.DEL.includes(tag)).concat(tagRecord.ADD)
+		await setImgTags({ variables: {id: img._id, tags: newTags}})
+		img.tags = newTags
 	}
 
 	return(
@@ -82,10 +90,10 @@ export const SINGLE_PIC = ({img, multi, delPic, choosePic, setChoosePic, getUser
 					centered
 					visible={visible}
 					onCancel={() => {setVisible(false);setState('none');}}
-					onOk={changeTag}
+					onOk={() => {changeTag(); setVisible(false); setState('none');}}
 					width={"40vw"}
       			>
-      				<TAG_MODAL img={img} setTagRecord={setTagRecord}/>
+      				<TAG_MODAL updTagDataQuery={updTagDataQuery} tagData={tagData} img={img} setTagRecord={setTagRecord}/>
 				</Modal>
 				:
 				((state === "view")?
