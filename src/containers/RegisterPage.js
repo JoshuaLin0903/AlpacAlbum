@@ -4,13 +4,16 @@ import 'antd/dist/antd.css';
 import { Layout, message, Input, Button} from 'antd';
 import {
   UserOutlined,
-  KeyOutlined
+  KeyOutlined,
+  MailOutlined
 } from '@ant-design/icons';
 
 import '../style.css';
 import {
   USER_REGISTER
 } from '../graphql/users'
+
+import gif from '../images/picGIF.gif';
 
 
 const { Header, Content, Footer } = Layout;
@@ -62,41 +65,43 @@ const RegisterPage=()=>{
     return(
     <Layout style={{ minHeight: '100vh'}}>
      	<Layout className="site-layout">
-         <Content style={{ margin: '0 16px' }}>
-         <Header className="header">
-        </Header>
-         <div className="main-display-home">
+         <Content style={{ margin: '0 16px'}}>
+         <div className="main-display-register">
+            <img src={gif} style={{width: 150, height: 150, margin: 10}}/>
+            <br/>
+            <h1 style={{fontSize: 30}}> Create your account </h1>
             <Input 
                 placeholder="Enter your username" 
-                prefix={<UserOutlined/>} 
-                style={{width: 250, margin:5}}
+                addonBefore={<><UserOutlined/> Username </>} 
+                style={{width: 350, margin:10}}
                 onChange={(e) => setUserName(e.target.value)}
             />
             <Input.Password placeholder="Enter your password"
-                prefix={<KeyOutlined />}
-                style={{width:250, margin:5}}
+                addonBefore={<><KeyOutlined /> Password </>}
+                style={{width:350, margin:10}}
                 onChange={(e) => setPassword(e.target.value)}
             />
             <Input.Password placeholder="Enter your password again"
-                prefix={<KeyOutlined />}
-                style={{width:250, margin:5}}
+                addonBefore={<><KeyOutlined /> Password </>}
+                style={{width:350, margin:10}}
                 onChange={(e) => setPassword2(e.target.value)}
             />
             <Input 
                 placeholder="Enter your email" 
-                prefix={<UserOutlined/>} 
-                style={{width: 250, margin:5}}
+                addonBefore={<><MailOutlined /> Email </>} 
+                style={{width: 350, margin:10}}
                 onChange={(e) => setEmail(e.target.value)}
             />
             <Button type="primary" 
-                style={{margin:5}} 
+                style={{margin:10}} 
                 onClick={handleRegister} > 
                 Register
             </Button>
-            </div>
+            <a href="/#/">Back to Homepage</a>
+          </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}> 
-            <a href="/#/">Back to Homepage</a>
+            @2021 WebProgramming, Group 66
         </Footer>
         </Layout>
     </Layout>

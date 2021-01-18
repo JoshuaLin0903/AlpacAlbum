@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import {Drawer, Button, Input, message, Divider} from 'antd'
 import { LoginOutlined, UserOutlined, KeyOutlined } from '@ant-design/icons';
+import gif from '../images/picGIF.gif';
 import logo from '../images/logo.png';
 import '../style.css';
 import {
@@ -80,10 +81,11 @@ export const LOGIN_DRAWER = ({setLogIN}) =>{
           <Button type="primary" style={{margin:10}} onClick={handleLogIn} size="large"> 
             Login
           </Button>
-          <div style={{position: "absolute", top: "34%", left: "25%"}}> 
+          <div style={{position: "absolute", top: "34%", left: "27%"}}> 
             Not a user yet?
           	<a href="/#/register"> Sign up</a>
           </div>
+          <img src={gif} style={{width: 60, height: 60, position: "absolute", right: "5%"}}/>
         </div>
    		</Drawer>
 		</>

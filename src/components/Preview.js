@@ -3,6 +3,8 @@ import { useQuery } from '@apollo/react-hooks'
 import '../style.css'
 import {Divider} from 'antd';
 
+import noPic from '../images/no_pic.png';
+
 import {
 	ALBUM_PREVIEW,
 	ALBUM_COUNT
@@ -27,7 +29,7 @@ export const PREVIEW = forwardRef(({onChoose, tag}, ref) => {
 
 	const showImg = (idx) => {
 		if(idx >= imgData.albumPreview.length){
-			return <img className="img-empty" src={"https://imgur.com/OKg01CIs.png"}/>
+			return <img className="img-empty" src={noPic} style={{width: 90, height: 90}}/>
 		}
 		const url = imgData.albumPreview[idx].url.slice(0, -4)+'s.jpg'
 		return <img className="img-preview" src={url}/>
