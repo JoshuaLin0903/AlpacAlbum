@@ -33,6 +33,16 @@
   justify-content:center;
 }
 
+.main-display-register{
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  padding: 24px; 
+  min-height: 664px;
+  align-items:center;
+  justify-content:center;
+}
+
 .main-display-left{
   background: #fff;
   padding: 24px; 
@@ -244,7 +254,7 @@
 .img-show-tag{
   position: absolute;
   bottom: 5px;
-  right: 0px;
+  right: 5px;
 }
 
 .img-show-choose {

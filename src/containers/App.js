@@ -192,7 +192,7 @@ function App() {
           )}
         </Content>
         <Footer style={{ textAlign: 'center' }}>
-           footer
+           @2021 WebProgramming, Group 66
         </Footer>
       </Layout>
     </Layout>
