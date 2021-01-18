@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 
 import '../style.css';
-import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD, USER_DRAWER} from '../components'
+import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD, USER_DRAWER, LOGIN_DRAWER} from '../components'
 import alpaca from '../images/alpaca.png';
 import logo from '../images/logo.png';
 import {
@@ -32,45 +32,15 @@ function App() {
 	const [currentEvent, setCurrentEvent] = useState('home')
   const [mainDisplay, setMainDisplay] = useState(<HOMEPAGE/>)
   const [logIN, setLogIN] = useState(false)
-  const [username, setUserName] = useState('')
-  const [password, setPassword]= useState('')
   const [updPics, setUpdPics] = useState({})
   const [delPics, setDelPics] = useState({})
   const [selectTags, setSelectTags] = useState([])
 
-  const [login] = useMutation(USER_LOGIN)
   const [logout] = useMutation(USER_LOGOUT)
   const {loading: UserLoading, data: currentUser, refetch: userRefetch} = useQuery(USER_GET)
   const {data: userData} = useQuery(USER_GET_ALL)
 
-  const allRef = useRef()
-
-  const handleLogIn = async () => {
-    if (username === '' || password === ''){
-      message.error('Both username and password must be entered!')
-      return
-    }
-    try{
-      const {data} = await login({variables: { name: username, password: password }})
-      console.log(data.loginUser)
-      message.success('Successfully login!')
-      await userRefetch();
-      setLogIN(true)
-    } catch(e){
-      console.log(e.message)
-      switch (e.message) {
-        case 'GraphQL error: User not found' :
-          message.error('User not found!')
-          break;
-        case 'GraphQL error: Invaild password!' :
-          message.error('Wrong password!')
-          break;
-        default:
-          message.error('ERROR')
-          break;
-      }
-    }
-  }
+  const allRef = useRef()  
 
   const handleLogOut = async() =>{
     await logout()
@@ -185,27 +155,29 @@ function App() {
       (<></>)}
       <Layout className="site-layout">
       	<Header className="header">
-          {logIN?
-          <>
-            <div className="user">
-              <USER_DRAWER UserLoading={UserLoading} currentUser={currentUser}/>
+          <div className="user">
+            {logIN?
+              <>
+                <USER_DRAWER UserLoading={UserLoading} currentUser={currentUser}/>
+                <div>
+                  <Popconfirm placement="bottom" onConfirm={handleLogOut} 
+                    title="Are you sure you want to logout?"
+                    okText="Yes" cancelText="No"
+                  >
+                    <Button ghost="true" size="small" style={{color:"white", borderColor: "gray", marginLeft: 10}}> 
+                      Logout 
+                    </Button>
+                  </Popconfirm>
+                </div>
+              </>:
               <div>
-                <Popconfirm placement="bottom" 
-                  onConfirm={handleLogOut} 
-                  title="Are you sure you want to logout?"
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  <Button ghost="true" size="small" 
-                  style={{color:"white", borderColor: "gray", marginLeft: 10}}> 
-                    Logout 
-                  </Button>
-                </Popconfirm>
+                <LOGIN_DRAWER setLogIN={setLogIN}/>
+                <Button type="link" href="/#/register" size="small" style={{color:"white", borderColor: "gray", marginLeft: 10}}> 
+                  Sign up
+                </Button>
               </div>
-            </div>
-          </>
-          :
-          <></>}
+            }
+          </div>
       	</Header>
         <Content style={{ margin: '0 16px' }}>
           {UserLoading ? '' :
@@ -215,33 +187,6 @@ function App() {
               <div className="main-display-home">
                 <div className="image-display">
                   <img src={alpaca}/>
-                </div>
-                <Input 
-                  placeholder="Enter your username" 
-                  prefix={<UserOutlined/>} 
-                  style={{width: 250, margin:5}}
-                  onChange={(e) => setUserName(e.target.value)}
-                  onKeyDown={(e) => {
-                    if(e.key === 'Enter') {handleLogIn()}
-                  }}/>
-                <Input.Password placeholder="Enter your password"
-                  prefix={<KeyOutlined />}
-                  style={{width:250, margin:5}}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={(e) => {
-                    if(e.key === 'Enter') {handleLogIn()}
-                  }}/>
-                <div className="login-button">
-                  <Button type="primary" 
-                    style={{margin:10}} 
-                    onClick={handleLogIn} 
-                    size="large"> 
-                    Login
-                  </Button>
-                  <div style={{margin: 2}}> 
-                    Not a user yet?
-                    <a href="/#/register"> Sign up</a>
-                  </div>
                 </div>
               </div>
           )}

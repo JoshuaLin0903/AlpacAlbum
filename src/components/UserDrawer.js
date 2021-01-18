@@ -21,7 +21,7 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
 	//user settings
 	const [NewUsername, setNewUserName] = useState('')
 	const [CheckPassword, setCheckPassword] = useState('')
-    const [NewPassword, setNewPassword]= useState('')
+  const [NewPassword, setNewPassword]= useState('')
 	const [NewPassword2, setNewPassword2]= useState('')
 	const [avatarID, setAvatarID]= useState('')
 	//
