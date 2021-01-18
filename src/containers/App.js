@@ -36,7 +36,7 @@ function App() {
 
   const [logout] = useMutation(USER_LOGOUT)
   const {loading: UserLoading, data: currentUser, refetch: userRefetch} = useQuery(USER_GET)
-  const {data: userData} = useQuery(USER_GET_ALL)
+  const {data: userData, refetch: userAllRefetch} = useQuery(USER_GET_ALL)
 
   const allRef = useRef()  
 
@@ -60,9 +60,14 @@ function App() {
     }
   }
 
+  const onLogin = async() => {
+    await userRefetch()
+    await userAllRefetch()
+  }
+
   const getUserByID = (id) => {
-    if(!userData){return null}
-    return userData.getUsers.find(user => user._id === id)
+    if(!userData){ return null }
+    return userData.getUsers.find(user => user._id === id) || {name: 'unknown user', avatar: "unset"}
   }
 
   useEffect(()=>{
@@ -166,7 +171,7 @@ function App() {
                 </div>
               </>:
               <div>
-                <LOGIN_DRAWER setLogIN={setLogIN}/>
+                <LOGIN_DRAWER setLogIN={setLogIN} userRefetch={onLogin}/>
                 <Button type="link" href="/#/register" size="small" style={{color:"white", borderColor: "gray", marginLeft: 10}}> 
                   Sign up
                 </Button>

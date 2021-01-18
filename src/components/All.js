@@ -45,10 +45,7 @@ export const ALL = forwardRef(({getUserByID}, ref) => {
 	}, [tagData])
 
 	const onClickGoBack = () => {
-		if(choose === 'All'){
-			tagRefetch()
-		}
-		setState('preview')
+		setState('preview');
 		setMulti(false);
 	}
 	

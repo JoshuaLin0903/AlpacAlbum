@@ -1,24 +1,20 @@
 import React, {useState} from 'react'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import {Drawer, Button, Input, message, Divider} from 'antd'
 import { LoginOutlined, UserOutlined, KeyOutlined } from '@ant-design/icons';
 import gif from '../images/picGIF.gif';
 import logo from '../images/logo.png';
 import '../style.css';
 import {
-  USER_GET,
-  USER_GET_ALL,
-  USER_LOGIN,
-  USER_LOGOUT
+  USER_LOGIN
 } from '../graphql/users'
 
-export const LOGIN_DRAWER = ({setLogIN}) =>{
+export const LOGIN_DRAWER = ({setLogIN, userRefetch}) =>{
 	const [open, setOpen] = useState(false) 
 	const [password, setPassword]= useState('')
 	const [username, setUserName] = useState('')
 
 	const [login] = useMutation(USER_LOGIN)
-	const {loading: UserLoading, data: currentUser, refetch: userRefetch} = useQuery(USER_GET)
 
 	const handleLogIn = async () => {
     if (username === '' || password === ''){
