@@ -21,6 +21,8 @@ export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics
 	const [tagRecord, setTagRecord] = useState({})//muti pic's tag change 存成{ADD:[...],DEL:[...]}
 	const [choosePic, setChoosePic] = useState([])//Chosen pic list
 
+	const [delImage] = useMutation(IMAGE_DELETE)
+
 	const taglist = (choose === 'All') ? null : [choose]
 	const {loading, error, data: imgData, updateQuery} = useQuery(IMAGE_QUERY, { variables: {tags: taglist} })
 
@@ -42,7 +44,7 @@ export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics
 		}
 		if(delPics[choose]){
 			if(delPics[choose].length > 0){
-				// console.log(`update Delete : ${delPics[choose]}`)
+				console.log(`update Delete : ${delPics[choose]}`)
 				updateQuery(prev => ({
 					images: prev ? prev.images.filter((img) => !(delPics[choose].includes(img._id))) : []
 				}))
@@ -82,6 +84,33 @@ export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics
 
 	const deletePics = () => {
 		//delete pictures (multiple)
+		console.log(choosePic)
+		setChoosePic([])
+		updateQuery((prev) => ({
+			images: prev.images.filter((img) => !choosePic.map(pic => pic._id).includes(img._id))
+		}))
+		// START: update DelPics object
+		const newDelPics = delPics
+		choosePic.map(async image => {
+			await delImage({ variables: {id: image._id} })
+			image.tags.map((tag)=>{
+				if(tag !== choose){
+					if(!newDelPics[tag]){
+						newDelPics[tag] = []
+					}
+					newDelPics[tag].push(image._id)
+				}
+			})
+			if(choose !== "All"){
+				if(!newDelPics["All"]){
+					newDelPics["All"] = []
+				}
+				newDelPics["All"].push(image._id)
+			}
+		})
+		console.log(newDelPics)
+		setDelPics(newDelPics)
+		// END: update DelPics object
 	}
 
 	return(
@@ -107,7 +136,8 @@ export const CONTENT = ({choose, multi, updPics, setUpdPics, delPics, setDelPics
 			) : (
 				imgData.images.map((img, index) => {
 					return (<SINGLE_PIC img={img} key={index} multi={multi} delPic={deletePic} 
-									choosePic={choosePic} setChoosePic={setChoosePic} getUserByID={getUserByID}/>)
+									choosePic={choosePic} setChoosePic={setChoosePic}
+									getUserByID={getUserByID}/>)
 				})
 			)}
 

@@ -102,7 +102,7 @@ function App() {
         setMainDisplay(<HOMEPAGE/>)
         break
       case 'search':
-        setMainDisplay(<SEARCH selectTags={selectTags}/>)
+        setMainDisplay(<SEARCH selectTags={selectTags} getUserByID={getUserByID}/>)
         break
       case 'all':
         setMainDisplay(

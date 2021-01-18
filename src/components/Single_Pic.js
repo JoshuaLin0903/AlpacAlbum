@@ -54,9 +54,9 @@ export const SINGLE_PIC = ({img, multi, delPic, choosePic, setChoosePic, getUser
 			<div className="img-show-div">
 				{(multi)?
 					<>
-					{choose? <img className="img-show-blur"  src={newURL}/>:<img className="img-show"  src={newURL}/>}
+					{(choose && choosePic.includes(img)) ? <img className="img-show-blur"  src={newURL}/>:<img className="img-show"  src={newURL}/>}
 					<div className="img-show-choose" onClick={() => {setChoose(!choose);}}>
-						{choose?
+						{(choose && choosePic.includes(img)) ?
 							<CheckCircleTwoTone twoToneColor="#32CD32" style={{fontSize: 30}}/>:<></>
 						}
 					</div>

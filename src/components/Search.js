@@ -7,7 +7,7 @@ import '../style.css'
 import { SINGLE_PIC } from './Single_Pic'
 import { IMAGE_QUERY } from '../graphql/images'
 
-export const SEARCH= ({selectTags}) =>{
+export const SEARCH= ({selectTags, getUserByID}) =>{
 	const [showTags,setShowTags] = useState([])
 
 	const [getSearchImages, {loading, data}] = useLazyQuery(IMAGE_QUERY, {
@@ -46,7 +46,12 @@ export const SEARCH= ({selectTags}) =>{
 						) : (
 							<div className="main-display-left">
 								{data.images.map((img, index)=>{
-									return (<SINGLE_PIC img={img} key={index} multi={false} delPic={()=>{return true}} choosePic={[]} setChoosePic={()=>{return true}}/>)
+									return (<SINGLE_PIC
+										img={img} key={index} multi={false} 
+										delPic={()=>{return true}} choosePic={[]}
+										setChoosePic={()=>{return true}}
+										getUserByID={getUserByID}
+									/>)
 								})}
 							</div>
 						)}
