@@ -58,10 +58,14 @@ const PWD_CHECK = gql`
     mutation pwdCheck(
         $name: String
         $password: String!
+        $password_new: String!
+        $password_new2: String!
     ) {
         pwdCheck(
             name: $name
             password: $password
+            password_new: $password_new
+            password_new2: $password_new2
         ){
             _id
             name

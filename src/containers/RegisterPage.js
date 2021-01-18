@@ -47,7 +47,8 @@ const RegisterPage=()=>{
         try{
             const {data} = await register({variables: { name: username, password: password, email: email }})
             console.log(data.registerUser)
-            message.success('Successfully register!')
+            message.success('Successfully registered!')
+            window.location.assign("http://localhost:3000/#/")
         } catch(e){
             console.log(e.message)
             if(e.message.includes("GraphQL error: E11000 duplicate key error")){

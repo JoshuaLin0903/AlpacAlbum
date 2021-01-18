@@ -55,7 +55,18 @@ const Mutation = {
             return false
         }
         else{
-            return true
+            if(args.password_new==""||args.password_new2==""){
+                throw new Error ('Password cannot be empty')
+            }
+            else if(args.password_new!=args.password_new2){
+                throw new Error ('Please confirm your new password')
+            }
+            else{
+                const hashedpassword = await bcrypt.hash(args.password_new, 10)
+                user.password = hashedpassword;
+                user.save()
+                return true;
+            }
         }
     },
     createImage: async(_, args, {pubsub}) => {

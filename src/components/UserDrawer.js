@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
 import {Drawer, Avatar, Button, Popconfirm, Divider, Popover, Collapse, Input, message} from 'antd'
 import {UserOutlined, SettingOutlined, LogoutOutlined, KeyOutlined} from '@ant-design/icons';
-import { useMutation } from '@apollo/react-hooks'
+import {useQuery, useMutation } from '@apollo/react-hooks'
 import '../style.css';
-import {PWD_CHECK,USER_LOGOUT} from '../graphql/users'
+import {USER_GET,PWD_CHECK,USER_LOGOUT} from '../graphql/users'
 import pig from '../images/pig.png';
 import alpaca from '../images/alpaca_i.png';
 import shark from '../images/shark.png';
@@ -27,6 +27,7 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
 	//
 	const [open, setOpen] = useState(false) 
 	const [profilePic, setProfilePic] = useState('unset')
+	const {refetch: userRefetch} = useQuery(USER_GET)
 
 	const [pwdCheck] = useMutation(PWD_CHECK)
 	const [logout] = useMutation(USER_LOGOUT)
@@ -82,12 +83,14 @@ const handleLogOut = async() =>{
 	}
   }
   const handlePwdChange = async()=>{
-	let check=false
 	try{
-		const {data} = await pwdCheck({variables: { name: currentUser.getUser.name, password: CheckPassword }})
-		message.success('Successful!')
-		check=true
-		//await userRefetch();
+		const {data} = await pwdCheck({variables: { 
+									name: currentUser.getUser.name, 
+									password: CheckPassword,
+									password_new: NewPassword,
+									password_new2: NewPassword2
+								}})
+		message.success('Success! Please log in again!')
 	} catch(e){
 		console.log(e.message)
 		switch (e.message) {
@@ -108,7 +111,8 @@ const handleLogOut = async() =>{
 		return
 	}
 	else{
-		alert("Change")
+		message.success('Success! Please log in again!')
+		window.location.reload()
 	}
 
   }
