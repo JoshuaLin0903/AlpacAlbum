@@ -123,7 +123,7 @@ function App() {
        	onCollapse={() => handleMenuCollapse()}>
      		<div className="logo-div">
           <img className="logo" src={logo}/>
-          {(menuCollapsed)?<></>:<h1 style={{color: "white", marginLeft: 5}}> AlpacAlbum </h1>}
+          {(menuCollapsed)?<></>:<h1 style={{color: "white", margin: 5}}> AlpacAlbum </h1>}
         </div>
         <Menu theme="dark" mode="inline" style={{ textAlign: 'center' }} defaultSelectedKeys={['1']}>
           <Menu.Item key="1" 

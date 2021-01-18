@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import {Modal, Button, Popconfirm} from 'antd'
+import { Modal, Button, Popconfirm, Tag } from 'antd'
 import { TAG_MODAL, VIEW_MODAL } from './Modal'
 import {
   EyeOutlined,
@@ -64,15 +64,24 @@ export const SINGLE_PIC = ({img, multi, delPic, choosePic, setChoosePic, getUser
 					:
 					<>
 					<img className="img-show"  src={newURL}/>
-					<div className="img-show-button">
-						<Button icon={<EyeOutlined />} type="text" onClick={() => {setVisible(true);setState('view')}}/>
-						<Popconfirm placement="bottom" onConfirm={deletePic} 
-							title="Are you sure you want to delete this picture?" 
-							okText="Yes" cancelText="No" 
-						>
+					<div className="img-show-hover">
+						<div className="img-show-button">
+							<Button icon={<EyeOutlined />} type="text" onClick={() => {setVisible(true);setState('view')}}/>
+							<Popconfirm placement="bottom" onConfirm={deletePic} 
+								title="Are you sure you want to delete this picture?" 
+								okText="Yes" cancelText="No" 
+							>
 							<Button icon={<DeleteOutlined />} type="text"/>
-						</Popconfirm>
-						<Button icon={<FolderAddOutlined />} type="text" onClick={() => {setVisible(true);setState('tag')}}/>
+							</Popconfirm>
+							<Button icon={<FolderAddOutlined />} type="text" onClick={() => {setVisible(true);setState('tag')}}/>
+						</div>
+						<div className="img-show-tag">
+							{img.tags.map((t) => {
+								return(
+									<> #{t} </>
+								)
+							})}
+						</div>
 					</div>
 					</>}
 			</div>
