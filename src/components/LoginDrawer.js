@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import {Drawer, Button, Input, message} from 'antd'
+import {Drawer, Button, Input, message, Divider} from 'antd'
 import { LoginOutlined, UserOutlined, KeyOutlined } from '@ant-design/icons';
 import logo from '../images/logo.png';
 import '../style.css';
@@ -54,16 +54,28 @@ export const LOGIN_DRAWER = ({setLogIN}) =>{
       </Button>
       <Drawer title={<><LoginOutlined /> Login </>} placement="right" closable={false} visible={open}
    			onClose={() => setOpen(false)} width={400}>
-   			<Input placeholder="Enter your username" prefix={<UserOutlined/>} style={{width: 250, margin:5}}
+   			<br/>
+   			<br/>
+   			<div style={{display: "flex", flexDirection: "row"}}>
+   				<img src={logo} style={{width: 90, height: 90}}/>
+   				<h1 style={{fontSize: 40, margin: "10px 15px", color: "#4B0082"}}> AlpacAlbum </h1>
+   			</div>
+   			<br/>
+   			<br/>
+   			<Divider/>
+   			<h3 style={{marginLeft:5}}> Username </h3>
+   			<Input prefix={<UserOutlined/>} style={{width:"95%", margin:5}}
           onChange={(e) => setUserName(e.target.value)}
           onKeyDown={(e) => {
             if(e.key === 'Enter') {handleLogIn()}
           }}/>
-        <Input.Password placeholder="Enter your password" prefix={<KeyOutlined />} style={{width:250, margin:5}}
+        <h3 style={{marginLeft:5}}> Password </h3>
+        <Input.Password prefix={<KeyOutlined />} style={{width:"95%", margin:5}}
           onChange={(e) => setPassword(e.target.value)}
 					onKeyDown={(e) => {
             if(e.key === 'Enter') {handleLogIn()}
           }}/>
+        <Divider/>
         <div className="login-button">
           <Button type="primary" style={{margin:10}} onClick={handleLogIn} size="large"> 
             Login
