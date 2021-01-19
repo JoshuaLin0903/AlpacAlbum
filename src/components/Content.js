@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import {Modal, Button, Popconfirm, Affix} from 'antd'
+import {Modal, Button, Popconfirm, message, Affix} from 'antd'
 import {
   DeleteOutlined,
   FolderAddOutlined,
@@ -9,21 +9,23 @@ import {
 
 import '../style.css'
 import { SINGLE_PIC } from './Single_Pic'
+import { TAG_MODAL_MULTI } from './TagModal'
 import {
 	IMAGE_QUERY,
 	IMAGE_DELETE
 } from '../graphql/images'
-import { TAG_MODAL_MULTI } from './TagModal'
-
+import { TAG_SET } from '../graphql/tags'
 
 export const CONTENT = ({tagData, updTagDataQuery, choose, multi, getUserByID}) => {
 	const [visible, setVisible] = useState(false)
+	const [rstTagRecord, setRstTagRecord] = useState(false)
 	const [tagRecord, setTagRecord] = useState({})//muti pic's tag change 存成{ADD:[...],DEL:[...]}
 	const [choosePic, setChoosePic] = useState([])//Chosen pic list
 
 	const taglist = (choose === 'All') ? null : [choose]
 	const {loading, error, data: imgData, updateQuery} = useQuery(IMAGE_QUERY, { variables: {tags: taglist}, fetchPolicy: 'cache-and-network' })
 	const [delImage] = useMutation(IMAGE_DELETE)
+	const [setImgTags] = useMutation(TAG_SET)
 
 	useEffect(() => {
 		setChoosePic([])
@@ -66,6 +68,36 @@ export const CONTENT = ({tagData, updTagDataQuery, choose, multi, getUserByID}) 
 		}
 	}
 
+	const changeTags = () => {
+		console.log("change Tags")
+		console.log(tagRecord)
+		console.log(choosePic)
+		if(tagRecord.DEL.length === 0 && tagRecord.ADD.length === 0){
+			message.info({ content: 'Warning: no tag changes.'})
+			return
+		}
+		setChoosePic([])
+		if(tagRecord.DEL.includes(choose)){
+			updateQuery((prev) => {
+				const newImgs = prev.images.filter((img) => !choosePic.map(pic => pic._id).includes(img._id))
+				if(newImgs.length === 0){
+					updTagDataQuery(prev => ({
+						tags: prev.tags.filter((tag) => tag !== choose)
+					}))
+				}
+				return {images: newImgs}
+			})
+		}
+		choosePic.map(async img => {
+			let newTags = (img.tags).filter(tag => !tagRecord.DEL.includes(tag)).concat(tagRecord.ADD)
+			newTags = [...new Set(newTags)]
+			await setImgTags({ variables: {id: img._id, tags: newTags}})
+			img.tags = newTags
+		})
+		setRstTagRecord(true);
+		setVisible(false);
+	}
+
 	return(
 		<>
 			{multi?
@@ -75,9 +107,9 @@ export const CONTENT = ({tagData, updTagDataQuery, choose, multi, getUserByID}) 
 						title="Are you sure you want to delete these pictures?" 
 						okText="Yes" cancelText="No" 
 					>
-						<Button icon={<DeleteOutlined />} size="large" type="primary" danger/>
+						<Button icon={<DeleteOutlined />} type="primary" size="large" disabled={choosePic.length === 0} danger/>
 					</Popconfirm>
-					<Button icon={<FolderAddOutlined />} size="large" type="primary" onClick={() => setVisible(true)}/>
+					<Button icon={<FolderAddOutlined />} type="primary" size="large" disabled={choosePic.length === 0} onClick={() => setVisible(true)}/>
 				</Affix>
 				:<></>
 			}
@@ -100,9 +132,10 @@ export const CONTENT = ({tagData, updTagDataQuery, choose, multi, getUserByID}) 
 				centered
 				visible={visible}
 				onCancel={() => {setVisible(false)}}
+				onOk={changeTags}
 				width={(choose === "All")? "30vw":"40vw"}
       		>
-      			<TAG_MODAL_MULTI tagData={tagData} album={choose} setTagRecord={setTagRecord}/>
+      			<TAG_MODAL_MULTI tagData={tagData} album={choose} setTagRecord={setTagRecord} rstTagRecord={rstTagRecord} setRstTagRecord={setRstTagRecord} />
 			</Modal>
 		</>
 	)

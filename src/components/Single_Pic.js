@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import { useQuery, useMutation } from '@apollo/react-hooks'
-import { Modal, Button, Popconfirm, Tag, message } from 'antd'
+import { useMutation } from '@apollo/react-hooks'
+import { Modal, Button, Popconfirm, message } from 'antd'
 import { TAG_MODAL } from './TagModal'
 import { VIEW_MODAL } from './ViewModal'
 import {
@@ -10,7 +10,6 @@ import {
   CheckCircleTwoTone
 } from '@ant-design/icons';
 import {
-	IMAGE_QUERY,
 	IMAGE_DELETE
 } from '../graphql/images'
 import { TAG_SET } from '../graphql/tags'
@@ -31,15 +30,21 @@ export const SINGLE_PIC = ({tagData, updTagDataQuery, img, multi, onDelete, choo
 	},[multi])
 
 	useEffect(()=>{
-		if(choose){
+		if(choosePic.length === 0){
+			setChoose(false)
+		}
+	},[choosePic])
+
+	const onMultiChoose = () => {
+		setChoose(!choose);
+		if(!choose){
 			setChoosePic([...choosePic, img])
 		}
 		else{
 			const newPic = choosePic.filter((p) => (p !== img))
 			setChoosePic(newPic)
 		}
-
-	},[choose])
+	}
 
 	const deletePic = async()=>{
 		//delete the picture
@@ -68,9 +73,9 @@ export const SINGLE_PIC = ({tagData, updTagDataQuery, img, multi, onDelete, choo
 			<div className="img-show-div">
 				{(multi)?
 					<>
-					{(choose && choosePic.includes(img)) ? <img className="img-show-blur"  src={newURL}/>:<img className="img-show"  src={newURL}/>}
-					<div className="img-show-choose" onClick={() => {setChoose(!choose);}}>
-						{(choose && choosePic.includes(img)) ?
+					{(choose) ? <img className="img-show-blur"  src={newURL}/>:<img className="img-show"  src={newURL}/>}
+					<div className="img-show-choose" onClick={onMultiChoose}>
+						{(choose) ?
 							<CheckCircleTwoTone twoToneColor="#32CD32" style={{fontSize: 30}}/>:<></>
 						}
 					</div>
@@ -92,7 +97,7 @@ export const SINGLE_PIC = ({tagData, updTagDataQuery, img, multi, onDelete, choo
 						<div className="img-show-tag">
 							{img.tags.map((t) => {
 								return(
-									<> #{t} </>
+									` #${t} `
 								)
 							})}
 						</div>

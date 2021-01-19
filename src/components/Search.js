@@ -6,13 +6,29 @@ import {SmileTwoTone } from '@ant-design/icons'
 import '../style.css'
 import { SINGLE_PIC } from './Single_Pic'
 import { IMAGE_QUERY } from '../graphql/images'
+import {
+	TAG_ALL
+} from '../graphql/tags'
 
 export const SEARCH= ({selectTags, getUserByID}) =>{
 	const [showTags,setShowTags] = useState([])
+	const {loading: tagLoading, data: tagData, updateQuery: updTagDataQuery} = useQuery(TAG_ALL, {fetchPolicy: 'cache-and-network'})
 
-	const [getSearchImages, {loading, data}] = useLazyQuery(IMAGE_QUERY, {
+	const [getSearchImages, {loading, data, updateQuery}] = useLazyQuery(IMAGE_QUERY, {
 		fetchPolicy: 'cache-and-network'
 	})
+
+	const updQueryOnDelete = (imgID) => {
+		updateQuery(prev => ({
+			images: prev.images.filter((img)=> img._id !== imgID)
+		}))
+	}
+
+	const onChangeTag = (imgID, delArr) => {
+		if(delArr.some(tag => selectTags.includes(tag))){
+			updQueryOnDelete(imgID)
+		}
+	}
 
 	useEffect(() => {
 		setShowTags(selectTags)
@@ -39,18 +55,18 @@ export const SEARCH= ({selectTags, getUserByID}) =>{
 						</Breadcrumb.Item>
 					</Breadcrumb>
 					<>
-						{(loading || !data) ? (
+						{(loading || tagLoading || !data) ? (
 							<div className="main-display-cen">
 								<Spin tip="Searching" size="large"/>
 							</div>
 						) : (
 							<div className="main-display-left">
 								{data.images.map((img, index)=>{
-									return (<SINGLE_PIC
-										img={img} key={index} multi={false} 
-										delPic={()=>{return true}} choosePic={[]}
-										setChoosePic={()=>{return true}}
+									return (<SINGLE_PIC tagData={tagData.tags} updTagDataQuery={updTagDataQuery}
+										img={img} key={index} onDelete={updQueryOnDelete}
+										onChangeTag={onChangeTag}
 										getUserByID={getUserByID}
+										multi={false} choosePic={[]} setChoosePic={()=>{return true}}	// unused
 									/>)
 								})}
 							</div>

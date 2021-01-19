@@ -10,7 +10,7 @@ import {
 	ALBUM_COUNT
 } from '../graphql/images'
 
-export const PREVIEW = forwardRef(({updTagDataQuery, onChoose, tag}, ref) => {
+export const PREVIEW = forwardRef(({onChoose, tag}, ref) => {
 	const {loading, error, data: imgData, refetch: previewRefetch} = useQuery(ALBUM_PREVIEW, { variables: {tag: (tag === 'All') ? null : tag}})
 	const {loading:countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT, { variables: {tag: (tag === 'All') ? null : tag}})
 

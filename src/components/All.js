@@ -19,7 +19,7 @@ export const ALL = forwardRef(({getUserByID}, ref) => {
 	const [pvRefs, setPvRefs] = useState([])
 	
 	const {loading: countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT, {fetchPolicy: 'cache-and-network'})
-	const {loading: tagLoading, data: tagData, refetch: tagRefetch, updateQuery: updTagDataQuery} = useQuery(TAG_ALL)
+	const {loading: tagLoading, data: tagData, refetch: tagRefetch, updateQuery: updTagDataQuery} = useQuery(TAG_ALL, {fetchPolicy: 'cache-and-network'})
 
 	useImperativeHandle(ref, () => ({
 		uploadUpdate(){
@@ -45,6 +45,8 @@ export const ALL = forwardRef(({getUserByID}, ref) => {
 	}, [tagData])
 
 	const onClickGoBack = () => {
+		tagRefetch()
+		countRefetch()
 		setState('preview');
 		setMulti(false);
 	}
@@ -87,7 +89,7 @@ export const ALL = forwardRef(({getUserByID}, ref) => {
 								tag={'All'} key={0} ref={pvRefs[0]}
 							/>
 							{tagData.tags.map((td, index) => {
-								return (<PREVIEW updTagDataQuery={updTagDataQuery}
+								return (<PREVIEW
 								onChoose={() => {setState('content'); setChoose(td);}} 
 								tag={td} key={index+1} ref={pvRefs[index+1]}
 								/>)

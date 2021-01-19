@@ -1,22 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import { useQuery } from '@apollo/react-hooks'
-import {Avatar, Button, Divider, Collapse, Tag, Input, message} from 'antd'
+import {Button, Divider, Collapse, Tag, Input, message} from 'antd'
 import {
-  UserOutlined,
-  HeartOutlined,
-  CommentOutlined,
   TagsOutlined
 } from '@ant-design/icons';
 
 import '../style.css'
-import {
-	TAG_ALL
-} from '../graphql/tags'
-import {
-	IMAGE_SINGEL_QUERY
-} from '../graphql/images'
-import tableCat from '../images/tableCat.png'
-import giwua from '../images/giwua.png'
   
 const {Panel} = Collapse
 
@@ -25,7 +13,6 @@ const TAG_MODAL = ({tagData, updTagDataQuery, img, setTagRecord}) => {
 	const [add, setAdd] = useState([])
 	const [newTag, setNewTag] = useState('')
 	const [newTagList, setNewTagList] = useState([])
-	// const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
 
 	const leftTags = tagData.concat(img.tags).filter((v,i,arr) => (arr.indexOf(v) === arr.lastIndexOf(v)))
 
@@ -170,15 +157,22 @@ const TAG_MODAL = ({tagData, updTagDataQuery, img, setTagRecord}) => {
 	)
 }
 
-const TAG_MODAL_MULTI = ({tagData, album, setTagRecord}) => {
+const TAG_MODAL_MULTI = ({tagData, album, setTagRecord, rstTagRecord, setRstTagRecord}) => {
 	const [del, setDelete] = useState([])
 	const [add, setAdd] = useState([])
 	const [newTag, setNewTag] = useState('')
 	const [newTagList, setNewTagList] = useState([])
 	const [remove, setRemove] = useState(false)
-	// const {loading: tagLoading, data: tagData, refetch: tagRefetch} = useQuery(TAG_ALL)
 
 	const leftTags = tagData.filter((t) => (t !== album))
+
+	useEffect(()=>{
+		if(rstTagRecord){
+			setAdd([])
+			setDelete([])
+			setRstTagRecord(false)
+		}
+	}, [rstTagRecord])
 
 	useEffect(() => {
 		setTagRecord({ADD:add,DEL:del})
@@ -315,7 +309,7 @@ const TAG_MODAL_MULTI = ({tagData, album, setTagRecord}) => {
 		 			<Tag color="red" style={{marginLeft: 5}}>
 		 		 	Remove
 		 			{del.map((tag) => {
-		 				return(<> #{tag}</>)
+		 				return ` #${tag}`
 		 			})}
 		 			</Tag>
 		 		:<></>
@@ -324,7 +318,7 @@ const TAG_MODAL_MULTI = ({tagData, album, setTagRecord}) => {
 		 			<Tag color="blue" style={{marginLeft: 5}}>
 		 		 	Add
 		 			{add.map((tag) => {
-		 				return(<> #{tag}</>)
+		 				return ` #${tag}`
 		 			})}
 		 			</Tag>
 		 		:<></>
