@@ -22,7 +22,7 @@ export const LOGIN_DRAWER = ({setLogIN, userRefetch}) =>{
       return
     }
     try{
-      const {data} = await login({variables: { name: username, password: password }})
+      const {data} = await login({variables: { name: username, password: password}})
       console.log(data.loginUser)
       message.success('Successfully login!')
       await userRefetch();
@@ -30,7 +30,7 @@ export const LOGIN_DRAWER = ({setLogIN, userRefetch}) =>{
     } catch(e){
       console.log(e.message)
       switch (e.message) {
-        case 'GraphQL error: User not found' :
+        case 'GraphQL error: User not found!' :
           message.error('User not found!')
           break;
         case 'GraphQL error: Invaild password!' :

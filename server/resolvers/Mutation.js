@@ -28,7 +28,19 @@ const Mutation = {
         }
 
         if(!user){
-            throw new Error ('User not found')
+            let user_email
+            user_email = await User.findOne({email: args.name})
+            if(!user_email){
+                throw new Error('User not found!')
+            }
+            else{
+                const valid = await bcrypt.compare(args.password, user_email.password)
+                if(!valid){
+                    throw new Error('Invalid password!')
+                }
+                req.session.userId = user_email._id
+                return user_email
+            }
         }
 
         const valid = await bcrypt.compare(args.password, user.password)
