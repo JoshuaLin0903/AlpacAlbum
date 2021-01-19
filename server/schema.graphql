@@ -19,6 +19,7 @@ type Mutation {
     setImageTags(id: ID!, tags: [String!]!): Image
     pwdCheck(name: String, email: String, password: String!, password_new: String!, password_new2: String!): User
     avatarChange(name: String, avatar: String, avatar_new: String!): User
+    usernameChange(name: String, name_new: String!): User
 }
 
 type Subscription {

@@ -3,7 +3,7 @@ import {Drawer, Avatar, Button, Popconfirm, Divider, Popover, Collapse, Input, m
 import {UserOutlined, SettingOutlined, LogoutOutlined, KeyOutlined} from '@ant-design/icons';
 import {useQuery, useMutation } from '@apollo/react-hooks'
 import '../style.css';
-import {USER_GET,PWD_CHECK,USER_LOGOUT,AVATAR_CHANGE} from '../graphql/users'
+import {USER_GET,PWD_CHECK,USER_LOGOUT,AVATAR_CHANGE,NAME_CHANGE} from '../graphql/users'
 import pig from '../images/pig.png';
 import unset from '../images/alpaca_i.png';
 import shark from '../images/shark.png';
@@ -29,6 +29,7 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
 	const [profilePic, setProfilePic] = useState(currentUser.getUser.avatar)
 	const {refetch: userRefetch} = useQuery(USER_GET)
 
+	const [usernameChange] = useMutation(NAME_CHANGE)
 	const [avatarChange] = useMutation(AVATAR_CHANGE)
 	const [pwdCheck] = useMutation(PWD_CHECK)
 	const [logout] = useMutation(USER_LOGOUT)
@@ -85,10 +86,30 @@ const handleLogOut = async() =>{
   }
 
   const handleUsernameChange = async()=>{
-	if(NewUsername==""){
-		message.error("Username cannot be empty!")
-		return
+	const _name = currentUser.getUser.name;
+	try{
+		const {data} = await usernameChange({variables:{
+			name: _name,
+			name_new: NewUsername
+		}})
+	}catch(e){
+		console.log(e.message)
+		switch(e.message){
+			case 'User not found!':
+				message.error('User not found!')
+				return;
+				break;
+			case 'Username taken!':
+				message.error('Username taken!')
+				return;
+				break;
+			default:
+				break;
+		}
 	}
+	alert('Username changed! Please log in again!')
+	logout()
+	window.location.reload()
   }
   const handleAvatarChange = async()=>{
 	  const _name = currentUser.getUser.name;
@@ -169,6 +190,19 @@ const handleLogOut = async() =>{
 	  
       <br/>
 	  <br/>
+	  <Collapse style={{textAlign: 'center'}}>
+        <Panel showArrow={false} header={<><KeyOutlined /> Change your username</>} key="1">
+          <Input placeholder="Your new username"
+            style={{width:200, margin:5}}
+			onChange={(e) => setNewUserName(e.target.value)}
+			/>
+          <Button style={{margin:5}} type="primary"
+		  	onClick={handleUsernameChange}
+		  > 
+		  	Confirm 
+		  </Button>
+        </Panel>
+      </Collapse>
 		<Collapse style={{textAlign: 'center'}}>
         <Panel showArrow={false} header={<><KeyOutlined /> Change your password </>} key="1">
           <Input.Password placeholder="Your current password"

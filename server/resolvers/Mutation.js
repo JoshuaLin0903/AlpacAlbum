@@ -47,6 +47,25 @@ const Mutation = {
 
         return true
     },
+    usernameChange: async(_, args, {req}) => {
+        let user
+        user = await User.findOne({name: args.name})
+        if(!user){
+            throw new Error('User not found!')
+        }
+        else{
+            let checkUser
+            checkUser = await User.findOne({name_new: args.name_new})
+            if(checkUser){
+                throw new Error('Username taken!')
+            }
+            else{
+                user.name = args.name_new;
+                user.save()
+                return true;
+            }
+        }
+    },
     avatarChange: async(_, args, {req}) => {
         let user
         user = await User.findOne({name: args.name})
