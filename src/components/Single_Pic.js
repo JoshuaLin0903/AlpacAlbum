@@ -68,6 +68,8 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, onDelete
 		message.info(str)
 	}
 
+	const id = (typeof img.author === 'string')? img.author:img.author._id
+
 	return(
 		<>	
 			<div className="img-show-div">
@@ -85,14 +87,16 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, onDelete
 					<img className="img-show"  src={newURL}/>
 					<div className="img-show-hover">
 						<div className="img-show-button">
-							<Button icon={<EyeOutlined />} type="text" onClick={() => {setVisible(true);setState('view')}}/>
-							<Popconfirm placement="bottom" onConfirm={deletePic} 
+							{(id === user._id)?
+								<Popconfirm placement="bottom" onConfirm={deletePic} 
 								title="Are you sure you want to delete this picture?" 
-								okText="Yes" cancelText="No" 
-							>
-							<Button icon={<DeleteOutlined />} type="text"/>
-							</Popconfirm>
+								okText="Yes" cancelText="No" >
+									<Button icon={<DeleteOutlined />} type="text"/>
+								</Popconfirm>:<></>}
+							<Button icon={<EyeOutlined />} type="text" onClick={() => {setVisible(true);setState('view')}}/>
+							{(id === user._id)?
 							<Button icon={<FolderAddOutlined />} type="text" onClick={() => {setVisible(true);setState('tag')}}/>
+							:<></>}
 						</div>
 						<div className="img-show-tag">
 							{img.tags.map((t) => {

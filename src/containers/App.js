@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 
 import '../style.css';
-import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD, USER_DRAWER, LOGIN_DRAWER} from '../components'
+import {HOMEPAGE, SEARCH, ALL, SEARCH_SIDER, UPLOAD, USER_DRAWER, LOGIN_DRAWER, WELPAGE} from '../components'
 import alpaca from '../images/alpaca.png';
 import logo from '../images/logo.png';
 import {
@@ -155,7 +155,7 @@ function App() {
       :
       (<></>)}
       <Layout className="site-layout">
-      	<Header className="header">
+      	<Header style={{zIndex: 2}}>
           <div className="user">
             {logIN?
               <>
@@ -172,6 +172,7 @@ function App() {
                 </div>
               </>:
               <div>
+                <img className="logo" src={logo}/>
                 <LOGIN_DRAWER setLogIN={setLogIN} userRefetch={onLogin}/>
                 <Button type="link" href="/#/register" size="small" style={{color:"white", borderColor: "gray", marginLeft: 10}}> 
                   Sign up
@@ -185,11 +186,7 @@ function App() {
             logIN ? 
               mainDisplay
               :(
-              <div className="main-display-home">
-                <div className="image-display">
-                  <img src={alpaca}/>
-                </div>
-              </div>
+              <WELPAGE />
           )}
         </Content>
         <Footer style={{ textAlign: 'center' }}>

@@ -33,6 +33,21 @@
   justify-content:center;
 }
 
+.main-display-wel{
+  display: flex;
+  flex-direction: row;
+  background-image: linear-gradient(to bottom right, rgb(102, 0, 102), rgb(0, 0, 102));
+  padding: 24px; 
+  min-height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  align-items:center;
+  justify-content:center;
+}
+
 .main-display-register{
   display: flex;
   flex-direction: column;
@@ -68,6 +83,32 @@
   padding: 24px; 
   min-height: 535px;
   align-items:center;
+}
+
+.wel-word {
+  width: 600px;
+  position: relative;
+}
+
+.descrip1 {
+  font-size: 20px;
+  color: white;
+  position: absolute;
+  top: 280px;
+  margin-left: 10px;
+}
+
+.descrip2 {
+  font-size: 20px;
+  color: white;
+  position: absolute;
+  top: 310px;
+  margin-left: 10px;
+}
+
+.image-display{
+  position: relative;
+  top: 40px;
 }
 
 .upload-div{
