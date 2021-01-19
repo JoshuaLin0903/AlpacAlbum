@@ -175,7 +175,7 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
 					Upload to ... 
 				</h1>
 				<div className="upload-div">
-					<div style={{width: "50%"}}>
+					<div style={{width: "50%", height: "100%"}}>
 						<div className="upload-tag">
 							<h2 style={{color: "white"}}> <TagsOutlined /> Search a tag or enter a new tag. </h2>
 							<Input allowClear value={searchValue} prefix={<SearchOutlined/>} style={{ width: "70%" }} 
@@ -217,7 +217,7 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
  								</div>)}
        			</div>
        		</div>
-       		<div style={{width: "50%"}}>
+       		<div style={{width: "50%", height: "100%"}}>
        			<div className="upload-dragger">
        				<h2 style={{color: "white"}}> <UploadOutlined /> Upload your pictures here! </h2>
        				<div style={{width: 337, height: 150}}>

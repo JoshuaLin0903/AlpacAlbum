@@ -5,7 +5,7 @@ import {useQuery, useMutation } from '@apollo/react-hooks'
 import '../style.css';
 import {USER_GET,PWD_CHECK,USER_LOGOUT} from '../graphql/users'
 import pig from '../images/pig.png';
-import alpaca from '../images/alpaca_i.png';
+import unset from '../images/alpaca_i.png';
 import shark from '../images/shark.png';
 import giwua from '../images/giwua.png';
 import strongSiba from '../images/strongSiba.png';
@@ -14,48 +14,49 @@ import tableCat from '../images/tableCat.png';
 
 const {Panel} = Collapse
 
-const avatar_src = [pig, alpaca, shark, giwua, strongSiba, siba, tableCat]
-const avatar = ["pig", "alpaca", "shark", "giwua", "strongSiba", "siba", "tableCat"]
+const avatar_src = [pig, unset, shark, giwua, strongSiba, siba, tableCat]
+const avatar = ["pig", "unset", "shark", "giwua", "strongSiba", "siba", "tableCat"]
 
 export const USER_DRAWER = ({UserLoading, currentUser}) => {
 	//user settings
 	const [NewUsername, setNewUserName] = useState('')
 	const [CheckPassword, setCheckPassword] = useState('')
-  	const [NewPassword, setNewPassword]= useState('')
+  const [NewPassword, setNewPassword]= useState('')
 	const [NewPassword2, setNewPassword2]= useState('')
-	const [NewAvatar, setNewAvatar] = useState('')
-	//const [AvatarSaved, setAvatarSaved] = useState('false')
+	const [avatarID, setAvatarID]= useState('')
 	//
 	const [open, setOpen] = useState(false) 
-	const [profilePic, setProfilePic] = useState('unset')
+	const [profilePic, setProfilePic] = useState(currentUser.getUser.avatar)
 	const {refetch: userRefetch} = useQuery(USER_GET)
 
-	//const [avatarChange] = useMutation(AVATAR_CHANGE)
 	const [pwdCheck] = useMutation(PWD_CHECK)
 	const [logout] = useMutation(USER_LOGOUT)
 
 	const currentAvatar = (style, size) => {
 		switch(profilePic){
 			case 'unset':
-				return (<Avatar icon={<UserOutlined/>} style={style} size={size}/>)
+				return (<Avatar src={unset} style={style} size={size}/>)
 				break;
 			case 'pig':
 				return (<Avatar src={pig} style={style} size={size}/>)
 				break
-			case 'alpaca':
-				return (<Avatar src={alpaca} style={style} size={size}/>)
 			case 'shark':
 				return (<Avatar src={shark} style={style} size={size}/>)
+				break
 			case 'giwua':
 				return (<Avatar src={giwua} style={style} size={size}/>)
+				break
 			case 'strongSiba':
 				return (<Avatar src={strongSiba} style={style} size={size}/>)
+				break
 			case 'siba':
 				return (<Avatar src={siba} style={style} size={size}/>)
+				break
 			case 'tableCat':
 				return (<Avatar src={tableCat} style={style} size={size}/>)
+				break
 			default:
-        return (<Avatar icon={<UserOutlined/>} style={style} size={size}/>)
+        return (<Avatar src={unset} style={style} size={size}/>)
         break
 		}
 	}
@@ -64,40 +65,30 @@ const handleLogOut = async() =>{
     await logout()
     window.location.reload()
 }
+
   const avatarOption = () => {
+  	var count = 0
   	return(
   		<div>
   			{avatar.map((m,i) => {
-          if((i+1)%3 === 0){
-            return(<><img src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/><br/></>)
+  				if(m !== currentUser.getUser.avatar){
+  					count = count + 1
+  					if((count)%3 === 0){
+              return(<><img src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/><br/></>)
+            }
+           	else return(<img src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/>)
           }
-  				else return(<img src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/>)
   			})}
   		</div>
   	)
   }
-  
+
   const handleUsernameChange = async()=>{
-	
 	if(NewUsername==""){
 		message.error("Username cannot be empty!")
 		return
 	}
   }
-  /*const handleAvatarChange = async()=>{
-	  
-	  try{
-		setNewAvatar(profilePic)
-		console.log(NewAvatar)
-		const {data} = await avatarChange({variables:{
-										name: currentUser.getUser.name,
-										avatar_new: NewAvatar}})
-		message.success('Success')
-	  }catch(e){
-		  console.log(e.message)
-	  }
-	  setAvatarSaved(true)
-  }*/
   const handlePwdChange = async()=>{
 	try{
 		const {data} = await pwdCheck({variables: { 
@@ -106,7 +97,7 @@ const handleLogOut = async() =>{
 									password_new: NewPassword,
 									password_new2: NewPassword2
 								}})
-		message.success('Success!')
+		message.success('Success! Please log in again!')
 	} catch(e){
 		console.log(e.message)
 		switch (e.message) {
@@ -153,7 +144,6 @@ const handleLogOut = async() =>{
    				{currentAvatar('', 80)}
    			</div>
    		</Popover>
-		
    		<h1 style={{textAlign: 'center', color: "#483D8B"}}> {currentUser.getUser.name} </h1>
       <br/>
       <Collapse style={{textAlign: 'center'}}>

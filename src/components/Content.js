@@ -13,7 +13,7 @@ import {
 	IMAGE_QUERY,
 	IMAGE_DELETE
 } from '../graphql/images'
-import { TAG_MODAL_MULTI } from './Modal'
+import { TAG_MODAL_MULTI } from './TagModal'
 
 
 export const CONTENT = ({tagData, updTagDataQuery, choose, multi, getUserByID}) => {

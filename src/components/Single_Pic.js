@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { Modal, Button, Popconfirm, Tag } from 'antd'
-import { TAG_MODAL, VIEW_MODAL } from './Modal'
+import { Modal, Button, Popconfirm, Tag, message } from 'antd'
+import { TAG_MODAL } from './TagModal'
+import { VIEW_MODAL } from './ViewModal'
 import {
   EyeOutlined,
   DeleteOutlined,
@@ -55,6 +56,11 @@ export const SINGLE_PIC = ({tagData, updTagDataQuery, img, multi, onDelete, choo
 		const newTags = (img.tags).filter(tag => !tagRecord.DEL.includes(tag)).concat(tagRecord.ADD)
 		await setImgTags({ variables: {id: img._id, tags: newTags}})
 		img.tags = newTags
+		var str = "Add"
+		newTags.map((t) => {
+			str = str + " #"+t
+		})
+		message.info(str)
 	}
 
 	return(
