@@ -71,7 +71,7 @@ const handleLogOut = async() =>{
   	return(
   		<div>
   			{avatar.map((m,i) => {
-  				if(m !== currentUser.getUser.avatar){
+  				if(m !== profilePic){
   					count = count + 1
   					if((count)%3 === 0){
               return(<><img src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/><br/></>)
