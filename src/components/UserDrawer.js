@@ -23,7 +23,7 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
 	const [CheckPassword, setCheckPassword] = useState('')
  	const [NewPassword, setNewPassword]= useState('')
 	const [NewPassword2, setNewPassword2]= useState('')
-	const [avatarID, setAvatarID]= useState('')
+	const [AvatarSaved, setAvatarSaved] = useState(false)
 	//
 	const [open, setOpen] = useState(false) 
 	const [profilePic, setProfilePic] = useState(currentUser.getUser.avatar)
@@ -68,7 +68,7 @@ const handleLogOut = async() =>{
 }
 
   const avatarOption = () => {
-  	var count = 0
+	  var count = 0
   	return(
   		<div>
   			{avatar.map((m,i) => {
@@ -103,9 +103,10 @@ const handleLogOut = async() =>{
 	  }catch(e){
 		  //console.log(e.message)
 	  }
-	  alert('Success! Please Log in again!')
-	  /*logout()
-	  window.location.reload()*/
+	  setAvatarSaved(true)
+	  //alert('Success! Please Log in again!')
+	  /*logout()*/
+	  window.location.reload()
   }
   const handlePwdChange = async()=>{
 	try{
@@ -157,9 +158,15 @@ const handleLogOut = async() =>{
    		<h1 style={{textAlign: 'center', color: "#483D8B"}}> {currentUser.getUser.name} </h1>
       <br/>
       <br/>
+	  {!AvatarSaved?(
 	  <Button
 		onClick={handleAvatarChange}
-	  >save avatar</Button>
+	  >save avatar</Button>):(
+	  <Button
+		onClick={handleAvatarChange}
+		disabled ={true}
+	  >saved</Button>)}
+	  
       <br/>
 	  <br/>
 		<Collapse style={{textAlign: 'center'}}>
