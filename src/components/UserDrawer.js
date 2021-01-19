@@ -17,7 +17,7 @@ const {Panel} = Collapse
 const avatar_src = [pig, unset, shark, giwua, strongSiba, siba, tableCat]
 const avatar = ["pig", "unset", "shark", "giwua", "strongSiba", "siba", "tableCat"]
 
-export const USER_DRAWER = ({UserLoading, currentUser}) => {
+export const USER_DRAWER = ({user, updUserData}) => {
 	//user settings
 	const [NewUsername, setNewUserName] = useState('')
 	const [CheckPassword, setCheckPassword] = useState('')
@@ -26,8 +26,7 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
 	const [AvatarSaved, setAvatarSaved] = useState(false)
 	//
 	const [open, setOpen] = useState(false) 
-	const [profilePic, setProfilePic] = useState(currentUser.getUser.avatar)
-	const {refetch: userRefetch} = useQuery(USER_GET)
+	const [profilePic, setProfilePic] = useState(user.avatar)
 
 	const [usernameChange] = useMutation(NAME_CHANGE)
 	const [avatarChange] = useMutation(AVATAR_CHANGE)
@@ -76,23 +75,23 @@ const handleLogOut = async() =>{
   				if(m !== profilePic){
   					count = count + 1
   					if((count)%3 === 0){
-              return(<><img src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/><br/></>)
-            }
-           	else return(<img src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/>)
-          }
+						return(<><img key={i} src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/><br/></>)
+					}
+           			else return(<img key={i} src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/>)
+         		}
   			})}
   			<div style={{textAlign: 'center', width: "100%", margin: '10px 0px'}}>
   			{!AvatarSaved?(
 	  				<Button onClick={handleAvatarChange} type='primary'>save avatar</Button>
 	  			):(
-	  				<Button	nClick={handleAvatarChange} disabled ={true}>saved</Button>)}
+	  				<Button	onClick={handleAvatarChange} disabled={true}>saved</Button>)}
 	  		</div>
   		</div>
   	)
   }
 
   const handleUsernameChange = async()=>{
-	const _name = currentUser.getUser.name;
+	const _name = user.name;
 	try{
 		const {data} = await usernameChange({variables:{
 			name: _name,
@@ -118,11 +117,11 @@ const handleLogOut = async() =>{
 	window.location.reload()
   }
   const handleAvatarChange = async()=>{
-	  const _name = currentUser.getUser.name;
-	  const _avatar = currentUser.getUser.avatar;
+	  const _name = user.name;
+	  const _avatar = user.avatar;
 	  const new_avatar = profilePic;
 	  try{
-		  const {data} = await avatarChange({variables:{
+		  await avatarChange({variables:{
 			  name: _name,
 			  avatar: _avatar,
 			  avatar_new: new_avatar
@@ -131,14 +130,13 @@ const handleLogOut = async() =>{
 		  //console.log(e.message)
 	  }
 	  setAvatarSaved(true)
-	  //alert('Success! Please Log in again!')
-	  /*logout()*/
-	  window.location.reload()
+	  updUserData()
+
   }
   const handlePwdChange = async()=>{
 	try{
 		const {data} = await pwdCheck({variables: { 
-									name: currentUser.getUser.name, 
+									name: user.name, 
 									password: CheckPassword,
 									password_new: NewPassword,
 									password_new2: NewPassword2
@@ -165,72 +163,72 @@ const handleLogOut = async() =>{
 	return(
 		<>
 		<div className="userAvatar" onClick={() => setOpen(!open)}>
-      {currentAvatar({marginRight: 8}, "default")}
-    	{UserLoading ? '' : currentUser.getUser.name}
-    </div>
+      		{currentAvatar({marginRight: 8}, "default")}
+    		{user.name}
+    	</div>
 
-    <Drawer
-   	title={<><SettingOutlined /> User Settings </>}
-  	placement="right"
-  	closable={false}
-   	visible={open}
-   	onClose={() => setOpen(false)}
-   	width={300}
-   	>
-   		<br/>
-   		<Popover title="Choose a new avatar" placement="bottom" trigger="click" content={avatarOption}>
-   			<div className="userSettingAva">
-   				{currentAvatar('', 80)}
-   			</div>
-   		</Popover>
-   		<h1 style={{textAlign: 'center', color: "#483D8B"}}> {currentUser.getUser.name} </h1>
-      <br/>
-	  <Collapse style={{textAlign: 'center'}}>
-        <Panel showArrow={false} header={<><KeyOutlined /> Change your username</>} key="1">
-          <Input placeholder="Your new username"
-            style={{width:200, margin:5}}
-			onChange={(e) => setNewUserName(e.target.value)}
-			/>
-          <Button style={{margin:5}} type="primary"
-		  	onClick={handleUsernameChange}
-		  > 
-		  	Confirm 
-		  </Button>
-        </Panel>
-      </Collapse>
-		<Collapse style={{textAlign: 'center'}}>
-        <Panel showArrow={false} header={<><KeyOutlined /> Change your password </>} key="1">
-          <Input.Password placeholder="Your current password"
-            style={{width:200, margin:5}}
-			onChange={(e) => setCheckPassword(e.target.value)}
-			/>
-          <Input.Password placeholder="New password"
-            style={{width:200, margin:5}}
-			onChange={(e) => setNewPassword(e.target.value)}
-			/>
-		  <Input.Password placeholder="Confirm new password"
-            style={{width:200, margin:5}}
-			onChange={(e) => setNewPassword2(e.target.value)}
-			/>
-          <Button style={{margin:5}} type="primary"
-		  	onClick={handlePwdChange}
-		  > 
-		  	Confirm 
-		  </Button>
-        </Panel>
-      </Collapse>
-  		<Popconfirm placement="top" 
-        onConfirm={handleLogOut} 
-        title="Are you sure you want to logout?"
-        okText="Yes"
-        cancelText="No"
-      >
-    		<Button style={{position: "absolute", bottom: 35, right: 0}}
-     			icon={<LogoutOutlined />} type="text" shape="round"> 
-     			Logout 
-     		</Button>
-     	</Popconfirm>
-   	</Drawer>
+		<Drawer
+			title={<><SettingOutlined /> User Settings </>}
+			placement="right"
+			closable={false}
+			visible={open}
+			onClose={() => setOpen(false)}
+			width={300}
+		>
+			<br/>
+				<Popover title="Choose a new avatar" placement="bottom" trigger="click" content={avatarOption} onVisibleChange={(vis) => {if(vis) setAvatarSaved(false)}}>
+					<div className="userSettingAva">
+						{currentAvatar('', 80)}
+					</div>
+				</Popover>
+				<h1 style={{textAlign: 'center', color: "#483D8B"}}> {user.name} </h1>
+			<br/>
+			<Collapse style={{textAlign: 'center'}}>
+				<Panel showArrow={false} header={<><KeyOutlined /> Change your username</>} key="1">
+				<Input placeholder="Your new username"
+					style={{width:200, margin:5}}
+					onChange={(e) => setNewUserName(e.target.value)}
+					/>
+				<Button style={{margin:5}} type="primary"
+					onClick={handleUsernameChange}
+				> 
+					Confirm 
+				</Button>
+				</Panel>
+			</Collapse>
+			<Collapse style={{textAlign: 'center'}}>
+				<Panel showArrow={false} header={<><KeyOutlined /> Change your password </>} key="1">
+				<Input.Password placeholder="Your current password"
+					style={{width:200, margin:5}}
+					onChange={(e) => setCheckPassword(e.target.value)}
+					/>
+				<Input.Password placeholder="New password"
+					style={{width:200, margin:5}}
+					onChange={(e) => setNewPassword(e.target.value)}
+					/>
+				<Input.Password placeholder="Confirm new password"
+					style={{width:200, margin:5}}
+					onChange={(e) => setNewPassword2(e.target.value)}
+					/>
+				<Button style={{margin:5}} type="primary"
+					onClick={handlePwdChange}
+				> 
+					Confirm 
+				</Button>
+				</Panel>
+			</Collapse>
+			<Popconfirm placement="top" 
+				onConfirm={handleLogOut} 
+				title="Are you sure you want to logout?"
+				okText="Yes"
+				cancelText="No"
+			>
+				<Button style={{position: "absolute", bottom: 35, right: 0}}
+					icon={<LogoutOutlined />} type="text" shape="round"> 
+					Logout 
+				</Button>
+			</Popconfirm>
+		</Drawer>
     </>
 		
 	)

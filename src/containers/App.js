@@ -159,7 +159,7 @@ function App() {
           <div className="user">
             {logIN?
               <>
-                <USER_DRAWER UserLoading={UserLoading} currentUser={currentUser}/>
+                <USER_DRAWER UserLoading={UserLoading} user={currentUser.getUser} updUserData={userAllRefetch}/>
                 <div>
                   <Popconfirm placement="bottom" onConfirm={handleLogOut} 
                     title="Are you sure you want to logout?"

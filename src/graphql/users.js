@@ -88,12 +88,7 @@ const AVATAR_CHANGE = gql`
             name: $name
             avatar: $avatar
             avatar_new: $avatar_new
-        ){
-            _id
-            name
-            email
-            avatar
-        }
+        )
     }
 `
 const PWD_CHECK = gql`

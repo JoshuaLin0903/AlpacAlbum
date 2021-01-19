@@ -81,6 +81,9 @@ const VIEW_MODAL = ({user, img, getUserByID}) => {
 			if(typeof img.author === 'string'){
 				img.author = getUserByID(img.author)
 			}
+			else{
+				img.author = getUserByID(img.author._id)
+			}
 			console.log(img)
 			setLoading(false)
 		}
