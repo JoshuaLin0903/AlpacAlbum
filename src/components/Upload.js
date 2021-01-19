@@ -57,19 +57,22 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
 
 	const selectTag = () => {
 		var buf = select
-		console.log(select)
-		console.log(searchValue)
-		if (select.indexOf(searchValue) === -1 && searchValue !== ''){
+		// console.log(select)
+		// console.log(searchValue)
+		if(searchValue === 'All'){
+			message.info(`Can't use tag #All.`)
+		}
+		else if (!select.includes(searchValue) && searchValue !== ''){
 			buf.push(searchValue)
-			if (tagData.tags.indexOf(searchValue) === -1){
-				const str = 'A new tag is added: "'+ searchValue + '".'
+			if (!tagData.tags.includes(searchValue)){
+				const str = 'A new tag is added: #'+ searchValue + '.'
 				message.info({
 					content: str
 				})
 			}
 			setSelect(buf)
 		}
-		else if (select.indexOf(searchValue) !== -1){
+		else if (select.includes(searchValue)){
 			const str = '"'+ searchValue + '" has already been selected.'
 			message.info({
 				content: str

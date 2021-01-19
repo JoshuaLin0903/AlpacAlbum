@@ -42,24 +42,24 @@ const TAG_MODAL = ({tagData, updTagDataQuery, img, setTagRecord}) => {
 	}
 
 	const handleNewTagList = (newTag) =>{
-		if (tagData.indexOf(newTag) === -1) {
+		if (!tagData.includes(newTag)) {
 			setNewTagList([...newTagList, newTag])
-			updTagDataQuery(prev => {
-				const newTags = [...prev.tags, newTag]
-				newTags.sort()
-				return {tags: newTags}
-			})
 		}
 	}
 
 	const handleEnter = () =>{
-		if (img.tags.indexOf(newTag) === -1){
+		if(newTag === ''){
+			return
+		}
+		else if(newTag === 'All'){
+			message.info(`Can't use tag #All.`)
+		}
+		else if (!img.tags.includes(newTag) && !add.includes(newTag)){
 			setAdd([...add, newTag])
 			handleNewTagList(newTag)
 		}
 		else{
-			const str = `#${newTag} is already on this picture.`
-			message.info(str)
+			message.info(`#${newTag} is already on this picture.`)
 		}
 		setNewTag('')
 	}
@@ -108,17 +108,16 @@ const TAG_MODAL = ({tagData, updTagDataQuery, img, setTagRecord}) => {
             		(<Tag key={tag} closable={true} color="#108ee9" onClose={(e) => removeAdd(e,tag)}>
              			{tag}
             		</Tag>)
-           ))})
-          }
-		 		</div>
+					))})}
+		 	</div>
 		 		<Input.Search
 		 			style={{margin: 10, width: "97%"}}
-       		enterButton="Add"
-       		placeholder="Enter the new tag you want to add"
-       		value={newTag}
-       		onChange={(e) => setNewTag(e.target.value)}
-       		onSearch={handleEnter}
-       	/>
+					enterButton="Add"
+					placeholder="Enter the new tag you want to add"
+					value={newTag}
+					onChange={(e) => setNewTag(e.target.value)}
+					onSearch={handleEnter}
+				/>
        	<div style={{marginLeft: 10}}>
        	{
        		newTagList.map((tag) => {
@@ -200,14 +199,20 @@ const TAG_MODAL_MULTI = ({tagData, album, setTagRecord, rstTagRecord, setRstTagR
 	}
 
 	const handleNewTagList = (newTag) =>{
-		if (tagData.indexOf(newTag) === -1) {
+		if (!tagData.includes(newTag)) {
 			setNewTagList([...newTagList, newTag])
 		}
 		setNewTag('')
 	}
 
 	const handleEnter = () =>{
-		if (newTag !== album){
+		if(newTag === ''){
+			return
+		}
+		else if(newTag === 'All'){
+			message.info(`Can't use tag #All.`)
+		}
+		else if (newTag !== album && !add.includes(newTag)){
 			setAdd([...add, newTag])
 			handleNewTagList(newTag)
 		}
