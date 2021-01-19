@@ -49,8 +49,9 @@ const VIEW_MODAL = ({img, getUserByID}) => {
 	useEffect(()=>{
 		if(data && !imgDataLoading){
 			Object.assign(img, data.imgData)
-			img.author = getUserByID(img.author)
-			console.log(img)
+			if(typeof img.author === 'string'){
+				img.author = getUserByID(img.author)
+			}
 			setLoading(false)
 		}
 	}, [data, imgDataLoading])
@@ -122,9 +123,9 @@ const VIEW_MODAL = ({img, getUserByID}) => {
 					}
 				</div>
 				<div style={{marginTop: 10}}>
-					{img.tags.map((t) => {
+					{img.tags.map((t, idx) => {
 						return(
-							<Tag color="#108ee9"> #{t} </Tag>
+							<Tag color="#108ee9" key={idx}> #{t} </Tag>
 						)
 					})}
 				</div>

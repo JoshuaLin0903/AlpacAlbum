@@ -16,7 +16,7 @@ import {
 } from '../graphql/images'
 import { TAG_SET } from '../graphql/tags'
 
-export const CONTENT = ({tagData, updTagDataQuery, choose, multi, getUserByID}) => {
+export const CONTENT = ({user, tagData, updTagDataQuery, choose, multi, getUserByID}) => {
 	const [visible, setVisible] = useState(false)
 	const [rstTagRecord, setRstTagRecord] = useState(false)
 	const [tagRecord, setTagRecord] = useState({})//muti pic's tag change 存成{ADD:[...],DEL:[...]}
@@ -120,7 +120,7 @@ export const CONTENT = ({tagData, updTagDataQuery, choose, multi, getUserByID}) 
 				<p>error</p>
 			) : (
 				imgData.images.map((img, index) => {
-					return (<SINGLE_PIC tagData={tagData} updTagDataQuery={updTagDataQuery}
+					return (<SINGLE_PIC user={user} tagData={tagData} updTagDataQuery={updTagDataQuery}
 									img={img} key={index} multi={multi} onDelete={updQueryOnDelete} 
 									choosePic={choosePic} setChoosePic={setChoosePic} onChangeTag={onChangeTag}
 									getUserByID={getUserByID}/>)

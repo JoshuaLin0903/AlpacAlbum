@@ -76,13 +76,14 @@ function App() {
         setMainDisplay(<HOMEPAGE/>)
         break
       case 'search':
-        setMainDisplay(<SEARCH selectTags={selectTags} getUserByID={getUserByID}/>)
+        setMainDisplay(<SEARCH user={currentUser.getUser} selectTags={selectTags} getUserByID={getUserByID}/>)
         break
       case 'all':
         setMainDisplay(
         <ALL 
           ref = {allRef}
           getUserByID={getUserByID}
+          user={currentUser.getUser}
         />)
         break
       case 'upload':

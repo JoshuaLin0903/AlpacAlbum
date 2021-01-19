@@ -14,7 +14,7 @@ import {
 } from '../graphql/images'
 import { TAG_SET } from '../graphql/tags'
 
-export const SINGLE_PIC = ({tagData, updTagDataQuery, img, multi, onDelete, choosePic, setChoosePic, onChangeTag, getUserByID}) => {
+export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, onDelete, choosePic, setChoosePic, onChangeTag, getUserByID}) => {
 	const [visible, setVisible] = useState(false)
 	const [delImage] = useMutation(IMAGE_DELETE)
 	const [choose, setChoose] = useState(false)

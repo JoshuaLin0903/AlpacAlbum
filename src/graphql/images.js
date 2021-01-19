@@ -6,6 +6,7 @@ const IMAGE_QUERY = gql`
             _id
             url
             tags
+            author
         }
     }
 `
@@ -13,7 +14,6 @@ const IMAGE_QUERY = gql`
 const IMAGE_SINGEL_QUERY = gql`
     query($id: ID!){
         imgData(id: $id){
-            author
             date
             comments{
                 _id

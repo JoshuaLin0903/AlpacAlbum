@@ -12,7 +12,7 @@ import {
 	TAG_ALL
 } from '../graphql/tags'
 
-export const ALL = forwardRef(({getUserByID}, ref) => {
+export const ALL = forwardRef(({user, getUserByID}, ref) => {
 	const [state, setState] = useState('preview')
 	const [choose, setChoose] = useState('')
 	const [multi, setMulti] = useState(false)
@@ -97,7 +97,7 @@ export const ALL = forwardRef(({getUserByID}, ref) => {
 							</>
 						):( <p>no photos</p> )
 					)
-				): <CONTENT tagData={tagData.tags} updTagDataQuery={updTagDataQuery}
+				): <CONTENT user={user} tagData={tagData.tags} updTagDataQuery={updTagDataQuery}
 					choose={choose} multi={multi}
 					getUserByID={getUserByID}
 				/>	

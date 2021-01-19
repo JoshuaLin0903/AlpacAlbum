@@ -10,7 +10,7 @@ import {
 	TAG_ALL
 } from '../graphql/tags'
 
-export const SEARCH= ({selectTags, getUserByID}) =>{
+export const SEARCH= ({user, selectTags, getUserByID}) =>{
 	const [showTags,setShowTags] = useState([])
 	const {loading: tagLoading, data: tagData, updateQuery: updTagDataQuery} = useQuery(TAG_ALL, {fetchPolicy: 'cache-and-network'})
 
@@ -62,7 +62,7 @@ export const SEARCH= ({selectTags, getUserByID}) =>{
 						) : (
 							<div className="main-display-left">
 								{data.images.map((img, index)=>{
-									return (<SINGLE_PIC tagData={tagData.tags} updTagDataQuery={updTagDataQuery}
+									return (<SINGLE_PIC user={user} tagData={tagData.tags} updTagDataQuery={updTagDataQuery}
 										img={img} key={index} onDelete={updQueryOnDelete}
 										onChangeTag={onChangeTag}
 										getUserByID={getUserByID}
