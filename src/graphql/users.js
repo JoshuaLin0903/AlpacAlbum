@@ -26,6 +26,7 @@ const USER_GET_ALL = gql`
         getUsers{
             _id
             name
+            avatar
         }
     }
 `

@@ -133,7 +133,7 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, onDelete
 					footer={null}
 					width={"80vw"}
 				>
-					<VIEW_MODAL img={img} getUserByID={getUserByID}/>
+					<VIEW_MODAL user={user} img={img} getUserByID={getUserByID}/>
 				</Modal>
 				:<></>
       )}

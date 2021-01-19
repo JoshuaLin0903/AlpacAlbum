@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 
 const Image = require('../models/image')
 const User = require('../models/user')
+import {Comment} from '../models/comment'
 
 const Mutation = {
     registerUser: async(_, args) => {
@@ -174,6 +175,22 @@ const Mutation = {
             throw new Error('Image not found.')
         }
         return img
+    },
+    createComment: async(_, args) => {
+        const cmt = new Comment({
+            author: args.author,
+            text: args.comment
+        })
+
+        const img = await Image.findOneAndUpdate(
+            {_id: ObjectId(args.picID)},
+            {$push: {comments: cmt} }
+        )
+
+        if(img === null){
+            throw new Error('Image not found.')
+        }
+        return true
     }
 }
 

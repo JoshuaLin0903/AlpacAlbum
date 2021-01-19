@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import {Avatar, Button, Divider, Tag, Input, message} from 'antd'
 import {
   UserOutlined,
@@ -12,8 +12,8 @@ import {
 	IMAGE_SINGEL_QUERY
 } from '../graphql/images'
 import {
-  USER_GET
-} from '../graphql/users'
+	COMMENT_CREATE
+} from '../graphql/comments'
 
 import pig from '../images/pig.png';
 import unset from '../images/alpaca_i.png';
@@ -23,25 +23,54 @@ import strongSiba from '../images/strongSiba.png';
 import siba from '../images/siba.png';
 import tableCat from '../images/tableCat.png';
 
-const COMMENT = ({currentUser, comment, src}) => {
+const userAvatar = (avatar) => {
+	switch(avatar){
+		case 'unset':
+			return (unset)
+			break;
+		case 'pig':
+			return (pig)
+			break
+		case 'shark':
+			return (shark)
+			break
+		case 'giwua':
+			return (giwua)
+			break
+		case 'strongSiba':
+			return (strongSiba)
+			break
+		case 'siba':
+			return (siba)
+			break
+		case 'tableCat':
+			return (tableCat)
+			break
+		default:
+	return (unset)
+	break
+	}
+}
+
+const COMMENT = ({comment, getUserByID}) => {
+	const author = getUserByID(comment.author)
 	return(
 		<div className="comment-div">
-			<Avatar src={src} size="large"/>
+			<Avatar src={userAvatar(author.avatar)} size="large"/>
 			<div className="comment-input"> 
-				<div style={{fontWeight: "bold"}}> {currentUser.getUser.name} </div> 
-					<div> {comment} </div> 
+				<div style={{fontWeight: "bold"}}> {author.name} </div> 
+					<div> {comment.text} </div> 
 			</div>
 		</div>
 	)
 }
   
-const VIEW_MODAL = ({img, getUserByID}) => {
+const VIEW_MODAL = ({user, img, getUserByID}) => {
 	const [loading, setLoading] = useState(true)
-	const [comments, setComments] = useState([])
 	const [onInput, setOnInput] = useState('')
 	const {loading: imgDataLoading, data} = useQuery(IMAGE_SINGEL_QUERY, {variables: {id: img._id}})
+	const [addComment] = useMutation(COMMENT_CREATE)
 
-	const {loading: UserLoading, data: currentUser, refetch: userRefetch} = useQuery(USER_GET)
 
 	const Today = new Date()
 	const today = { year: Today.getFullYear().toString(), month : (Today.getMonth()+1).toString(), date : Today.getDate().toString()}
@@ -52,6 +81,7 @@ const VIEW_MODAL = ({img, getUserByID}) => {
 			if(typeof img.author === 'string'){
 				img.author = getUserByID(img.author)
 			}
+			console.log(img)
 			setLoading(false)
 		}
 	}, [data, imgDataLoading])
@@ -70,42 +100,12 @@ const VIEW_MODAL = ({img, getUserByID}) => {
 
 	const submitComment = (e) => {
 		if (e.key === 'Enter' && onInput !== ''){
-			setComments([...comments, onInput])
+			addComment({variables: {picID: img._id, author: user._id, comment: onInput}})
+			img.comments.push({author: user._id, text: onInput})
 			setOnInput('')
+			e.target.value = ''
 		}
 	}
-
-	const userAvatar = () => {
-		switch(currentUser.getUser.avatar){
-			case 'unset':
-				return (unset)
-				break;
-			case 'pig':
-				return (pig)
-				break
-			case 'shark':
-				return (shark)
-				break
-			case 'giwua':
-				return (giwua)
-				break
-			case 'strongSiba':
-				return (strongSiba)
-				break
-			case 'siba':
-				return (siba)
-				break
-			case 'tableCat':
-				return (tableCat)
-				break
-			default:
-        return (unset)
-        break
-		}
-	}
-
-	const UA = userAvatar()
-
 
 	return(
 		<>
@@ -114,7 +114,7 @@ const VIEW_MODAL = ({img, getUserByID}) => {
 			</div>
 			<div className="social">
 				<div className="social-publish-data">
-					<div style={{paddingTop: 7}}> <Avatar icon={<UserOutlined/>} size="large"/> </div>
+					<div style={{paddingTop: 7}}> <Avatar src={userAvatar(img.author.avatar)} size="large"/> </div>
 					{loading ? <></> :
 						<div className="publish-data-word">
 							<p style={{margin: 0, fontWeight: "bold", fontSize: 20}}> {(img.author.name) ? img.author.name : "author"} </p>
@@ -135,15 +135,17 @@ const VIEW_MODAL = ({img, getUserByID}) => {
 					<Button icon={<CommentOutlined />} style={{width: "50%"}}> comment </Button>
 				</div>
 				<br/>
-				<div className="comments">
-					{comments.map((c) => {
-						return(
-							<COMMENT comment={c} currentUser={currentUser} src={UA}/>
-						)
-					})}
-				</div>
+				{loading ? <></> :
+					<div className="comments">
+						{img.comments.map((c, idx) => {
+							return(
+								<COMMENT comment={c} getUserByID={getUserByID} key={idx}/>
+							)
+						})}
+					</div>
+				}
 				<div className="comment-div">
-					<Avatar src={UA} size="large"/>
+					<Avatar src={userAvatar(user.avatar)} size="large"/>
 					<input className="comment-input" id="commentInput" type="text" placeholder="Write a comment"
 						onChange={(e) => setOnInput(e.target.value)} onKeyPress={(e) => submitComment(e)}/>
 				</div>
