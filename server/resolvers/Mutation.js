@@ -47,6 +47,22 @@ const Mutation = {
 
         return true
     },
+    avatarChange: async(_, args, {req}) => {
+        let user
+        user = await User.findOne({name: args.name})
+        if(!user){
+            throw new Error('User not found!')
+        }
+        else{
+            console.log(user)
+            user.avatar = args.avatar_new
+            user._id = user._id
+            user.save()
+            return true;
+        }
+        //const valid = await bcrypt.compare(args.password, user.password)
+        
+    },
     pwdCheck: async(_, args, {req}) => {
         let user
         user = await User.findOne({name: args.name})

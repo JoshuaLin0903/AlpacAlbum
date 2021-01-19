@@ -61,7 +61,24 @@ const USER_LOGIN = gql`
         }
     }
 `
-
+const AVATAR_CHANGE = gql`
+    mutation avatarChange(
+        $name: String
+        $avatar: String
+        $avatar_new: String!
+    ) {
+        avatarChange(
+            name: $name
+            avatar: $avatar
+            avatar_new: $avatar_new
+        ){
+            _id
+            name
+            email
+            avatar
+        }
+    }
+`
 const PWD_CHECK = gql`
     mutation pwdCheck(
         $name: String
@@ -89,4 +106,4 @@ const USER_LOGOUT = gql `
     }
 `
 
-export { USER_GET, USER_GET_ALL, USER_LOGIN, USER_LOGOUT, USER_REGISTER, PWD_CHECK }
+export { USER_GET, USER_GET_ALL, USER_LOGIN, USER_LOGOUT, USER_REGISTER, PWD_CHECK,AVATAR_CHANGE }

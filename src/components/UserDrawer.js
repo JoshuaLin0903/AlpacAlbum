@@ -3,7 +3,7 @@ import {Drawer, Avatar, Button, Popconfirm, Divider, Popover, Collapse, Input, m
 import {UserOutlined, SettingOutlined, LogoutOutlined, KeyOutlined} from '@ant-design/icons';
 import {useQuery, useMutation } from '@apollo/react-hooks'
 import '../style.css';
-import {USER_GET,PWD_CHECK,USER_LOGOUT} from '../graphql/users'
+import {USER_GET,PWD_CHECK,USER_LOGOUT,AVATAR_CHANGE} from '../graphql/users'
 import pig from '../images/pig.png';
 import unset from '../images/alpaca_i.png';
 import shark from '../images/shark.png';
@@ -21,7 +21,7 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
 	//user settings
 	const [NewUsername, setNewUserName] = useState('')
 	const [CheckPassword, setCheckPassword] = useState('')
-  const [NewPassword, setNewPassword]= useState('')
+ 	const [NewPassword, setNewPassword]= useState('')
 	const [NewPassword2, setNewPassword2]= useState('')
 	const [avatarID, setAvatarID]= useState('')
 	//
@@ -29,6 +29,7 @@ export const USER_DRAWER = ({UserLoading, currentUser}) => {
 	const [profilePic, setProfilePic] = useState(currentUser.getUser.avatar)
 	const {refetch: userRefetch} = useQuery(USER_GET)
 
+	const [avatarChange] = useMutation(AVATAR_CHANGE)
 	const [pwdCheck] = useMutation(PWD_CHECK)
 	const [logout] = useMutation(USER_LOGOUT)
 
@@ -89,6 +90,23 @@ const handleLogOut = async() =>{
 		return
 	}
   }
+  const handleAvatarChange = async()=>{
+	  const _name = currentUser.getUser.name;
+	  const _avatar = currentUser.getUser.avatar;
+	  const new_avatar = profilePic;
+	  try{
+		  const {data} = await avatarChange({variables:{
+			  name: _name,
+			  avatar: _avatar,
+			  avatar_new: new_avatar
+		  }})
+	  }catch(e){
+		  //console.log(e.message)
+	  }
+	  alert('Success! Please Log in again!')
+	  /*logout()
+	  window.location.reload()*/
+  }
   const handlePwdChange = async()=>{
 	try{
 		const {data} = await pwdCheck({variables: { 
@@ -109,18 +127,10 @@ const handleLogOut = async() =>{
 			break;
 		}
 	}
-	if(NewPassword==""||NewPassword2==""){
-		message.error("Password cannot be empty!")
-		return
-	}
-	else if(NewPassword!=NewPassword2){
-		message.error("Please confirm your new password!")
-		return
-	}
-	else{
-		message.success('Success! Please log in again!')
-		window.location.reload()
-	}
+	message.success('Success! Please log in again!')
+	alert('Success! Please Log in again!')
+	logout()
+	window.location.reload()
 
   }
 
@@ -146,17 +156,12 @@ const handleLogOut = async() =>{
    		</Popover>
    		<h1 style={{textAlign: 'center', color: "#483D8B"}}> {currentUser.getUser.name} </h1>
       <br/>
-      <Collapse style={{textAlign: 'center'}}>
-	 	 <Panel showArrow={false} header={<><KeyOutlined /> Change your username </>} key="1">
-          <Input placeholder="Your new username"
-            style={{width:200, margin:5}}
-			onChange={(e) => setNewUserName(e.target.value)}
-			/>
-          <Button style={{margin:5}} type="primary"
-		  	onClick={handleUsernameChange}
-		  > Confirm </Button>
-        </Panel>
-		</Collapse>
+      <br/>
+	  <Button
+		onClick={handleAvatarChange}
+	  >save avatar</Button>
+      <br/>
+	  <br/>
 		<Collapse style={{textAlign: 'center'}}>
         <Panel showArrow={false} header={<><KeyOutlined /> Change your password </>} key="1">
           <Input.Password placeholder="Your current password"
