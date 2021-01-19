@@ -60,7 +60,7 @@ export const LOGIN_DRAWER = ({setLogIN, userRefetch}) =>{
    			<br/>
    			<br/>
    			<Divider/>
-   			<h3 style={{marginLeft:5}}> Username </h3>
+   			<h3 style={{marginLeft:5}}> Username / Email </h3>
    			<Input prefix={<UserOutlined/>} style={{width:"95%", margin:5}}
           onChange={(e) => setUserName(e.target.value)}
           onKeyDown={(e) => {

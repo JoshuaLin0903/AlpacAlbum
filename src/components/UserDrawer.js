@@ -81,6 +81,12 @@ const handleLogOut = async() =>{
            	else return(<img src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/>)
           }
   			})}
+  			<div style={{textAlign: 'center', width: "100%", margin: '10px 0px'}}>
+  			{!AvatarSaved?(
+	  				<Button onClick={handleAvatarChange} type='primary'>save avatar</Button>
+	  			):(
+	  				<Button	nClick={handleAvatarChange} disabled ={true}>saved</Button>)}
+	  		</div>
   		</div>
   	)
   }
@@ -171,6 +177,7 @@ const handleLogOut = async() =>{
    	onClose={() => setOpen(false)}
    	width={300}
    	>
+   		<br/>
    		<Popover title="Choose a new avatar" placement="bottom" trigger="click" content={avatarOption}>
    			<div className="userSettingAva">
    				{currentAvatar('', 80)}
@@ -178,18 +185,6 @@ const handleLogOut = async() =>{
    		</Popover>
    		<h1 style={{textAlign: 'center', color: "#483D8B"}}> {currentUser.getUser.name} </h1>
       <br/>
-      <br/>
-	  {!AvatarSaved?(
-	  <Button
-		onClick={handleAvatarChange}
-	  >save avatar</Button>):(
-	  <Button
-		onClick={handleAvatarChange}
-		disabled ={true}
-	  >saved</Button>)}
-	  
-      <br/>
-	  <br/>
 	  <Collapse style={{textAlign: 'center'}}>
         <Panel showArrow={false} header={<><KeyOutlined /> Change your username</>} key="1">
           <Input placeholder="Your new username"

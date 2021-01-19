@@ -1,15 +1,12 @@
 import React from 'react'
-import alpaca from '../images/alpaca.png';
+import alpacaBig from '../images/alpacaBIG.gif';
 import '../style.css'
 
 export const HOMEPAGE = () =>{
 
 	return(
 		<div className="main-display-home">
-			<div className="image-display">
-      	<img src={alpaca}/>
-    	</div>
-    	<p> Welcome! </p>
+      	<img src={alpacaBig}/>
     </div>
 	)
 }

@@ -75,12 +75,16 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, onDelete
 			<div className="img-show-div">
 				{(multi)?
 					<>
-					{(choose) ? <img className="img-show-blur"  src={newURL}/>:<img className="img-show"  src={newURL}/>}
-					<div className="img-show-choose" onClick={onMultiChoose}>
+					{(id !== user._id)? <img className="img-show-disable"  src={newURL}/>
+						:((choose) ? <img className="img-show-blur"  src={newURL}/>:<img className="img-show"  src={newURL}/>)
+					}
+
+					{(id !== user._id)?<></>:
+						<div className="img-show-choose" onClick={onMultiChoose}>
 						{(choose) ?
 							<CheckCircleTwoTone twoToneColor="#32CD32" style={{fontSize: 30}}/>:<></>
 						}
-					</div>
+						</div>}
 					</>
 					:
 					<>

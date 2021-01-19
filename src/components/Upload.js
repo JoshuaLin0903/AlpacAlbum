@@ -220,7 +220,7 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
        		<div style={{width: "50%", height: "100%"}}>
        			<div className="upload-dragger">
        				<h2 style={{color: "white"}}> <UploadOutlined /> Upload your pictures here! </h2>
-       				<div style={{width: 337, height: 150}}>
+       				<div style={{width: 337, height: 250, overflowY: "scroll"}}>
        					<Dragger {...upload_props} >
 									<p className="ant-upload-drag-icon">
 										<InboxOutlined style={{fontSize: 50}}/>

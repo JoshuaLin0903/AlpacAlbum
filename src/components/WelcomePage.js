@@ -11,10 +11,10 @@ export const WELPAGE = () =>{
         <img src={title} style={{width: "100%", height: "auto"}}/>
         <h1 className="descrip1"> Find your pictures in an easy way </h1>
         <h1 className="descrip2"> Create your own albums </h1>
-       </div>
-        <div className="image-display">
-      	<img src={alpaca}/>
-    	</div>
+      </div>
+        <div className="image-display-wel">
+      		<img src={alpaca}/>
+    		</div>
     </div>
 	)
 }
