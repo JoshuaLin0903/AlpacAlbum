@@ -67,11 +67,12 @@ const COMMENT = ({comment, getUserByID}) => {
 	)
 }
   
-const VIEW_MODAL = ({user, image, next, prev, getUserByID}) => {
+const VIEW_MODAL = ({user, image, getUserByID}) => {
 	const [img, setImg] = useState(image)
 	const [loading, setLoading] = useState(true)
+	const [ImgLoading, setImgLoading] = useState(false)
 	const [onInput, setOnInput] = useState('')
-	const {loading: imgDataLoading, data, refetch} = useQuery(IMAGE_SINGEL_QUERY, {variables: {id: img._id}})
+	const {loading: imgDataLoading, data} = useQuery(IMAGE_SINGEL_QUERY, {variables: {id: img._id}})
 	const [addComment] = useMutation(COMMENT_CREATE)
 
 	const Today = new Date()
@@ -119,11 +120,13 @@ const VIEW_MODAL = ({user, image, next, prev, getUserByID}) => {
 
 	const nextPic = () => {
 		setLoading(true)
+		setImgLoading(false)
 		setImg(img.next)
 	}
 
 	const prevPic = () => {
 		setLoading(true)
+		setImgLoading(false)
 		setImg(img.prev)
 	}
 
@@ -136,7 +139,7 @@ const VIEW_MODAL = ({user, image, next, prev, getUserByID}) => {
 				</Tooltip>
 			</div>
 			<div className="img_big_box">
-				<img className="img_big" src={img.url}/>
+				<img className="img_big" src={img.url} onLoad={() => {setImgLoading(true)}} style={{ opacity: ImgLoading ? 1 : 0.3 }}/>
 			</div>
 			<div className="social">
 				<div className="social-publish-data">
