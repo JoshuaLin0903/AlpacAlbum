@@ -14,25 +14,25 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
 
-// setup MongoDB
-const mongoose = require('mongoose')
-mongoose.set('useFindAndModify', false)
-mongoose.set('useCreateIndex', true);
+// // setup MongoDB
+// const mongoose = require('mongoose')
+// mongoose.set('useFindAndModify', false)
+// mongoose.set('useCreateIndex', true);
 
-mongoose.connect("mongodb+srv://JoshuaLin:webprogramming6666@cluster0.5jced.mongodb.net/cluster0?retryWrites=true&w=majority", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+// mongoose.connect("mongodb+srv://JoshuaLin:webprogramming6666@cluster0.5jced.mongodb.net/cluster0?retryWrites=true&w=majority", {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// })
 
-const db = mongoose.connection
+// const db = mongoose.connection
 
-db.on('error', (error) => {
-  console.error(error)
-})
+// db.on('error', (error) => {
+//   console.error(error)
+// })
 
-db.once('open', () => {
-  console.log('MongoDB connected!')
-})
+// db.once('open', () => {
+//   console.log('MongoDB connected!')
+// })
 
 // setup GraphQL server
 const server = new ApolloServer({
