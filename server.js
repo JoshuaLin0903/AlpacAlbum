@@ -8,31 +8,36 @@ const { readFileSync } = require('fs');
 const Query = require('./server/resolvers/Query')
 const Mutation = require('./server/resolvers/Mutation')
 
-const port = 80;
+const port = process.env.PORT || 80;
 
 const app = express();
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
 
-// // setup MongoDB
-// const mongoose = require('mongoose')
-// mongoose.set('useFindAndModify', false)
-// mongoose.set('useCreateIndex', true);
+// setup MongoDB
+const mongoose = require('mongoose')
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true);
 
-// mongoose.connect("mongodb+srv://JoshuaLin:webprogramming6666@cluster0.5jced.mongodb.net/cluster0?retryWrites=true&w=majority", {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// })
+if (!process.env.MONGO_URL) {
+  console.error('Missing MONGO_URL!!!')
+  process.exit(1)
+}
 
-// const db = mongoose.connection
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
 
-// db.on('error', (error) => {
-//   console.error(error)
-// })
+const db = mongoose.connection
 
-// db.once('open', () => {
-//   console.log('MongoDB connected!')
-// })
+db.on('error', (error) => {
+  console.error(error)
+})
+
+db.once('open', () => {
+  console.log('MongoDB connected!')
+})
 
 // setup GraphQL server
 const server = new ApolloServer({
