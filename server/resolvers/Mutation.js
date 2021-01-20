@@ -124,13 +124,13 @@ const Mutation = {
     deleteImage: async(_, args, {pubsub}) => {
         if(!args.id){
             await Image.remove({ })
-            throw new Error ('Delete all message')
+            throw new Error ('Delete all Image')
         }
-        const msg = await Image.findOneAndDelete({_id : ObjectId(args.id)})
-        if(msg === null){
-            throw new Error ('Message not found')
+        const img = await Image.findOneAndDelete({_id : ObjectId(args.id)})
+        if(img === null){
+            throw new Error ('Image not found')
         }
-        return msg
+        return img
     },
     addImageTags: async(_, args, {pubsub}) => {
         if(args.tags.length === 0){
@@ -184,10 +184,18 @@ const Mutation = {
         if(img === null){
             throw new Error('Image not found.')
         }
-        return true
+        return cmt
     },
-    deleteComment: async(_, args)=>{
-        
+    deleteComment: async(_, args) => {
+        const img = await Image.findOneAndUpdate(
+            {comments: {$elemMatch: {_id: args.id}}},
+            {$pull: {comments: {_id: args.id}}},
+            false
+        )
+        if(img === null){
+            throw new Error ('Message not found')
+        }
+        return true
     }
 }
 

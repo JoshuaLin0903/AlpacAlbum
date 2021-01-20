@@ -10,20 +10,14 @@ const COMMENT_CREATE = gql`
             picID: $picID
             author: $author
             comment: $comment
-        )
+        ){
+            _id
+        }
     }
 `
 const COMMENT_DELETE = gql`
-    mutation deleteComment(
-        $picID: ID!
-        $author: ID!
-        $comment: String!
-    ){
-        deleteComment(
-            picID: $picID
-            author: $author
-            comment: $comment
-        )
+    mutation deleteComment($id: ID!){
+        deleteComment( id: $id )
     }
 `
 

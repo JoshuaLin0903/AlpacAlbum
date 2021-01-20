@@ -17,11 +17,11 @@ type Mutation {
     addImageTags(id: ID!, tags: [String!]!): Image
     deleteImageTags(id: ID!, tags: [String!]!): Image
     setImageTags(id: ID!, tags: [String!]!): Image
-    createComment(picID: ID!, author: ID!, comment: String!): Boolean
+    createComment(picID: ID!, author: ID!, comment: String!): Comment
+    deleteComment(id: ID!):Boolean
     pwdCheck(name: String, email: String, password: String!, password_new: String!, password_new2: String!): User
     avatarChange(name: String, avatar: String, avatar_new: String!): Boolean
     usernameChange(name: String, name_new: String!): User
-    deleteComment(picID: ID!, author: ID!, comment: String!):Boolean
 }
 
 type Subscription {

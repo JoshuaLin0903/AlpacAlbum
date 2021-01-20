@@ -16,7 +16,8 @@ import {
 	IMAGE_SINGEL_QUERY
 } from '../graphql/images'
 import {
-	COMMENT_CREATE
+	COMMENT_CREATE,
+	COMMENT_DELETE
 } from '../graphql/comments'
 
 import pig from '../images/pig.png';
@@ -68,13 +69,25 @@ const userAvatar = (avatar) => {
 	}
 }
 
-const COMMENT = ({comment, getUserByID}) => {
+const COMMENT = ({updateQuery, comment, user, getUserByID}) => {
+	const [removed, setRemoved] = useState(false)
+	const [delComment] = useMutation(COMMENT_DELETE)
 	const author = getUserByID(comment.author)
 	const deleteComment = () => {
-
+		delComment({variables: {id: comment._id}})
+		updateQuery((prev) => {
+			const newData = prev.imgData
+			newData.comments = prev.imgData.comments.filter(c => c._id !== comment._id)
+			return {
+				...prev,
+				imgData: newData
+			}
+		})
+		setRemoved(true)
 	}
 
 	return(
+		removed ? <></> :
 		<div className="comment-div">
 			<Avatar src={userAvatar(author.avatar)} size="large"/>
 			<div className="comment-show"> 
@@ -86,7 +99,7 @@ const COMMENT = ({comment, getUserByID}) => {
 					title="Are you sure you want to delete this comment?" 
 					okText="Yes" cancelText="No" 
 				>
-					<Button icon={<CloseCircleOutlined />} type="text"/>
+					<Button icon={<CloseCircleOutlined />} type="text" hidden={user._id !== author._id}/>
 				</Popconfirm>
 			</div>
 		</div>
@@ -98,7 +111,7 @@ const VIEW_MODAL = ({user, image, getUserByID}) => {
 	const [loading, setLoading] = useState(true)
 	const [ImgLoading, setImgLoading] = useState(false)
 	const [onInput, setOnInput] = useState('')
-	const {loading: imgDataLoading, data} = useQuery(IMAGE_SINGEL_QUERY, {variables: {id: img._id}})
+	const {loading: imgDataLoading, data, updateQuery} = useQuery(IMAGE_SINGEL_QUERY, {variables: {id: img._id}})
 	const [addComment] = useMutation(COMMENT_CREATE)
 
 	const Today = new Date()
@@ -113,7 +126,7 @@ const VIEW_MODAL = ({user, image, getUserByID}) => {
 			else{
 				img.author = getUserByID(img.author._id)
 			}
-			console.log(img)
+			// console.log(img)
 			setLoading(false)
 		}
 	}, [data, imgDataLoading, img])
@@ -130,10 +143,10 @@ const VIEW_MODAL = ({user, image, getUserByID}) => {
 		return(date)
 	}
 
-	const submitComment = (e) => {
+	const submitComment = async(e) => {
 		if (e.key === 'Enter' && onInput !== ''){
-			addComment({variables: {picID: img._id, author: user._id, comment: onInput}})
-			img.comments.push({author: user._id, text: onInput})
+			const {data} = await addComment({variables: {picID: img._id, author: user._id, comment: onInput}})
+			img.comments.push({__typename: 'Comment', _id: data.createComment._id, author: user._id, text: onInput})
 			setOnInput('')
 			e.target.value = ''
 		}
@@ -196,7 +209,7 @@ const VIEW_MODAL = ({user, image, getUserByID}) => {
 					<div className="comments">
 						{img.comments.map((c, idx) => {
 							return(
-								<COMMENT comment={c} getUserByID={getUserByID} key={idx}/>
+								<COMMENT updateQuery={updateQuery} comment={c} user={user} getUserByID={getUserByID} key={idx}/>
 							)
 						})}
 					</div>
