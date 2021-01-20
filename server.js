@@ -19,12 +19,7 @@ const mongoose = require('mongoose')
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true);
 
-if (!process.env.MONGO_URL) {
-  console.error('Missing MONGO_URL!!!')
-  process.exit(1)
-}
-
-mongoose.connect(process.env.MONGO_URL, {
+mongoose.connect("mongodb+srv://public:public@cluster0.5jced.mongodb.net/cluster0?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
