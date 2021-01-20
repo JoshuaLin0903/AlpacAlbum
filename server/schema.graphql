@@ -21,6 +21,7 @@ type Mutation {
     pwdCheck(name: String, email: String, password: String!, password_new: String!, password_new2: String!): User
     avatarChange(name: String, avatar: String, avatar_new: String!): Boolean
     usernameChange(name: String, name_new: String!): User
+    deleteComment(picID: ID!, author: ID!, comment: String!):Boolean
 }
 
 input ImageInput {

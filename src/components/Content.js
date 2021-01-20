@@ -108,6 +108,16 @@ export const CONTENT = ({user, tagData, updTagDataQuery, choose, multi, chooseAl
 		})
 		setRstTagRecord(true);
 		setVisible(false);
+		if(tagRecord.DEL.length !== 0){
+			var str = "Remove"
+			tagRecord.DEL.map((d) => {str = str + " #" + d})
+			message.info(str)
+		}
+		if(tagRecord.ADD.length !== 0){
+			var str = "Add"
+			tagRecord.ADD.map((a) => {str = str + " #" + a})
+			message.info(str)
+		}
 	}
 
 	return(

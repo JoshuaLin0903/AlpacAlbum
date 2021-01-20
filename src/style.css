@@ -98,6 +98,11 @@
   margin-left: 10px;
 }
 
+.image-display-wel{
+  position: relative;
+  top: 40px;
+}
+
 .descrip2 {
   font-size: 20px;
   color: white;
@@ -335,6 +340,7 @@
   width: 70%;
   height: 100%;
   background: black;
+  position: relative;
 }
 
 .social{
@@ -381,6 +387,17 @@
   border-radius: 10px;
   padding: 5px 10px;
   outline: none;
+}
+
+.comment-show{
+  margin-left: 5px;
+  width: 80%;
+  background: #F5F5F5;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: row;
 }
 
 .comments{

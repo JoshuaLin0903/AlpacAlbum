@@ -69,11 +69,16 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, chooseAl
 		const newTags = (img.tags).filter(tag => !tagRecord.DEL.includes(tag)).concat(tagRecord.ADD)
 		await setImgTags({ variables: {id: img._id, tags: newTags}})
 		img.tags = newTags
-		var str = "Change tags to:"
-		newTags.forEach(t => {
-			str = str + " #"+t
-		})
-		message.info(str)
+		if(tagRecord.DEL.length !== 0){
+			var str = "Remove"
+			tagRecord.DEL.map((d) => {str = str + " #" + d})
+			message.info(str)
+		}
+		if(tagRecord.ADD.length !== 0){
+			var str = "Add"
+			tagRecord.ADD.map((a) => {str = str + " #" + a})
+			message.info(str)
+		}
 	}
 
 	return(

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {Drawer, Avatar, Button, Popconfirm, Popover, Collapse, Input, message} from 'antd'
-import {SettingOutlined, LogoutOutlined, KeyOutlined} from '@ant-design/icons';
+import { SettingOutlined, LogoutOutlined, KeyOutlined} from '@ant-design/icons';
 import { useMutation } from '@apollo/react-hooks'
 import '../style.css';
 import {PWD_CHECK,USER_LOGOUT,AVATAR_CHANGE,NAME_CHANGE} from '../graphql/users'
@@ -11,11 +11,14 @@ import giwua from '../images/giwua.png';
 import strongSiba from '../images/strongSiba.png';
 import siba from '../images/siba.png';
 import tableCat from '../images/tableCat.png';
+import duck from '../images/duck.png';
+import guineaPig from '../images/guineaPig.png';
+import smileCat from '../images/smileCat.png';
 
 const {Panel} = Collapse
 
-const avatar_src = [pig, unset, shark, giwua, strongSiba, siba, tableCat]
-const avatar = ["pig", "unset", "shark", "giwua", "strongSiba", "siba", "tableCat"]
+const avatar_src = [pig, unset, shark, giwua, strongSiba, siba, tableCat, duck, guineaPig, smileCat]
+const avatar = ["pig", "unset", "shark", "giwua", "strongSiba", "siba", "tableCat", "duck", "guineaPig", "smileCat"]
 
 export const USER_DRAWER = ({user, updUserData}) => {
 	//user settings
@@ -49,6 +52,12 @@ export const USER_DRAWER = ({user, updUserData}) => {
 				return (<Avatar src={siba} style={style} size={size}/>)
 			case 'tableCat':
 				return (<Avatar src={tableCat} style={style} size={size}/>)
+			case 'duck':
+				return (<Avatar src={duck} style={style} size={size}/>)
+			case 'guineaPig':
+				return (<Avatar src={guineaPig} style={style} size={size}/>)
+			case 'smileCat':
+				return (<Avatar src={smileCat} style={style} size={size}/>)
 			default:
         		return (<Avatar src={unset} style={style} size={size}/>)
 		}
@@ -138,6 +147,12 @@ const handleLogOut = async() =>{
 		  case 'GraphQL error: Invaild password!' :
 			message.error('Wrong current password!')
 			return;
+			case 'GraphQL error: Password cannot be empty':
+				message.error('Password cannot be empty!')
+				return;
+			case 'GraphQL error: Please confirm your new password':
+				message.error('Please confirm your new password!')
+				return;
 		  default:
 			break;
 		}
@@ -165,7 +180,8 @@ const handleLogOut = async() =>{
 			width={300}
 		>
 			<br/>
-				<Popover title="Choose a new avatar" placement="bottom" trigger="click" content={avatarOption} onVisibleChange={(vis) => {if(vis) setAvatarSaved(false)}}>
+				<Popover title="Choose a new avatar" placement="bottom" trigger="click" content={avatarOption} 
+				onVisibleChange={(vis) => {if(vis) {setAvatarSaved(false)};setProfilePic(user.avatar);}}>
 					<div className="userSettingAva">
 						{currentAvatar('', 80)}
 					</div>
