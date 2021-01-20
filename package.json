@@ -12,6 +12,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.10.15",
     "fs": "^0.0.1-security",
     "react": "^17.0.1",
     "react-apollo": "^3.1.5",
@@ -41,12 +43,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "dotenv-defaults": "^2.0.1",
-    "express": "^4.17.1",
-    "mongodb": "^3.6.3",
-    "mongoose": "^5.10.15"
   },
   "resolutions": {
     "graphql": "^15.0.0"
