@@ -10,6 +10,8 @@ import {
 	TAG_ALL
 } from '../graphql/tags'
 
+import searching from '../images/searching.gif';
+
 export const SEARCH= ({user, selectTags, getUserByID}) =>{
 	const [showTags,setShowTags] = useState([])
 	const {loading: tagLoading, data: tagData, updateQuery: updTagDataQuery} = useQuery(TAG_ALL, {fetchPolicy: 'cache-and-network'})
@@ -80,7 +82,7 @@ export const SEARCH= ({user, selectTags, getUserByID}) =>{
 						</Breadcrumb.Item>
 					</Breadcrumb>
 					<div className="main-display-cen">
-						<Spin tip="Searching" size="large"/>
+						<img src={searching}/>
 					</div>
 				</>
 			}
