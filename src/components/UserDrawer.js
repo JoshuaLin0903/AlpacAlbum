@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Drawer, Avatar, Button, Popconfirm, Divider, Popover, Collapse, Input, message} from 'antd'
 import {UserOutlined, SettingOutlined, LogoutOutlined, KeyOutlined} from '@ant-design/icons';
 import {useQuery, useMutation } from '@apollo/react-hooks'
@@ -188,7 +188,8 @@ const handleLogOut = async() =>{
 			width={300}
 		>
 			<br/>
-				<Popover title="Choose a new avatar" placement="bottom" trigger="click" content={avatarOption} onVisibleChange={(vis) => {if(vis) setAvatarSaved(false)}}>
+				<Popover title="Choose a new avatar" placement="bottom" trigger="click" content={avatarOption} 
+				onVisibleChange={(vis) => {if(vis) {setAvatarSaved(false)};setProfilePic(user.avatar);}}>
 					<div className="userSettingAva">
 						{currentAvatar('', 80)}
 					</div>
