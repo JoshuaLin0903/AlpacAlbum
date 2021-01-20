@@ -1,8 +1,18 @@
-import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
+const express = require('express');
+const path = require('path');
+const { ApolloServer } = require('apollo-server-express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const { readFileSync } = require('fs');
 
-import Query from './resolvers/Query'
-import Mutation from './resolvers/Mutation'
+const Query = require('./server/resolvers/Query')
+const Mutation = require('./server/resolvers/Mutation')
+
+const port = process.env.PORT || 80;
+
+const app = express();
+app.use(express.static(path.join(__dirname, 'build')));
+app.use(bodyParser.json());
 
 // setup MongoDB
 require('dotenv-defaults').config()
@@ -26,15 +36,7 @@ db.on('error', (error) => {
   console.error(error)
 })
 
-
-db.once('open', () => {
-  console.log('MongoDB connected!')
-})
-
 // setup GraphQL server
-const session = require('express-session')
-const { readFileSync } = require('fs')
-
 const server = new ApolloServer({
   typeDefs: readFileSync('./server/schema.graphql', 'utf-8'),
   resolvers: {
@@ -43,8 +45,6 @@ const server = new ApolloServer({
   },
   context: ({ req, res }) => ({ req, res })
 })
-
-const app = express()
 
 app.use(session({
   secret: `oijwaeasdlkfj`,
@@ -66,6 +66,17 @@ server.applyMiddleware({
   }
 })
 
-app.listen((process.env.PORT | 4000), () => {
-  console.log(`The server is up on port ${process.env.PORT | 4000}${server.graphqlPath}!`)
+app.get('/ping', function (req, res) {
+  return res.send('pong');
+});
+
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+db.once('open', () => {
+  console.log('MongoDB connected!')
+  app.listen(port);
+  console.log("Server Ready!")
 })
+

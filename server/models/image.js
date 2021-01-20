@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-import { CommentSchema } from './comment'
+const { CommentSchema } =  require('./comment')
 
 const ImageSchema = new Schema({
 	url: {

@@ -127,7 +127,7 @@ export const CONTENT = ({user, tagData, updTagDataQuery, choose, multi, chooseAl
 				:<></>
 			}
 
-			{loading ? (
+			{loading || !imgData ? (
 				<p></p>
 			) : error ? (
 				<p>error</p>

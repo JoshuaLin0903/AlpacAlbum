@@ -23,10 +23,6 @@ type Mutation {
     usernameChange(name: String, name_new: String!): User
 }
 
-type Subscription {
-    album(tag: String): Image!
-}
-
 input ImageInput {
     url: String!
     tags: [String!]
@@ -55,10 +51,4 @@ type Comment {
     _id: ID!
     author: ID!
     text: String!
-}
-
-enum MutationType{
-    CREATE
-    UPDATE
-    DELETE
 }

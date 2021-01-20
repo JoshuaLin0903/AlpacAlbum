@@ -1,10 +1,10 @@
-import { ObjectId } from 'mongodb'
+const { ObjectId } = require('mongodb')
 
 const bcrypt = require('bcrypt');
 
 const Image = require('../models/image')
 const User = require('../models/user')
-import {Comment} from '../models/comment'
+const {Comment} = require('../models/comment')
 
 const Mutation = {
     registerUser: async(_, args) => {
@@ -112,7 +112,7 @@ const Mutation = {
             }
         }
     },
-    createImage: async(_, args, {pubsub}) => {
+    createImage: async(_, args) => {
         const newTags = [...new Set(args.data.tags)]
         args.data.tags = newTags
         args.data.comments = []
@@ -121,7 +121,7 @@ const Mutation = {
 
         return img
     },
-    deleteImage: async(_, args, {pubsub}) => {
+    deleteImage: async(_, args) => {
         if(!args.id){
             await Image.remove({ })
             throw new Error ('Delete all message')
@@ -132,7 +132,7 @@ const Mutation = {
         }
         return msg
     },
-    addImageTags: async(_, args, {pubsub}) => {
+    addImageTags: async(_, args) => {
         if(args.tags.length === 0){
             throw new Error("Empty tags array.")
         }
@@ -146,7 +146,7 @@ const Mutation = {
         }
         return img
     },
-    deleteImageTags: async(_, args, {pubsub}) => {
+    deleteImageTags: async(_, args) => {
         if(args.tags.length === 0){
             throw new Error("Empty tags array.")
         }
@@ -160,7 +160,7 @@ const Mutation = {
         }
         return img
     },
-    setImageTags: async(_, args, {pubsub}) => {
+    setImageTags: async(_, args) => {
         const img = await Image.findOneAndUpdate(
             {_id: ObjectId(args.id)},
             {tags: args.tags}
@@ -188,4 +188,4 @@ const Mutation = {
     }
 }
 
-export { Mutation as default }
+module.exports = Mutation
