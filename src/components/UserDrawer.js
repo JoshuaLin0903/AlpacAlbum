@@ -161,6 +161,14 @@ const handleLogOut = async() =>{
 			message.error('Wrong current password!')
 			return;
 			break;
+			case 'GraphQL error: Password cannot be empty':
+				message.error('Password cannot be empty!')
+				return;
+				break;
+			case 'GraphQL error: Please confirm your new password':
+				message.error('Please confirm your new password!')
+				return;
+				break;
 		  default:
 			break;
 		}
