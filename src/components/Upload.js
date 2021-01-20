@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import {Breadcrumb, Input, Upload, message, Tag, Divider, Button, Popconfirm} from 'antd'
+import {Breadcrumb, Input, Upload, message, Tag, Button, Popconfirm} from 'antd'
 import {
 	RocketTwoTone, 
 	InboxOutlined, 
@@ -26,7 +26,6 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
 	const [select, setSelect] = useState([])
 	const [showingTags, setShowingTags] = useState([])
   	const [searchValue, setSearchValue] = useState('')
-	const [open, setOpen] = useState(false)
 	const [fileList, setFileList] = useState([])
 	const [uploading, setUploading] = useState(false)
 
@@ -140,7 +139,7 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
 		isMountedRef.current = true
 		tagRefetch()
 		return () => isMountedRef.current = false
-	},[])
+	},[tagRefetch])
 
 	const filterTags = (search) => {
     const l = search.length

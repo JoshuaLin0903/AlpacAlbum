@@ -8,7 +8,7 @@ import '../style.css'
   
 const {Panel} = Collapse
 
-const TAG_MODAL = ({tagData, updTagDataQuery, img, setTagRecord}) => {
+const TAG_MODAL = ({tagData, img, setTagRecord}) => {
 	const [del, setDelete] = useState([])
 	const [add, setAdd] = useState([])
 	const [newTag, setNewTag] = useState('')
@@ -19,7 +19,7 @@ const TAG_MODAL = ({tagData, updTagDataQuery, img, setTagRecord}) => {
 	useEffect(() => {
 		setTagRecord({ADD:add,DEL:del})
 	}
-	,[add,del])
+	,[add, del, setTagRecord])
 
 	const removeDel = (e,tag) => {
 		e.preventDefault()
@@ -174,12 +174,12 @@ const TAG_MODAL_MULTI = ({tagData, album, setTagRecord, rstTagRecord, setRstTagR
 			setDelete([])
 			setRstTagRecord(false)
 		}
-	}, [rstTagRecord])
+	}, [rstTagRecord, setRstTagRecord])
 
 	useEffect(() => {
 		setTagRecord({ADD:add,DEL:del})
 	}
-	,[add,del])
+	,[add,del, setTagRecord])
 
 	const removeDel = (tag) => {
 		var buf = del.filter((t) => (t !==tag ))

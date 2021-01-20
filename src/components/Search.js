@@ -38,7 +38,7 @@ export const SEARCH= ({user, selectTags, getUserByID}) =>{
 			getSearchImages({variables: {tags: selectTags}})
 		}
 	}
-	,[selectTags])
+	,[selectTags, getSearchImages])
 
 
 	return(
@@ -88,7 +88,7 @@ export const SEARCH= ({user, selectTags, getUserByID}) =>{
 						</Breadcrumb.Item>
 					</Breadcrumb>
 					<div className="main-display-cen">
-						<img src={searching}/>
+						<img src={searching} alt=""/>
 					</div>
 				</>
 			}

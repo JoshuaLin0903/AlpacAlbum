@@ -3,8 +3,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import {Modal, Button, Popconfirm, message, Affix} from 'antd'
 import {
   DeleteOutlined,
-  FolderAddOutlined,
-  CheckCircleTwoTone
+  FolderAddOutlined
 } from '@ant-design/icons';
 
 import '../style.css'
@@ -42,7 +41,7 @@ export const CONTENT = ({user, tagData, updTagDataQuery, choose, multi, chooseAl
 			})
 			setChoosePic(newChoose)
 		}
-	},[chooseAll])
+	},[chooseAll, imgData, loading, user._id])
 
 	const updQueryOnDelete = (imgID) => {
 		// console.log(`delete pic ${image._id}`)

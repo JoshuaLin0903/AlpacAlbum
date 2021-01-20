@@ -23,7 +23,6 @@ const { Header, Content, Footer, Sider} = Layout;
 function Home() {
 	const [menuCollapsed, setMenuCollapsed] = useState(true);
   const [searchCollapsed, setSearchCollapsed] = useState(true);
-  const [lastEvent, setLastEvent] = useState('')
 	const [currentEvent, setCurrentEvent] = useState('home')
   const [mainDisplay, setMainDisplay] = useState(<HOMEPAGE/>)
   const [logIN, setLogIN] = useState(false)
@@ -31,9 +30,7 @@ function Home() {
 
   const [logout] = useMutation(USER_LOGOUT)
   const {loading: UserLoading, data: currentUser, refetch: userRefetch} = useQuery(USER_GET)
-  const {data: userData, refetch: userAllRefetch} = useQuery(USER_GET_ALL)
-
-  const allRef = useRef()  
+  const {data: userData, refetch: userAllRefetch} = useQuery(USER_GET_ALL)  
 
   const handleLogOut = async() =>{
     await logout()
@@ -47,17 +44,19 @@ function Home() {
   	setMenuCollapsed(!menuCollapsed);
   }
 
+  const onLogin = async() => {
+    await userRefetch()
+    await userAllRefetch()
+  }
+
+  const allRef = useRef()
+
   // trigger when upload
   const whenUpload = async() => {
     // console.log("whenUpload")
     if(allRef.current){
       allRef.current.uploadUpdate()
     }
-  }
-
-  const onLogin = async() => {
-    await userRefetch()
-    await userAllRefetch()
   }
 
   const getUserByID = (id) => {
@@ -94,12 +93,6 @@ function Home() {
     }
   }, [currentEvent, selectTags])
 
-  // handle actions on event change
-  useEffect(()=>{
-    console.log(`Event Change: ${lastEvent} to ${currentEvent}`)
-
-  }, [currentEvent])
-
   // auto login
   useEffect(()=>{
     if(currentUser){
@@ -118,31 +111,31 @@ function Home() {
        	width={500} 
        	onCollapse={() => handleMenuCollapse()}>
      		<div className="logo-div">
-          <img className="logo" src={logo}/>
+          <img className="logo" src={logo} alt=""/>
           {(menuCollapsed)?<></>:<h1 style={{color: "white", margin: 5}}> AlpacAlbum </h1>}
         </div>
         <Menu theme="dark" mode="inline" style={{ textAlign: 'center' }} defaultSelectedKeys={['1']}>
           <Menu.Item key="1" 
            	icon={<HomeOutlined />} 
-           	onClick={()=>{setLastEvent(currentEvent);setCurrentEvent("home");setSearchCollapsed(true);}}>
+           	onClick={()=>{setCurrentEvent("home");setSearchCollapsed(true);}}>
            	Home Page
           </Menu.Item>
           	{searchCollapsed?
             	<Menu.Item 
            	   	key="2" 
            	   	icon={<SearchOutlined/>} 
-           	   	onClick={() => {setSearchCollapsed(false);setLastEvent(currentEvent);setCurrentEvent("search");setMenuCollapsed(false);}}>
+           	   	onClick={() => {setSearchCollapsed(false);setCurrentEvent("search");setMenuCollapsed(false);}}>
             		Search by Tags
             	</Menu.Item>
               :
              	<SEARCH_SIDER onChange={setSelectTags}/>
             }
           <Menu.Item key="3" icon={<PictureOutlined />}
-          	onClick={()=>{setLastEvent(currentEvent);setCurrentEvent("all");setSearchCollapsed(true);}}>
+          	onClick={()=>{setCurrentEvent("all");setSearchCollapsed(true);}}>
           	View All Albums
           </Menu.Item>
           <Menu.Item key="4" icon={<UploadOutlined />}
-            onClick={()=>{setLastEvent(currentEvent);setCurrentEvent("upload");setSearchCollapsed(true);}}>
+            onClick={()=>{setCurrentEvent("upload");setSearchCollapsed(true);}}>
             Upload photos
           </Menu.Item>
         </Menu>
@@ -167,7 +160,7 @@ function Home() {
                 </div>
               </>:
               <div>
-                <img className="logo" src={logo}/>
+                <img className="logo" src={logo} alt=""/>
                 <LOGIN_DRAWER setLogIN={setLogIN} userRefetch={onLogin}/>
                 <Button type="link" href="/#/register" size="small" style={{color:"white", borderColor: "gray", marginLeft: 10}}> 
                   Sign up

@@ -41,7 +41,7 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, chooseAl
 		if(id === user._id){
 			setChoose(chooseAll)
 		}
-	},[chooseAll])
+	},[chooseAll, id, user._id])
 
 	const onMultiChoose = () => {
 		setChoose(!choose);
@@ -70,7 +70,7 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, chooseAl
 		await setImgTags({ variables: {id: img._id, tags: newTags}})
 		img.tags = newTags
 		var str = "Change tags to:"
-		newTags.map((t) => {
+		newTags.forEach(t => {
 			str = str + " #"+t
 		})
 		message.info(str)
@@ -81,8 +81,8 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, chooseAl
 			<div className="img-show-div">
 				{(multi)?
 					<>
-					{(id !== user._id)? <img className="img-show-disable"  src={newURL}/>
-						:((choose) ? <img className="img-show-blur"  src={newURL}/>:<img className="img-show"  src={newURL}/>)
+					{(id !== user._id)? <img className="img-show-disable"  src={newURL} alt=""/>
+						:((choose) ? <img className="img-show-blur"  src={newURL} alt=""/>:<img className="img-show"  src={newURL} alt=""/>)
 					}
 
 					{(id !== user._id)?<></>:
@@ -94,7 +94,7 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, chooseAl
 					</>
 					:
 					<>
-					<img className="img-show"  src={newURL}/>
+					<img className="img-show"  src={newURL} alt=""/>
 					<div className="img-show-hover">
 						{(id === user._id)?
 							<div className="img-show-button">

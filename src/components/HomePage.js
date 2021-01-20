@@ -6,7 +6,7 @@ export const HOMEPAGE = () =>{
 
 	return(
 		<div className="main-display-home">
-      	<img src={alpacaBig}/>
+      	<img src={alpacaBig} alt=""/>
     </div>
 	)
 }

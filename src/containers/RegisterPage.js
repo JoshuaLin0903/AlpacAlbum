@@ -16,7 +16,7 @@ import {
 import gif from '../images/picGIF.gif';
 
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 
 const RegisterPage=()=>{
     const [username, setUserName] = useState('')
@@ -67,7 +67,7 @@ const RegisterPage=()=>{
      	<Layout className="site-layout">
          <Content style={{ margin: '0 16px'}}>
          <div className="main-display-register">
-            <img src={gif} style={{width: 150, height: 150, margin: 10}}/>
+            <img src={gif} style={{width: 150, height: 150, margin: 10}} alt=""/>
             <br/>
             <h1 style={{fontSize: 30}}> Create your account </h1>
             <Input 

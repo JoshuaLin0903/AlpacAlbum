@@ -54,7 +54,7 @@ export const LOGIN_DRAWER = ({setLogIN, userRefetch}) =>{
    			<br/>
    			<br/>
    			<div style={{display: "flex", flexDirection: "row"}}>
-   				<img src={logo} style={{width: 90, height: 90}}/>
+   				<img src={logo} style={{width: 90, height: 90}} alt=""/>
    				<h1 style={{fontSize: 40, margin: "10px 15px", color: "#4B0082"}}> AlpacAlbum </h1>
    			</div>
    			<br/>
@@ -81,7 +81,7 @@ export const LOGIN_DRAWER = ({setLogIN, userRefetch}) =>{
             Not a user yet?
           	<a href="/#/register"> Sign up</a>
           </div>
-          <img src={gif} style={{width: 60, height: 60, position: "absolute", right: "5%"}}/>
+          <img src={gif} style={{width: 60, height: 60, position: "absolute", right: "5%"}} alt=""/>
         </div>
    		</Drawer>
 		</>

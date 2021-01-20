@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { useMutation, useQuery } from '@apollo/react-hooks'
-import {Avatar, Button, Divider, Tag, Input, message, Tooltip} from 'antd'
+import {Avatar, Button, Tag, Tooltip} from 'antd'
 import {
-  UserOutlined,
   HeartOutlined,
   CommentOutlined,
   LeftOutlined,
@@ -29,28 +28,20 @@ const userAvatar = (avatar) => {
 	switch(avatar){
 		case 'unset':
 			return (unset)
-			break;
 		case 'pig':
 			return (pig)
-			break
 		case 'shark':
 			return (shark)
-			break
 		case 'giwua':
 			return (giwua)
-			break
 		case 'strongSiba':
 			return (strongSiba)
-			break
 		case 'siba':
 			return (siba)
-			break
 		case 'tableCat':
 			return (tableCat)
-			break
 		default:
-	return (unset)
-	break
+			return (unset)
 	}
 }
 
@@ -90,7 +81,7 @@ const VIEW_MODAL = ({user, image, getUserByID}) => {
 			console.log(img)
 			setLoading(false)
 		}
-	}, [data, imgDataLoading, img])
+	}, [data, imgDataLoading, img, getUserByID])
 
 	const determinState = (date) => {
 		if(!date){
@@ -139,7 +130,7 @@ const VIEW_MODAL = ({user, image, getUserByID}) => {
 				</Tooltip>
 			</div>
 			<div className="img_big_box">
-				<img className="img_big" src={img.url} onLoad={() => {setImgLoading(true)}} style={{ opacity: ImgLoading ? 1 : 0.3 }}/>
+				<img className="img_big" src={img.url} onLoad={() => {setImgLoading(true)}} style={{ opacity: ImgLoading ? 1 : 0.3 }} alt=""/>
 			</div>
 			<div className="social">
 				<div className="social-publish-data">
@@ -175,8 +166,8 @@ const VIEW_MODAL = ({user, image, getUserByID}) => {
 				}
 				<div className="comment-div">
 					<Avatar src={userAvatar(user.avatar)} size={"large"}/>
-					<input className="comment-input" id="commentInput" type="text" placeholder="Write a comment"
-						onChange={(e) => setOnInput(e.target.value)} onKeyPress={(e) => submitComment(e)} id="input"/>
+					<input className="comment-input" id="input" type="text" placeholder="Write a comment"
+						onChange={(e) => setOnInput(e.target.value)} onKeyPress={(e) => submitComment(e)}/>
 				</div>
 			</div>
 			<div className="viewBut"> 

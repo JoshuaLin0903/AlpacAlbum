@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
-import {Drawer, Avatar, Button, Popconfirm, Divider, Popover, Collapse, Input, message} from 'antd'
-import {UserOutlined, SettingOutlined, LogoutOutlined, KeyOutlined} from '@ant-design/icons';
-import {useQuery, useMutation } from '@apollo/react-hooks'
+import {Drawer, Avatar, Button, Popconfirm, Popover, Collapse, Input, message} from 'antd'
+import {SettingOutlined, LogoutOutlined, KeyOutlined} from '@ant-design/icons';
+import { useMutation } from '@apollo/react-hooks'
 import '../style.css';
-import {USER_GET,PWD_CHECK,USER_LOGOUT,AVATAR_CHANGE,NAME_CHANGE} from '../graphql/users'
+import {PWD_CHECK,USER_LOGOUT,AVATAR_CHANGE,NAME_CHANGE} from '../graphql/users'
 import pig from '../images/pig.png';
 import unset from '../images/alpaca_i.png';
 import shark from '../images/shark.png';
@@ -37,28 +37,20 @@ export const USER_DRAWER = ({user, updUserData}) => {
 		switch(profilePic){
 			case 'unset':
 				return (<Avatar src={unset} style={style} size={size}/>)
-				break;
 			case 'pig':
 				return (<Avatar src={pig} style={style} size={size}/>)
-				break
 			case 'shark':
 				return (<Avatar src={shark} style={style} size={size}/>)
-				break
 			case 'giwua':
 				return (<Avatar src={giwua} style={style} size={size}/>)
-				break
 			case 'strongSiba':
 				return (<Avatar src={strongSiba} style={style} size={size}/>)
-				break
 			case 'siba':
 				return (<Avatar src={siba} style={style} size={size}/>)
-				break
 			case 'tableCat':
 				return (<Avatar src={tableCat} style={style} size={size}/>)
-				break
 			default:
-        return (<Avatar src={unset} style={style} size={size}/>)
-        break
+        		return (<Avatar src={unset} style={style} size={size}/>)
 		}
 	}
 
@@ -71,14 +63,14 @@ const handleLogOut = async() =>{
 	  var count = 0
   	return(
   		<div>
-  			{avatar.map((m,i) => {
+  			{avatar.map((m, i) => {
   				if(m !== profilePic){
   					count = count + 1
   					if((count)%3 === 0){
-						return(<><img key={i} src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/><br/></>)
+						return(<><img key={i} src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)} alt=""/><br/></>)
 					}
-           			else return(<img key={i} src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)}/>)
-         		}
+           			else return(<img key={i} src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)} alt=""/>)
+				 }
   			})}
   			<div style={{textAlign: 'center', width: "100%", margin: '10px 0px'}}>
   			{!AvatarSaved?(
@@ -93,7 +85,7 @@ const handleLogOut = async() =>{
   const handleUsernameChange = async()=>{
 	const _name = user.name;
 	try{
-		const {data} = await usernameChange({variables:{
+		await usernameChange({variables:{
 			name: _name,
 			name_new: NewUsername
 		}})
@@ -103,11 +95,9 @@ const handleLogOut = async() =>{
 			case 'User not found!':
 				message.error('User not found!')
 				return;
-				break;
 			case 'Username taken!':
 				message.error('Username taken!')
 				return;
-				break;
 			default:
 				break;
 		}
@@ -135,7 +125,7 @@ const handleLogOut = async() =>{
   }
   const handlePwdChange = async()=>{
 	try{
-		const {data} = await pwdCheck({variables: { 
+		await pwdCheck({variables: { 
 									name: user.name, 
 									password: CheckPassword,
 									password_new: NewPassword,
@@ -148,7 +138,6 @@ const handleLogOut = async() =>{
 		  case 'GraphQL error: Invaild password!' :
 			message.error('Wrong current password!')
 			return;
-			break;
 		  default:
 			break;
 		}

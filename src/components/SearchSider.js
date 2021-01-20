@@ -9,7 +9,6 @@ import {
 
 const { Panel } = Collapse;
 const { CheckableTag } = Tag;
-const {Search} = Input;
 
 var chosen = []
 
@@ -60,7 +59,7 @@ export const SEARCH_SIDER = ({onChange})=>{
 
   useEffect(()=>{
     tagRefetch();
-  },[])
+  },[tagRefetch])
 
 
   useEffect(()=> {

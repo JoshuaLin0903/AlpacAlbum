@@ -17,7 +17,7 @@ export const PREVIEW = forwardRef(({onChoose, tag}, ref) => {
 	useEffect(() => {
 		previewRefetch()
 		countRefetch()
-	}, [])
+	}, [countRefetch, previewRefetch])
 
 	useImperativeHandle(ref, () => ({
 		uploadUpdate(){
@@ -29,10 +29,10 @@ export const PREVIEW = forwardRef(({onChoose, tag}, ref) => {
 
 	const showImg = (idx) => {
 		if(idx >= imgData.albumPreview.length){
-			return <img className="img-empty" src={noPic} style={{width: 90, height: 90}}/>
+			return <img className="img-empty" src={noPic} style={{width: 90, height: 90}} alt=""/>
 		}
 		const url = imgData.albumPreview[idx].url.slice(0, -4)+'s.jpg'
-		return <img className="img-preview" src={url}/>
+		return <img className="img-preview" src={url} alt=""/>
 	}
 
 	return(
