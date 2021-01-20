@@ -67,10 +67,11 @@ const COMMENT = ({comment, getUserByID}) => {
 	)
 }
   
-const VIEW_MODAL = ({user, img, getUserByID}) => {
+const VIEW_MODAL = ({user, image, next, prev, getUserByID}) => {
+	const [img, setImg] = useState(image)
 	const [loading, setLoading] = useState(true)
 	const [onInput, setOnInput] = useState('')
-	const {loading: imgDataLoading, data} = useQuery(IMAGE_SINGEL_QUERY, {variables: {id: img._id}})
+	const {loading: imgDataLoading, data, refetch} = useQuery(IMAGE_SINGEL_QUERY, {variables: {id: img._id}})
 	const [addComment] = useMutation(COMMENT_CREATE)
 
 	const Today = new Date()
@@ -88,7 +89,7 @@ const VIEW_MODAL = ({user, img, getUserByID}) => {
 			console.log(img)
 			setLoading(false)
 		}
-	}, [data, imgDataLoading])
+	}, [data, imgDataLoading, img])
 
 	const determinState = (date) => {
 		if(!date){
@@ -117,18 +118,21 @@ const VIEW_MODAL = ({user, img, getUserByID}) => {
 	}
 
 	const nextPic = () => {
-
+		setLoading(true)
+		setImg(img.next)
 	}
 
 	const prevPic = () => {
-
+		setLoading(true)
+		setImg(img.prev)
 	}
+
  
 	return(
 		<>
 			<div className="viewBut"> 
 				<Tooltip placement="bottom" title="Previous">
-					<Button icon={<LeftOutlined />} onClick={prevPic}/>
+					<Button icon={<LeftOutlined />} disabled={img.prev === null} onClick={prevPic}/>
 				</Tooltip>
 			</div>
 			<div className="img_big_box">
@@ -174,7 +178,7 @@ const VIEW_MODAL = ({user, img, getUserByID}) => {
 			</div>
 			<div className="viewBut"> 
 				<Tooltip placement="bottom" title="Next">
-					<Button icon={<RightOutlined />} onClick={nextPic}/> 
+					<Button icon={<RightOutlined />} disabled={img.next === null} onClick={nextPic}/> 
 				</Tooltip>
 			</div>
      </>

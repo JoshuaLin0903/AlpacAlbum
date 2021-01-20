@@ -133,9 +133,11 @@ export const CONTENT = ({user, tagData, updTagDataQuery, choose, multi, chooseAl
 				<p>error</p>
 			) : (
 				imgData.images.map((img, index) => {
-					return (<SINGLE_PIC user={user} tagData={tagData} updTagDataQuery={updTagDataQuery}
-									img={img} key={index} multi={multi} onDelete={updQueryOnDelete} 
-									choosePic={choosePic} setChoosePic={setChoosePic} onChangeTag={onChangeTag}
+					img.next = index >= imgData.images.length-1 ? null : imgData.images[index+1]
+					img.prev = index <= 0 ? null : imgData.images[index-1]
+					return (<SINGLE_PIC key={index} user={user} img={img}
+									tagData={tagData} updTagDataQuery={updTagDataQuery} onDelete={updQueryOnDelete} 
+									multi={multi} choosePic={choosePic} setChoosePic={setChoosePic} onChangeTag={onChangeTag}
 									getUserByID={getUserByID} chooseAll={chooseAll}/>)
 				})
 			)}

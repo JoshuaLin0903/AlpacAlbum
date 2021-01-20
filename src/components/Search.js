@@ -63,14 +63,20 @@ export const SEARCH= ({user, selectTags, getUserByID}) =>{
 							</div>
 						) : (
 							<div className="main-display-left">
-								{data.images.map((img, index)=>{
-									return (<SINGLE_PIC user={user} tagData={tagData.tags} updTagDataQuery={updTagDataQuery}
-										img={img} key={index} onDelete={updQueryOnDelete}
-										onChangeTag={onChangeTag}
-										getUserByID={getUserByID}
-										multi={false} choosePic={[]} setChoosePic={()=>{return true}}	// unused
-									/>)
-								})}
+								{data.images.length > 0 ? (
+									data.images.map((img, index)=>{
+										img.next = index >= data.images.length-1 ? null : data.images[index+1]
+										img.prev = index <= 0 ? null : data.images[index-1]
+										return (<SINGLE_PIC user={user} tagData={tagData.tags} updTagDataQuery={updTagDataQuery}
+											img={img} key={index} onDelete={updQueryOnDelete}
+											onChangeTag={onChangeTag}
+											getUserByID={getUserByID}
+											multi={false} choosePic={[]} setChoosePic={()=>{return true}}	// unused
+										/>)
+									})
+								):(
+									<p>No results!</p>
+								)}
 							</div>
 						)}
 					</>

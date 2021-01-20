@@ -69,7 +69,7 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, chooseAl
 		const newTags = (img.tags).filter(tag => !tagRecord.DEL.includes(tag)).concat(tagRecord.ADD)
 		await setImgTags({ variables: {id: img._id, tags: newTags}})
 		img.tags = newTags
-		var str = "Add"
+		var str = "Change tags to:"
 		newTags.map((t) => {
 			str = str + " #"+t
 		})
@@ -135,7 +135,7 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, chooseAl
 					footer={null}
 					width={"85vw"}
 				>
-					<VIEW_MODAL user={user} img={img} getUserByID={getUserByID}/>
+					<VIEW_MODAL user={user} image={img} getUserByID={getUserByID}/>
 				</Modal>
 				:<></>
       )}
