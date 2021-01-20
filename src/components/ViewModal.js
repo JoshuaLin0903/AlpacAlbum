@@ -82,14 +82,14 @@ const COMMENT = ({updateQuery, comment, user, getUserByID}) => {
 					<div style={{fontWeight: "bold"}}> {author.name} </div> 
 					<div> {comment.text} </div> 
 				</div>
-				{user._id === author._id ? <></> :
+				{user._id === author._id ? 
 					<Popconfirm placement="bottom" onConfirm={deleteComment}
 						title="Are you sure you want to delete this comment?" 
 						okText="Yes" cancelText="No" 
 					>
 						<Button icon={<CloseCircleOutlined />} type="text"/>
 					</Popconfirm>
-				} 
+				: <></> }
 			</div>
 		</div>
 	)
