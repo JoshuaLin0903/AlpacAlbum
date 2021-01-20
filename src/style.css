@@ -273,11 +273,15 @@
 
 .img-show-disable{
   z-index: 1;
-  opacity: 0.3;
+  filter: brightness(50%);
 }
 
 .img-show-disable:hover {
   cursor: not-allowed;
+}
+
+.img-show-notUser:hover {
+  cursor: pointer;
 }
 
 .img-show-hover{
@@ -286,6 +290,12 @@
   opacity: 0;
   position: relative;
   bottom: 160px;
+}
+
+.img-show-notUser{
+  height: 160px;
+  width: 160px;
+  opacity: 0;
 }
 
 .img-show-button{
@@ -375,6 +385,13 @@
 
 .comments{
   overflow-y: scroll;
+}
+
+.viewBut{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
   [data-theme="dark"] .site-layout .site-layout-background {

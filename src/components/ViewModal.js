@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import { useMutation, useQuery } from '@apollo/react-hooks'
-import {Avatar, Button, Divider, Tag, Input, message} from 'antd'
+import {Avatar, Button, Divider, Tag, Input, message, Tooltip} from 'antd'
 import {
   UserOutlined,
   HeartOutlined,
-  CommentOutlined
+  CommentOutlined,
+  LeftOutlined,
+  RightOutlined
 } from '@ant-design/icons';
 
 import '../style.css'
@@ -110,14 +112,32 @@ const VIEW_MODAL = ({user, img, getUserByID}) => {
 		}
 	}
 
+	const setFocus = () => {
+		const input = document.getElementById("input")
+		input.focus()
+	}
+
+	const nextPic = () => {
+
+	}
+
+	const prevPic = () => {
+
+	}
+ 
 	return(
 		<>
+			<div className="viewBut"> 
+				<Tooltip placement="bottom" title="Previous">
+					<Button icon={<LeftOutlined />} onClick={prevPic}/>
+				</Tooltip>
+			</div>
 			<div className="img_big_box">
 				<img className="img_big" src={img.url}/>
 			</div>
 			<div className="social">
 				<div className="social-publish-data">
-					<div style={{paddingTop: 7}}> <Avatar src={userAvatar(img.author.avatar)} size="large"/> </div>
+					<div style={{paddingTop: 7}}> <Avatar src={userAvatar(img.author.avatar)} size={50}/> </div>
 					{loading ? <></> :
 						<div className="publish-data-word">
 							<p style={{margin: 0, fontWeight: "bold", fontSize: 20}}> {(img.author.name) ? img.author.name : "author"} </p>
@@ -134,8 +154,8 @@ const VIEW_MODAL = ({user, img, getUserByID}) => {
 				</div>
 				<br/>
 				<div className= "social-button">
-					<Button icon={<HeartOutlined />} style={{width: "50%"}}> like </Button>
-					<Button icon={<CommentOutlined />} style={{width: "50%"}}> comment </Button>
+					<Button icon={<HeartOutlined />} style={{width: "50%"}}/>
+					<Button icon={<CommentOutlined />} style={{width: "50%"}} onClick={setFocus}/>
 				</div>
 				<br/>
 				{loading ? <></> :
@@ -148,10 +168,15 @@ const VIEW_MODAL = ({user, img, getUserByID}) => {
 					</div>
 				}
 				<div className="comment-div">
-					<Avatar src={userAvatar(user.avatar)} size="large"/>
+					<Avatar src={userAvatar(user.avatar)} size={"large"}/>
 					<input className="comment-input" id="commentInput" type="text" placeholder="Write a comment"
-						onChange={(e) => setOnInput(e.target.value)} onKeyPress={(e) => submitComment(e)}/>
+						onChange={(e) => setOnInput(e.target.value)} onKeyPress={(e) => submitComment(e)} id="input"/>
 				</div>
+			</div>
+			<div className="viewBut"> 
+				<Tooltip placement="bottom" title="Next">
+					<Button icon={<RightOutlined />} onClick={nextPic}/> 
+				</Tooltip>
 			</div>
      </>
 	)

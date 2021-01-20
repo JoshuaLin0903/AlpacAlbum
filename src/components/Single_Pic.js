@@ -90,24 +90,20 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, onDelete
 					<>
 					<img className="img-show"  src={newURL}/>
 					<div className="img-show-hover">
-						<div className="img-show-button">
-							{(id === user._id)?
+						{(id === user._id)?
+							<div className="img-show-button">
 								<Popconfirm placement="bottom" onConfirm={deletePic} 
-								title="Are you sure you want to delete this picture?" 
-								okText="Yes" cancelText="No" >
+								  title="Are you sure you want to delete this picture?" 
+								  okText="Yes" cancelText="No" >
 									<Button icon={<DeleteOutlined />} type="text"/>
-								</Popconfirm>:<></>}
-							<Button icon={<EyeOutlined />} type="text" onClick={() => {setVisible(true);setState('view')}}/>
-							{(id === user._id)?
-							<Button icon={<FolderAddOutlined />} type="text" onClick={() => {setVisible(true);setState('tag')}}/>
-							:<></>}
-						</div>
+								</Popconfirm>
+								<Button icon={<EyeOutlined />} type="text" onClick={() => {setVisible(true);setState('view')}}/>
+								<Button icon={<FolderAddOutlined />} type="text" onClick={() => {setVisible(true);setState('tag')}}/>
+							</div>:
+							<div className="img-show-notUser" onClick={() => {setVisible(true);setState('view')}}/>
+						}
 						<div className="img-show-tag">
-							{img.tags.map((t) => {
-								return(
-									` #${t} `
-								)
-							})}
+							{img.tags.map((t) => {return(` #${t} `)})}
 						</div>
 					</div>
 					</>}
@@ -131,7 +127,7 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, onDelete
 					visible={visible}
 					onCancel={() => {setVisible(false);setState('none');}}
 					footer={null}
-					width={"80vw"}
+					width={"85vw"}
 				>
 					<VIEW_MODAL user={user} img={img} getUserByID={getUserByID}/>
 				</Modal>

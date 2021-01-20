@@ -70,7 +70,7 @@ const TAG_MODAL = ({tagData, updTagDataQuery, img, setTagRecord}) => {
 		 <h2> Change Tags </h2>
 		 <Divider style={{marginTop: 0}}/>
 		 <Collapse expandIcon={({isActive}) => <TagsOutlined rotate={isActive ? 90 : 0}/>}
-		 	defaultActiveKey={["1"]}>
+		 	defaultActiveKey={["1","2"]}>
 		 	<Panel header="Current Tags" key="1">
 		 		<div className="change_tag_cur">
 		 			<h4 style={{color: "#3b5999"}}> Click the tag you want to remove </h4>
@@ -255,7 +255,7 @@ const TAG_MODAL_MULTI = ({tagData, album, setTagRecord, rstTagRecord, setRstTagR
 		 </div>
 		 :
 		 <Collapse expandIcon={({isActive}) => <TagsOutlined rotate={isActive ? 90 : 0}/>}
-		 	defaultActiveKey={["1"]}>
+		 	defaultActiveKey={["1","2"]}>
 		 	<Panel header="Current Tags" key="1">
 		 		<div className="change_tag_cur">
 		 			<h4 style={{color: "#3b5999"}}> Remove these pictures from #{album}?</h4>
