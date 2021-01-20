@@ -13,5 +13,18 @@ const COMMENT_CREATE = gql`
         )
     }
 `
+const COMMENT_DELETE = gql`
+    mutation deleteComment(
+        $picID: ID!
+        $author: ID!
+        $comment: String!
+    ){
+        deleteComment(
+            picID: $picID
+            author: $author
+            comment: $comment
+        )
+    }
+`
 
-export { COMMENT_CREATE }
+export { COMMENT_CREATE,COMMENT_DELETE }

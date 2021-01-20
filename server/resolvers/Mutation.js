@@ -185,6 +185,9 @@ const Mutation = {
             throw new Error('Image not found.')
         }
         return true
+    },
+    deleteComment: async(_, args)=>{
+        
     }
 }
 
