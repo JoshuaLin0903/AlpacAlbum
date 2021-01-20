@@ -204,7 +204,7 @@ const VIEW_MODAL = ({user, image, getUserByID}) => {
 				}
 				<div className="comment-div">
 					<Avatar src={userAvatar(user.avatar)} size={"large"}/>
-					<input className="comment-input" id="commentInput" type="text" placeholder="Write a comment"
+					<input className="comment-input" type="text" placeholder="Write a comment"
 						onChange={(e) => setOnInput(e.target.value)} onKeyPress={(e) => submitComment(e)} id="input"/>
 				</div>
 			</div>
