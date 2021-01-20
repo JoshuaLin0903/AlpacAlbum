@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react'
 import { useMutation, useQuery } from '@apollo/react-hooks'
-import {Avatar, Button, Divider, Tag, Input, message, Tooltip} from 'antd'
+import {Avatar, Button, Divider, Tag, Input, message, Tooltip, Popconfirm} from 'antd'
 import {
   UserOutlined,
   HeartOutlined,
   CommentOutlined,
   LeftOutlined,
-  RightOutlined
+  RightOutlined,
+  LoadingOutlined, 
+  CloseCircleOutlined
 } from '@ant-design/icons';
 
 import '../style.css'
@@ -24,6 +26,9 @@ import giwua from '../images/giwua.png';
 import strongSiba from '../images/strongSiba.png';
 import siba from '../images/siba.png';
 import tableCat from '../images/tableCat.png';
+import duck from '../images/duck.png';
+import guineaPig from '../images/guineaPig.png';
+import smileCat from '../images/smileCat.png';
 
 const userAvatar = (avatar) => {
 	switch(avatar){
@@ -48,6 +53,15 @@ const userAvatar = (avatar) => {
 		case 'tableCat':
 			return (tableCat)
 			break
+		case 'duck':
+			return (duck)
+			break
+		case 'guineaPig':
+			return (guineaPig)
+			break
+		case 'smileCat':
+			return (smileCat)
+			break
 		default:
 	return (unset)
 	break
@@ -56,12 +70,24 @@ const userAvatar = (avatar) => {
 
 const COMMENT = ({comment, getUserByID}) => {
 	const author = getUserByID(comment.author)
+	const deleteComment = () => {
+
+	}
+
 	return(
 		<div className="comment-div">
 			<Avatar src={userAvatar(author.avatar)} size="large"/>
-			<div className="comment-input"> 
-				<div style={{fontWeight: "bold"}}> {author.name} </div> 
+			<div className="comment-show"> 
+				<div style={{width: "90%"}}>
+					<div style={{fontWeight: "bold"}}> {author.name} </div> 
 					<div> {comment.text} </div> 
+				</div>
+				<Popconfirm placement="bottom" onConfirm={deleteComment}
+					title="Are you sure you want to delete this comment?" 
+					okText="Yes" cancelText="No" 
+				>
+					<Button icon={<CloseCircleOutlined />} type="text"/>
+				</Popconfirm>
 			</div>
 		</div>
 	)
@@ -139,7 +165,10 @@ const VIEW_MODAL = ({user, image, getUserByID}) => {
 				</Tooltip>
 			</div>
 			<div className="img_big_box">
-				<img className="img_big" src={img.url} onLoad={() => {setImgLoading(true)}} style={{ opacity: ImgLoading ? 1 : 0.3 }}/>
+				<img className="img_big" src={img.url} onLoad={() => {setImgLoading(true)}} style={{ opacity: ImgLoading ? 1 : 0 }}/>
+				{ImgLoading?<></>:
+					<div style={{position: "absolute", top: "50%", left: "50%"}}> <LoadingOutlined style={{color: "white"}}/> </div>
+				}
 			</div>
 			<div className="social">
 				<div className="social-publish-data">

@@ -11,11 +11,14 @@ import giwua from '../images/giwua.png';
 import strongSiba from '../images/strongSiba.png';
 import siba from '../images/siba.png';
 import tableCat from '../images/tableCat.png';
+import duck from '../images/duck.png';
+import guineaPig from '../images/guineaPig.png';
+import smileCat from '../images/smileCat.png';
 
 const {Panel} = Collapse
 
-const avatar_src = [pig, unset, shark, giwua, strongSiba, siba, tableCat]
-const avatar = ["pig", "unset", "shark", "giwua", "strongSiba", "siba", "tableCat"]
+const avatar_src = [pig, unset, shark, giwua, strongSiba, siba, tableCat, duck, guineaPig, smileCat]
+const avatar = ["pig", "unset", "shark", "giwua", "strongSiba", "siba", "tableCat", "duck", "guineaPig", "smileCat"]
 
 export const USER_DRAWER = ({user, updUserData}) => {
 	//user settings
@@ -55,6 +58,15 @@ export const USER_DRAWER = ({user, updUserData}) => {
 				break
 			case 'tableCat':
 				return (<Avatar src={tableCat} style={style} size={size}/>)
+				break
+			case 'duck':
+				return (<Avatar src={duck} style={style} size={size}/>)
+				break
+			case 'guineaPig':
+				return (<Avatar src={guineaPig} style={style} size={size}/>)
+				break
+			case 'smileCat':
+				return (<Avatar src={smileCat} style={style} size={size}/>)
 				break
 			default:
         return (<Avatar src={unset} style={style} size={size}/>)
