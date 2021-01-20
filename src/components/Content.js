@@ -35,7 +35,7 @@ export const CONTENT = ({user, tagData, updTagDataQuery, choose, multi, chooseAl
 		if(!chooseAll){
 			setChoosePic([])
 		}
-		else{
+		else if(!loading && imgData){
 			const newChoose = imgData.images.filter((im) => {
 				const id = (typeof im.author === 'string')? im.author:im.author._id
 				return(id === user._id)
