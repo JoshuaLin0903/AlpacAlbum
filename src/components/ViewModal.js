@@ -189,8 +189,7 @@ const VIEW_MODAL = ({user, image, getUserByID}) => {
 				</div>
 				<br/>
 				<div className= "social-button">
-					<Button icon={<HeartOutlined />} style={{width: "50%"}}/>
-					<Button icon={<CommentOutlined />} style={{width: "50%"}} onClick={setFocus}/>
+					<Button icon={<CommentOutlined />} style={{width: "100%"}} onClick={setFocus}>Comment </Button>
 				</div>
 				<br/>
 				{loading ? <></> :
