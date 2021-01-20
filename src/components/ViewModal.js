@@ -73,7 +73,6 @@ const VIEW_MODAL = ({user, img, getUserByID}) => {
 	const {loading: imgDataLoading, data} = useQuery(IMAGE_SINGEL_QUERY, {variables: {id: img._id}})
 	const [addComment] = useMutation(COMMENT_CREATE)
 
-
 	const Today = new Date()
 	const today = { year: Today.getFullYear().toString(), month : (Today.getMonth()+1).toString(), date : Today.getDate().toString()}
 

@@ -14,7 +14,7 @@ import {
 } from '../graphql/images'
 import { TAG_SET } from '../graphql/tags'
 
-export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, onDelete, choosePic, setChoosePic, onChangeTag, getUserByID}) => {
+export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, chooseAll, onDelete, choosePic, setChoosePic, onChangeTag, getUserByID}) => {
 	const [visible, setVisible] = useState(false)
 	const [delImage] = useMutation(IMAGE_DELETE)
 	const [choose, setChoose] = useState(false)
@@ -22,6 +22,8 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, onDelete
 	const [tagRecord, setTagRecord] = useState({}) //pic's tag change 存成{ADD:[...],DEL:[...]}
 
 	const [setImgTags] = useMutation(TAG_SET)
+
+	const id = (typeof img.author === 'string')? img.author:img.author._id
 
 	const newURL = img.url.slice(0, -4)+'b.jpg'
 
@@ -34,6 +36,12 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, onDelete
 			setChoose(false)
 		}
 	},[choosePic])
+
+	useEffect(() => {
+		if(id === user._id){
+			setChoose(chooseAll)
+		}
+	},[chooseAll])
 
 	const onMultiChoose = () => {
 		setChoose(!choose);
@@ -67,8 +75,6 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, onDelete
 		})
 		message.info(str)
 	}
-
-	const id = (typeof img.author === 'string')? img.author:img.author._id
 
 	return(
 		<>	

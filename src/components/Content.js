@@ -16,7 +16,7 @@ import {
 } from '../graphql/images'
 import { TAG_SET } from '../graphql/tags'
 
-export const CONTENT = ({user, tagData, updTagDataQuery, choose, multi, getUserByID}) => {
+export const CONTENT = ({user, tagData, updTagDataQuery, choose, multi, chooseAll, getUserByID}) => {
 	const [visible, setVisible] = useState(false)
 	const [rstTagRecord, setRstTagRecord] = useState(false)
 	const [tagRecord, setTagRecord] = useState({})//muti pic's tag change 存成{ADD:[...],DEL:[...]}
@@ -30,6 +30,19 @@ export const CONTENT = ({user, tagData, updTagDataQuery, choose, multi, getUserB
 	useEffect(() => {
 		setChoosePic([])
 	},[multi])
+
+	useEffect(() => {
+		if(!chooseAll){
+			setChoosePic([])
+		}
+		else{
+			const newChoose = imgData.images.filter((im) => {
+				const id = (typeof im.author === 'string')? im.author:im.author._id
+				return(id === user._id)
+			})
+			setChoosePic(newChoose)
+		}
+	},[chooseAll])
 
 	const updQueryOnDelete = (imgID) => {
 		// console.log(`delete pic ${image._id}`)
@@ -123,7 +136,7 @@ export const CONTENT = ({user, tagData, updTagDataQuery, choose, multi, getUserB
 					return (<SINGLE_PIC user={user} tagData={tagData} updTagDataQuery={updTagDataQuery}
 									img={img} key={index} multi={multi} onDelete={updQueryOnDelete} 
 									choosePic={choosePic} setChoosePic={setChoosePic} onChangeTag={onChangeTag}
-									getUserByID={getUserByID}/>)
+									getUserByID={getUserByID} chooseAll={chooseAll}/>)
 				})
 			)}
 

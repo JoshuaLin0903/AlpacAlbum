@@ -1,7 +1,7 @@
 import React, {useState, useEffect, createRef, forwardRef, useImperativeHandle} from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import {Breadcrumb, Button, Tooltip} from 'antd';
-import {PictureTwoTone, RollbackOutlined, CloseOutlined, CheckOutlined} from '@ant-design/icons';
+import {PictureTwoTone, RollbackOutlined, CloseOutlined, CheckOutlined, AppstoreAddOutlined} from '@ant-design/icons';
 
 import '../style.css'
 import {PREVIEW, CONTENT} from './Album'
@@ -17,6 +17,7 @@ export const ALL = forwardRef(({user, getUserByID}, ref) => {
 	const [choose, setChoose] = useState('')
 	const [multi, setMulti] = useState(false)
 	const [pvRefs, setPvRefs] = useState([])
+	const [chooseAll, setChooseAll] = useState(false)
 	
 	const {loading: countLoading, data: countData, refetch: countRefetch} = useQuery(ALBUM_COUNT, {fetchPolicy: 'cache-and-network'})
 	const {loading: tagLoading, data: tagData, refetch: tagRefetch, updateQuery: updTagDataQuery} = useQuery(TAG_ALL, {fetchPolicy: 'cache-and-network'})
@@ -61,13 +62,18 @@ export const ALL = forwardRef(({user, getUserByID}, ref) => {
 						:
 						<> 
 							<> Current Album : {choose} </>
-							<Tooltip title="Go Back" type="bottom">
+							<Tooltip title="Go Back">
 								<Button style={{marginLeft: 5}} icon={<RollbackOutlined />} size="small" onClick={onClickGoBack}/>
 							</Tooltip>
 							{multi?
-								<Tooltip title="Choose mutiple pictures" type="bottom">
-									<Button icon={<CloseOutlined />} size="small" onClick={()=>{setMulti(false);}}/>
-								</Tooltip>:
+								<>
+								<Tooltip title="Close">
+									<Button icon={<CloseOutlined />} size="small" onClick={()=>{setMulti(false);setChooseAll(false);}}/>
+								</Tooltip>
+								<Tooltip title="Choose All">
+									<Button icon={<AppstoreAddOutlined />} size="small" onClick={()=>{setChooseAll(!chooseAll);}}/>
+								</Tooltip>
+								</>:
 								<Tooltip title="Choose mutiple pictures" type="bottom">
 									<Button icon={<CheckOutlined />} size="small" onClick={()=>{setMulti(true);}}/>
 								</Tooltip>
@@ -98,7 +104,7 @@ export const ALL = forwardRef(({user, getUserByID}, ref) => {
 						):( <p>no photos</p> )
 					)
 				): <CONTENT user={user} tagData={tagData.tags} updTagDataQuery={updTagDataQuery}
-					choose={choose} multi={multi}
+					choose={choose} multi={multi} chooseAll={chooseAll}
 					getUserByID={getUserByID}
 				/>	
 				}
