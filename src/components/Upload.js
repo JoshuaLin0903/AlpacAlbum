@@ -62,6 +62,9 @@ export const UPLOAD = ({ user, AppWhenUpload}) =>{
 		if(searchValue === 'All'){
 			message.info(`Can't use tag #All.`)
 		}
+		else if(searchValue.includes(' ')){
+			message.info(`Invalid tag syntax.`)
+		}
 		else if (!select.includes(searchValue) && searchValue !== ''){
 			buf.push(searchValue)
 			if (!tagData.tags.includes(searchValue)){

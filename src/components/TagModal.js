@@ -54,6 +54,9 @@ const TAG_MODAL = ({tagData, updTagDataQuery, img, setTagRecord}) => {
 		else if(newTag === 'All'){
 			message.info(`Can't use tag #All.`)
 		}
+		else if(newTag.includes(' ')){
+			message.info(`Invalid tag syntax.`)
+		}
 		else if (!img.tags.includes(newTag) && !add.includes(newTag)){
 			setAdd([...add, newTag])
 			handleNewTagList(newTag)
@@ -211,6 +214,9 @@ const TAG_MODAL_MULTI = ({tagData, album, setTagRecord, rstTagRecord, setRstTagR
 		}
 		else if(newTag === 'All'){
 			message.info(`Can't use tag #All.`)
+		}
+		else if(newTag.includes(' ')){
+			message.info(`Invalid tag syntax.`)
 		}
 		else if (newTag !== album && !add.includes(newTag)){
 			setAdd([...add, newTag])
