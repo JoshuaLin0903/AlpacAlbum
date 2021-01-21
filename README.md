@@ -1,10 +1,10 @@
 # [109-1] Web Programming Final - AlpacAlbum
 
-### 專題名稱： AlpacAlbum
+### 專題名稱：Group66 AlpacAlbum
 
 ### Deploy連結：https://alpac-album.herokuapp.com/#/
 
-### Demo影片：
+### Demo影片：https://youtu.be/B5aPVzlCtFc
 
 ### 這個服務在做什麼？
 這是一個線上的相簿，可利用tag方便搜尋相片，並對相片做評論
