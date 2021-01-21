@@ -62,7 +62,7 @@
   background: #fff;
   padding: 10px 20px; 
   min-height: 535px;
-  max-height: 557px;
+  max-height: 100vh;
   overflow-y: scroll;
   display: flex;
   flex-direction: row;
