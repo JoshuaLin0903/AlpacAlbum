@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { useMutation } from '@apollo/react-hooks'
-import { Modal, Button, Popconfirm, message } from 'antd'
+import { Modal, Button, Popconfirm, message, Tooltip } from 'antd'
 import { TAG_MODAL } from './TagModal'
 import { VIEW_MODAL } from './ViewModal'
 import {
@@ -99,17 +99,23 @@ export const SINGLE_PIC = ({user, tagData, updTagDataQuery, img, multi, chooseAl
 					</>
 					:
 					<>
-					<img className="img-show"  src={newURL}/>
+					<img className="img-show"  src={newURL} onClick={() => {setVisible(true);setState('view')}}/>
 					<div className="img-show-hover">
 						{(id === user._id)?
 							<div className="img-show-button">
 								<Popconfirm placement="bottom" onConfirm={deletePic} 
 								  title="Are you sure you want to delete this picture?" 
 								  okText="Yes" cancelText="No" >
-									<Button icon={<DeleteOutlined />} type="text"/>
+								  <Tooltip title="Delete">
+										<Button icon={<DeleteOutlined />} type="text"/>
+									</Tooltip>
 								</Popconfirm>
-								<Button icon={<EyeOutlined />} type="text" onClick={() => {setVisible(true);setState('view')}}/>
-								<Button icon={<FolderAddOutlined />} type="text" onClick={() => {setVisible(true);setState('tag')}}/>
+								<Tooltip title="View">
+									<Button icon={<EyeOutlined />} type="text" onClick={() => {setVisible(true);setState('view')}}/>
+								</Tooltip>
+								<Tooltip title="Change Tags">
+									<Button icon={<FolderAddOutlined />} type="text" onClick={() => {setVisible(true);setState('tag')}}/>
+								</Tooltip>
 							</div>:
 							<div className="img-show-notUser" onClick={() => {setVisible(true);setState('view')}}/>
 						}

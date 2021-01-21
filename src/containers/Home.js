@@ -112,7 +112,7 @@ function Home() {
   return (
    	<Layout style={{ minHeight: '100vh'}}>
       {logIN?
-     	(<Sider 
+     	(<Sider
        	collapsible 
        	collapsed={menuCollapsed} 
        	width={500} 

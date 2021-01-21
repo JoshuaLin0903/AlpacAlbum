@@ -1,6 +1,6 @@
 import React, {useState, useEffect, createRef, forwardRef, useImperativeHandle} from 'react'
 import { useQuery } from '@apollo/react-hooks'
-import {Breadcrumb, Button, Tooltip} from 'antd';
+import {Breadcrumb, Button, Tooltip, BackTop, Spin} from 'antd';
 import {PictureTwoTone, RollbackOutlined, CloseOutlined, CheckOutlined, AppstoreAddOutlined} from '@ant-design/icons';
 
 import '../style.css'
@@ -86,7 +86,7 @@ export const ALL = forwardRef(({user, getUserByID}, ref) => {
 			<div className="main-display-left">
 				{(state === 'preview') ? (
 					(tagLoading || countLoading) ? (
-						<p>loading</p>
+						<Spin size="middle"/>
 					) : (
 						(countData.albumCount > 0) ? (
 							<>
@@ -108,6 +108,7 @@ export const ALL = forwardRef(({user, getUserByID}, ref) => {
 					getUserByID={getUserByID}
 				/>	
 				}
+				<BackTop visibilityHeight={100}/>
 			</div>			
 		</>
 	)
