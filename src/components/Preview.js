@@ -1,7 +1,7 @@
 import React, {useEffect, forwardRef, useImperativeHandle} from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import '../style.css'
-import {Divider} from 'antd';
+import {Divider, Spin} from 'antd';
 
 import noPic from '../images/no_pic.png';
 
@@ -38,7 +38,7 @@ export const PREVIEW = forwardRef(({onChoose, tag}, ref) => {
 	return(
 		<div className="album" onClick={onChoose}>
 			{loading ? (
-				<p> loading </p>
+				<div style={{position: "absolute", top: "50%", left: "50%"}}> <Spin size="middle"/> </div>
 			) : error ? (
 				<p> error </p>
 			) : 
@@ -54,7 +54,7 @@ export const PREVIEW = forwardRef(({onChoose, tag}, ref) => {
 					</div>
 				</div>
 				<Divider style={{margin: 5}}/>
-				<h1 style={{marginLeft: 5, marginBottom: 0}}> {tag} </h1>
+				<h1 style={{marginLeft: 5, marginBottom: 0, fontWeight: "bold"}}> {tag} </h1>
 				<div style={{marginLeft: 5}}>{countLoading ? '' :countData.albumCount} photos</div>
 				</>
 			}

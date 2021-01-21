@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Drawer, Avatar, Button, Popconfirm, Popover, Collapse, Input, message} from 'antd'
+import {Drawer, Avatar, Button, Popconfirm, Popover, Collapse, Input, message, Tooltip} from 'antd'
 import { SettingOutlined, LogoutOutlined, KeyOutlined} from '@ant-design/icons';
 import { useMutation } from '@apollo/react-hooks'
 import '../style.css';
@@ -14,11 +14,13 @@ import tableCat from '../images/tableCat.png';
 import duck from '../images/duck.png';
 import guineaPig from '../images/guineaPig.png';
 import smileCat from '../images/smileCat.png';
+import logo from '../images/logo.png';
 
 const {Panel} = Collapse
 
 const avatar_src = [pig, unset, shark, giwua, strongSiba, siba, tableCat, duck, guineaPig, smileCat]
 const avatar = ["pig", "unset", "shark", "giwua", "strongSiba", "siba", "tableCat", "duck", "guineaPig", "smileCat"]
+const tt = ["CutPig", "Alpaca", "Shark", "Giwuawua", "StrongSiba", "Siba", "TableCat", "Duck", "GuineaPigCar", "PoliteCat"]
 
 export const USER_DRAWER = ({user, updUserData}) => {
 	//user settings
@@ -76,10 +78,18 @@ const handleLogOut = async() =>{
   				if(m !== profilePic){
   					count = count + 1
   					if((count)%3 === 0){
-						return(<><img key={i} src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)} alt=""/><br/></>)
+						return(<>
+							<Tooltip title={tt[i]} placement="bottom">
+								<img key={i} src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)} alt=""/>
+							</Tooltip>
+							<br/></>)
 					}
-           			else return(<img key={i} src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)} alt=""/>)
-				 }
+           			else return(
+						<Tooltip title={tt[i]} placement="bottom">
+							<img key={i} src={avatar_src[i]} className="avatar_choose" onClick={()=>setProfilePic(m)} alt=""/>
+						</Tooltip>
+           			)
+         		}
   			})}
   			<div style={{textAlign: 'center', width: "100%", margin: '10px 0px'}}>
   			{!AvatarSaved?(
@@ -167,9 +177,11 @@ const handleLogOut = async() =>{
 	return(
 		<>
 		<div className="userAvatar" onClick={() => setOpen(!open)}>
-      		{currentAvatar({marginRight: 8}, "default")}
-    		{user.name}
-    	</div>
+			<Tooltip title="User Settings" placement="bottom">
+      	{currentAvatar({marginRight: 8}, "default")}
+      </Tooltip>
+    	{user.name}
+    </div>
 
 		<Drawer
 			title={<><SettingOutlined /> User Settings </>}
@@ -183,7 +195,9 @@ const handleLogOut = async() =>{
 				<Popover title="Choose a new avatar" placement="bottom" trigger="click" content={avatarOption} 
 				onVisibleChange={(vis) => {if(vis) {setAvatarSaved(false)};setProfilePic(user.avatar);}}>
 					<div className="userSettingAva">
-						{currentAvatar('', 80)}
+						<Tooltip title="Click to change!" placement="bottom">
+						 {currentAvatar('', 80)}
+						</Tooltip>
 					</div>
 				</Popover>
 				<h1 style={{textAlign: 'center', color: "#483D8B"}}> {user.name} </h1>
@@ -222,17 +236,19 @@ const handleLogOut = async() =>{
 				</Button>
 				</Panel>
 			</Collapse>
+			<div style={{position: "absolute", bottom: 35, right: 0}}>
+			<img src={logo} style={{width: 40, height: 40}}/>
 			<Popconfirm placement="top" 
 				onConfirm={handleLogOut} 
 				title="Are you sure you want to logout?"
 				okText="Yes"
 				cancelText="No"
 			>
-				<Button style={{position: "absolute", bottom: 35, right: 0}}
-					icon={<LogoutOutlined />} type="text" shape="round"> 
+				<Button icon={<LogoutOutlined />} type="text" shape="round"> 
 					Logout 
 				</Button>
 			</Popconfirm>
+			</div>
 		</Drawer>
     </>
 		

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import {Modal, Button, Popconfirm, message, Affix} from 'antd'
+import {Modal, Button, Popconfirm, message, Affix, Spin} from 'antd'
 import {
   DeleteOutlined,
   FolderAddOutlined
@@ -137,7 +137,7 @@ export const CONTENT = ({user, tagData, updTagDataQuery, choose, multi, chooseAl
 			}
 
 			{loading || !imgData ? (
-				<p></p>
+				<Spin size="middle"/>
 			) : error ? (
 				<p>error</p>
 			) : (
